@@ -1,0 +1,294 @@
+fileFormatVersion: 2
+guid: 5b89454221233844fa63039a6e0a99d7
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Bone
+    100004: Bone_end
+    100006: Door1
+    100008: DoorMain
+    100010: root
+    100012: root_end
+    100014: Door1_Rig
+    400000: //RootNode
+    400002: Bone
+    400004: Bone_end
+    400006: Door1
+    400008: DoorMain
+    400010: root
+    400012: root_end
+    400014: Door1_Rig
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Door1
+    4300002: Wall1_001
+    4300004: DoorHall1
+    4300006: Door_002
+    4300008: Roof3
+    4300010: Floor2
+    4300012: CornerPillar1
+    4300014: Roof_003
+    4300016: Roof_002
+    4300018: CornerPillar_001
+    4300020: Roof_001
+    4300022: Plane
+    4300024: Roof4
+    4300026: Floor
+    4300028: Floor_004_MeshPart0
+    4300030: Floor_004_MeshPart1
+    4300032: Floor_003_MeshPart0
+    4300034: Floor_003_MeshPart1
+    4300036: Roof2
+    4300038: Wall1
+    4300040: Wall
+    4300042: Roof1
+    4300044: Roof
+    4300046: Plane_001
+    4300048: Circle
+    4300050: Floor1
+    4300052: Floor_002
+    4300054: Floor_001
+    4300056: Door_003_MeshPart0
+    4300058: Door_003_MeshPart1
+    4300060: Door_003_MeshPart2
+    4300062: Door_001
+    4300064: Door1_001
+    7400000: Default Take
+    7400002: DoorDown
+    7400004: DoorUp
+    7400006: DoorMain|DoorDown
+    7400008: DoorMain|DoorUp
+    7400010: DoorMain|DoorMoveDown
+    7400012: DoorMain|DoorMoveUp
+    7400014: Door1_Rig|DoorDown
+    7400016: Door1_Rig|DoorMoveDown
+    7400018: Door1_Rig|DoorMoveUp
+    7400020: Door1_Rig|DoorUp
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Door1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Door1_Rig|DoorDown
+      takeName: Door1_Rig|DoorDown
+      firstFrame: 0
+      lastFrame: 9
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Door1
+        weight: 1
+      - path: Door1_Rig
+        weight: 1
+      - path: Door1_Rig/root
+        weight: 1
+      - path: Door1_Rig/root/Bone
+        weight: 1
+      - path: Door1_Rig/root/Bone/Bone_end
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Door1_Rig|DoorMoveDown
+      takeName: Door1_Rig|DoorMoveDown
+      firstFrame: 0
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Door1
+        weight: 1
+      - path: Door1_Rig
+        weight: 1
+      - path: Door1_Rig/root
+        weight: 1
+      - path: Door1_Rig/root/Bone
+        weight: 1
+      - path: Door1_Rig/root/Bone/Bone_end
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Door1_Rig|DoorMoveUp
+      takeName: Door1_Rig|DoorMoveUp
+      firstFrame: 0
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Door1
+        weight: 1
+      - path: Door1_Rig
+        weight: 1
+      - path: Door1_Rig/root
+        weight: 1
+      - path: Door1_Rig/root/Bone
+        weight: 1
+      - path: Door1_Rig/root/Bone/Bone_end
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Door1_Rig|DoorUp
+      takeName: Door1_Rig|DoorUp
+      firstFrame: 0
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Door1
+        weight: 1
+      - path: Door1_Rig
+        weight: 1
+      - path: Door1_Rig/root
+        weight: 1
+      - path: Door1_Rig/root/Bone
+        weight: 1
+      - path: Door1_Rig/root/Bone/Bone_end
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

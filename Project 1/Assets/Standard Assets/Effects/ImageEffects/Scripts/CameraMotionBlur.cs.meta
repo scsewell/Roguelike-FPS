@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 97e9b95cf609d96409b6c40519432957
+timeCreated: 1430812551
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - shader: {fileID: 4800000, guid: ab58f067eb74f1242a9e3cede1701672, type: 3}
+  - dx11MotionBlurShader: {fileID: 4800000, guid: bdfc9e694859d6346993c289a47750bb,
+      type: 3}
+  - replacementClear: {fileID: 4800000, guid: ca976b10dd24ed946a06e63942f84529, type: 3}
+  - noiseTexture: {fileID: 2800000, guid: fba4bb129c43e304386e03c200825281, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
