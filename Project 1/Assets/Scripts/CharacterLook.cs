@@ -9,8 +9,8 @@ public class CharacterLook : MonoBehaviour
     [SerializeField] private float m_maximumY = 80.0f;
     
 	private Settings m_settings;
+    private PlayerWeapons m_weapons;
     private Camera m_cam;
-    private MainGun m_gun;
 
     private float m_deltaX = 0;
     private float m_deltaY = 0;
@@ -19,11 +19,11 @@ public class CharacterLook : MonoBehaviour
     private void Start() 
     {
 		m_settings = GameObject.FindGameObjectWithTag("GameController").GetComponent<Settings>();
+        m_weapons = transform.GetComponentInChildren<PlayerWeapons>();
         m_cam = transform.GetComponentInChildren<Camera>();
-        m_gun = transform.GetComponentInChildren<MainGun>();
     }
 
-	void FixedUpdate()
+	private void FixedUpdate()
     {
         float sensitivity = 60 * m_settings.GetLookSensitivity() * (m_cam.fieldOfView / m_settings.GetFieldOfView());
         m_deltaX = Controls.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
@@ -31,7 +31,7 @@ public class CharacterLook : MonoBehaviour
 
         transform.Rotate(0, m_deltaX, 0);
 
-        m_rotationY += m_deltaY + m_gun.GetRecoil() * Time.fixedDeltaTime;
+        m_rotationY += m_deltaY + m_weapons.Recoil * Time.fixedDeltaTime;
         m_rotationY = Mathf.Clamp(m_rotationY, m_minimumY, m_maximumY);
 
         m_cam.transform.localEulerAngles = new Vector3(-m_rotationY, 0, 0);

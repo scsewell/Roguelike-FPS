@@ -666,7 +666,7 @@ public class CharacterMovement : MonoBehaviour
         return (movement.collisionFlags & CollisionFlags.CollidedAbove) != 0;
     }
 
-    bool IsGrounded()
+    public bool IsGrounded()
     {
         return grounded;
     }
@@ -686,9 +686,9 @@ public class CharacterMovement : MonoBehaviour
 		return jumping.jumping;
 	}
 	
-	public bool IsRunning ()
+	public bool IsRunning()
 	{
-		return (inputRunning);
+		return inputRunning;
 	}
 	
 	public bool IsCrouching()

@@ -359,6 +359,7 @@ namespace UnityStandardAssets.ImageEffects
             tmpCam.transform.rotation = _camera.transform.rotation;
             tmpCam.transform.localScale = _camera.transform.localScale;
             tmpCam.GetComponent<Camera>().CopyFrom(_camera);
+            tmpCam.GetComponent<Camera>().renderingPath = RenderingPath.Forward;
 
             tmpCam.GetComponent<Camera>().enabled = false;
             tmpCam.GetComponent<Camera>().depthTextureMode = DepthTextureMode.None;

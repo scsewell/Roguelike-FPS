@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ExoskeletonEnemyAnimation : MonoBehaviour {
-	
-	private Animator anim;
+public class ExoskeletonEnemyAnimation : MonoBehaviour
+{
+	private Animator m_anim;
 
-	void Start () {
-		anim = GetComponent<Animator>();
+    private void Start()
+    {
+		m_anim = GetComponent<Animator>();
 	}
 
-	void FixedUpdate () {
-		anim.SetFloat("forwardSpeed", 0);
-		anim.SetFloat("sidewaysSpeed", 0);
+    private void FixedUpdate()
+    {
+		m_anim.SetFloat("forwardSpeed", 0);
+		m_anim.SetFloat("sidewaysSpeed", 0);
 	}
 }

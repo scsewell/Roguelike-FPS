@@ -1,10 +1,8 @@
 --- Short Term ---
 
-Recoil varries with fixed delta time
-Make controls use buffer
+interactable object context prompt / outline
 controller run by just tapping thumbstick down once
 Add control binding to menu
-Contoller navigation keeps in view in dropdown
 
 Muzzle Flash - Make look not bad
 Bullet holes - See decals (no ambient light!) - Use z-testing shader? - Generate geometry and cull small areas?
@@ -20,6 +18,5 @@ minimap?
 
 --- Looking out for ---
 
-Menu flickers
 crouch wierdness
 aim fastness

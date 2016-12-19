@@ -1,18 +1,18 @@
 using UnityEngine;
-using System.Collections;
 
 public class HitBoxDamage : MonoBehaviour
 {
-	public float damageMultiplier = 1.0F;
-	private DamageReceiver damageReceiver;
+	public float damageMultiplier = 1f;
+
+	private DamageReceiver m_damageReciever;
 	
-	void Start ()
+	private void Start()
     {
-		damageReceiver = transform.root.GetComponent<DamageReceiver>();
+		m_damageReciever = transform.root.GetComponent<DamageReceiver>();
 	}
-	
-	void RecieveDamage (float damage)
+
+    private void RecieveDamage(float damage)
     {
-		damageReceiver.ApplyDamage(damage * damageMultiplier);
+		m_damageReciever.ApplyDamage(damage * damageMultiplier);
 	}
 }

@@ -1,24 +1,38 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class BulletHoles : MonoBehaviour
 {
-    public float minScale = 0.5f;
-    public float maxScale = 1.0f;
+    [SerializeField] private int m_maxHoleCount = 50;
+    [SerializeField] private float m_minScale = 0.025f;
+    [SerializeField] private float m_maxScale = 0.03f;
+    [SerializeField] private int m_fadeWait = 500;
+    [SerializeField] private float m_fadeSpeed = 1f;
+    [SerializeField] private float m_basePitch = 2.15f;
+    [SerializeField] private float m_pitchVariation = 0.5f;
+    [SerializeField] private AudioClip[] m_bulletSounds = new AudioClip[1];
 
-    public int fadeWait = 120;
-    public float fadeSpeed = 1f;
-    public float basePitch = 2f;
-    public float pitchVariation = 0.5f;
-    public AudioClip[] bulletSounds = new AudioClip[1];
+    private static List<Transform> m_bulletHoles;
 
-    AudioSource m_audioSource;
+    private AudioSource m_audioSource;
     
 	private void Start()
     {
+        if (m_bulletHoles == null)
+        {
+            m_bulletHoles = new List<Transform>();
+        }
+
+        m_bulletHoles.Add(transform);
+        if (m_bulletHoles.Count > m_maxHoleCount)
+        {
+            Destroy(m_bulletHoles[0].gameObject);
+            m_bulletHoles.RemoveAt(0);
+        }
+
         m_audioSource = transform.GetComponent<AudioSource>();
-        m_audioSource.clip = bulletSounds[Random.Range(0, bulletSounds.Length)];
-        m_audioSource.pitch = basePitch + Random.value * pitchVariation;
+        m_audioSource.clip = m_bulletSounds[Random.Range(0, m_bulletSounds.Length)];
+        m_audioSource.pitch = m_basePitch + (Random.value - 0.5f) * m_pitchVariation;
         m_audioSource.Play();
 	}
 
@@ -41,7 +55,7 @@ public class BulletHoles : MonoBehaviour
 
     public void SetParent(Transform parent)
     {
-        transform.localScale = Vector3.one * Random.Range(minScale, maxScale);
+        transform.localScale = Vector3.one * Random.Range(m_minScale, m_maxScale);
         transform.parent = parent;
     }
 }

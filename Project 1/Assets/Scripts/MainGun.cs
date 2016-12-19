@@ -9,12 +9,12 @@ public class MainGun : MonoBehaviour
 	[SerializeField] private float m_damage = 5.0f;
 	[SerializeField] private int m_bulletsPerClip = 32;
 	[SerializeField] private int m_clips = 20;
-	[SerializeField] private float m_reloadTime = 0.5f;
-	[SerializeField] private float m_baseInaccuracy = 0.0f;
-	[SerializeField] private float m_movementInaccuracyMultiplier = 2.0f;
+	[SerializeField] private float m_reloadTime = 2f;
+	[SerializeField] private float m_baseInaccuracy = 0.0135f;
+	[SerializeField] private float m_movementInaccuracyMultiplier = 1.5f;
 	[SerializeField] private float m_crouchInaccuracyMultiplier = 0.5f;
-	[SerializeField] private float m_shotRecoilAmount = 2f;
-	[SerializeField] private float m_recoilStabilizeSpeed = 2f;
+	[SerializeField] private float m_shotRecoilAmount = 20f;
+	[SerializeField] private float m_recoilStabilizeSpeed =1.25f;
 
     [SerializeField] private TextMesh m_bulletGUI;
     [SerializeField] private TextMesh m_clipsGUI;
@@ -29,9 +29,11 @@ public class MainGun : MonoBehaviour
     [SerializeField] private LayerMask m_hitLayers;
 
 	private CharacterMovement m_character;
+    private PlayerWeapons m_weapons;
     private MainGunAnimations m_anim;
     private MainGunSounds m_sound;
 
+    private IEnumerator m_reload;
     private bool m_reloading = false;
 	private float m_recoilIncrease = 0;
 	private int m_bulletsLeft = 0;
@@ -40,27 +42,18 @@ public class MainGun : MonoBehaviour
 	private void Start()
     {
 		m_character = transform.root.GetComponent<CharacterMovement>();
+        m_weapons = transform.GetComponentInParent<PlayerWeapons>();
         m_anim = GetComponent<MainGunAnimations>();
         m_sound = GetComponent<MainGunSounds>();
 
 		m_bulletsLeft = m_bulletsPerClip;
-	}
-
-    private void Update()
-    {
-		if (m_character.IsJumping() && m_reloading)
-        {
-            m_reloading = false;
-            StopCoroutine(FinishReload());
-            m_sound.ReloadCanceled();
-		}
-
-		m_muzzleFlashLight.enabled = false;
-	}
+        m_muzzleFlashLight.enabled = false;
+    }
 
     private void FixedUpdate()
     {
         m_recoilIncrease /= m_recoilStabilizeSpeed;
+        m_weapons.Recoil = m_recoilIncrease;
     }
 
     private void LateUpdate()
@@ -71,23 +64,24 @@ public class MainGun : MonoBehaviour
 
     public void Fire()
     {
-		if (!m_reloading)
+		if (!m_reloading && m_bulletsLeft > 0)
         {
-			if (Time.time - m_fireRate > m_nextFireTime)
+			if (Time.time > m_nextFireTime + m_fireRate)
             {
 				m_nextFireTime = Time.time - Time.deltaTime;
 			}
 		
-			while (m_nextFireTime < Time.time && m_bulletsLeft > 0)
+			while (Time.time > m_nextFireTime && m_bulletsLeft > 0)
             {
-                m_recoilIncrease += m_shotRecoilAmount;
-                m_muzzleFlashLight.enabled = true;
 				FireOneShot();
+                m_recoilIncrease += m_shotRecoilAmount;
 				m_nextFireTime += m_fireRate;
+                m_muzzleFlashLight.enabled = true;
+                StartCoroutine(FinishFire());
 			}
         }
 
-        if (m_bulletsLeft == 0 && !m_character.IsJumping())
+        if (m_bulletsLeft == 0)
         {
             Reload();
         }
@@ -95,11 +89,12 @@ public class MainGun : MonoBehaviour
 
     public void Reload()
     {
-        if (!m_reloading && m_bulletsLeft < m_bulletsPerClip && m_clips > 0)
+        if (!m_reloading && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
         {
             m_reloading = true;
-            m_sound.Reload();
-            StartCoroutine(FinishReload());
+            m_sound.PlayReloadStart();
+            m_reload = FinishReload();
+            StartCoroutine(m_reload);
         }
     }
 
@@ -150,25 +145,34 @@ public class MainGun : MonoBehaviour
         ParticleSystem flash = Instantiate(m_muzzleFlash, m_muzzleFlashPosition.transform.position, transform.rotation);
         flash.transform.parent = m_muzzleFlashPosition.transform;
 
-        m_sound.Recoil();
+        m_sound.PlayFireSound();
         m_anim.Recoil();
-	}
-	
-	private IEnumerator FinishReload()
+    }
+
+    private IEnumerator FinishFire()
     {
-		yield return new WaitForSeconds(m_reloadTime);
-		m_reloading = false;
-		m_clips--;
+        // wait a frame to turn off the flash
+        yield return 0;
+        m_muzzleFlashLight.enabled = false;
+    }
+    
+    private IEnumerator FinishReload()
+    {
+        yield return new WaitForSeconds(m_reloadTime - 0.2f);
+        m_sound.PlayReloadEnd();
+        yield return new WaitForSeconds(0.2f);
+        m_reloading = false;
 		m_bulletsLeft = m_bulletsPerClip;
-	}
-	
-	public float GetRecoil()
-    {
-		return m_recoilIncrease;
+		m_clips--;
 	}
 	
 	public bool IsReloading()
     {
 		return m_reloading;
-	}
+    }
+
+    public float GetReloadSpeed()
+    {
+        return m_reloadTime;
+    }
 }

@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GunBlocking : MonoBehaviour
 {
-    public float sweepDistance = 0.5f;
-    public float sweepRadius = 0.1f;
-    public LayerMask blockingLayers;
+    [SerializeField] private float m_sweepDistance = 0.0165f;
+    [SerializeField] private float m_sweepRadius = 0.065f;
+    [SerializeField] private LayerMask m_blockingLayers;
 
     private bool m_isBlocked = false;
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         m_isBlocked = false;
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sweepRadius, transform.forward, sweepDistance, blockingLayers);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, m_sweepRadius, transform.forward, m_sweepDistance, m_blockingLayers);
 
         foreach (RaycastHit hit in hits)
         {

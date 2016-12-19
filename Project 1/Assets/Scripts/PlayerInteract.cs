@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class PlayerInteract : MonoBehaviour
 {
-    public LayerMask BlockingLayers;
-	public float interactDistance = 0.6f;
-	public string interactiveTag;
+    [SerializeField] private LayerMask m_blockingLayers;
+	[SerializeField] private string m_interactiveTag = "Interactive";
+	[SerializeField] private float m_interactDistance = 0.65f;
 
-	void Update() 
-	{
-		if (Controls.JustDown(GameButton.Interact)) 
-		{
-			RaycastHit hit;
-			
-			if (Physics.Raycast(transform.position, transform.forward, out hit, interactDistance, BlockingLayers) && hit.collider.transform.tag == interactiveTag) 
-			{
-				hit.collider.SendMessageUpwards("Interact");
-			}
-		}
+	private void Update()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_blockingLayers) && hit.collider.transform.tag == m_interactiveTag)
+        {
+            if (Controls.JustDown(GameButton.Interact))
+            {
+                hit.collider.SendMessageUpwards("Interact");
+            }
+        }
 	}
 }

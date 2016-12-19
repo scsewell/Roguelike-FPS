@@ -3,21 +3,21 @@ using System.Collections;
 
 public class Door : MonoBehaviour
 {
-    private Animator anim;
-    private bool doorUp = false;
+    private Animator m_anim;
+    private bool m_doorUp = false;
 
-    void Start ()
+    private void Start()
     {
-        anim = GetComponent<Animator>();
+        m_anim = GetComponent<Animator>();
     }
-	
-	void Update ()
+
+    private void Update()
     {
-        anim.SetBool("Open", doorUp);
+        m_anim.SetBool("Open", m_doorUp);
     }
 
     public void Interact()
     {
-        doorUp = !doorUp;
+        m_doorUp = !m_doorUp;
     }
 }

@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum LightMode {
+public enum LightMode
+{
 	Static = 0,
 	Sine = 1,		
 	RandomFluctuation = 2,
 	Flicker = 3,
 }
 
-public class Lights : MonoBehaviour {
+public class Lights : MonoBehaviour
+{
 	
 	public LightMode lightMode = LightMode.Static;
 	public float lightDeactivateDistance = 40;

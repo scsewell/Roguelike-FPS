@@ -95,6 +95,7 @@ public class GameMenu : MonoBehaviour
         }
         else
         {
+            /*
             RectTransform selectedParent = selected.transform.parent.GetComponent<RectTransform>();
 
             if (selectedParent != null && m_settingPanels.Contains(selectedParent))
@@ -114,6 +115,7 @@ public class GameMenu : MonoBehaviour
                     scrollbar_settings.value = 1 - (m_settingPanels.IndexOf(selectedParent) * 1.25f / m_settingPanels.Count);
                 }
             }
+            */
         }
     }
 
@@ -144,15 +146,6 @@ public class GameMenu : MonoBehaviour
 
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Other";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Show FPS", m_settings.GetShowFPS, m_settings.SetShowFPS));
-
-        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Quality";
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Shadow Quality", m_settings.GetShadowQuality, m_settings.SetShadowQuality, Enum.GetNames(typeof(Settings.ShadowQualityLevels))));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Shadow Distance", m_settings.GetShadowDistance, m_settings.SetShadowDistance, Settings.MIN_SHADOW_DISTANCE, Settings.MAX_SHADOW_DISTANCE, true));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Texture Quality", m_settings.GetTextureResolution, m_settings.SetTextureResolution, Enum.GetNames(typeof(Settings.TextureResolution))));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Antialiasing", m_settings.GetAntialiasing, m_settings.SetAntialiasing));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("SSAO", m_settings.GetSSAO, m_settings.SetSSAO));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Bloom", m_settings.GetBloom, m_settings.SetBloom));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Motion Blur", m_settings.GetMotionBlur, m_settings.SetMotionBlur));
 
         Navigation middleNav = new Navigation();
         middleNav.mode = Navigation.Mode.Explicit;
