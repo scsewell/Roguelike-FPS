@@ -82,6 +82,7 @@ public class GameMenu : MonoBehaviour
             }
         }
 
+        // ensure there is always something selected so that controllers can always be used
         GameObject selected = EventSystem.current.currentSelectedGameObject;
 
         if (selected == null)
@@ -124,6 +125,7 @@ public class GameMenu : MonoBehaviour
         // Create settings panels
         m_settingPanels = new List<RectTransform>();
 
+        UIHelper.AddSpacer(panel_setingsContent, 10);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Screen";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Resolution", m_settings.GetResolution, m_settings.SetResolution, m_settings.GetSupportedResolutions()));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Fullscreen", m_settings.GetFullscreen, m_settings.SetFullscreen));
@@ -132,6 +134,7 @@ public class GameMenu : MonoBehaviour
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Field Of View", m_settings.GetFieldOfView, m_settings.SetFieldOfView, Settings.MIN_FOV, Settings.MAX_FOV, true));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Brightness", m_settings.GetBrightness, m_settings.SetBrightness, Settings.MIN_BRIGHTNESS, Settings.MAX_BRIGHTNESS, false));
 
+        UIHelper.AddSpacer(panel_setingsContent, 10);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Quality";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Shadow Quality", m_settings.GetShadowQuality, m_settings.SetShadowQuality, Enum.GetNames(typeof(Settings.ShadowQualityLevels))));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Shadow Distance", m_settings.GetShadowDistance, m_settings.SetShadowDistance, Settings.MIN_SHADOW_DISTANCE, Settings.MAX_SHADOW_DISTANCE, true));
@@ -141,11 +144,15 @@ public class GameMenu : MonoBehaviour
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Bloom", m_settings.GetBloom, m_settings.SetBloom));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Motion Blur", m_settings.GetMotionBlur, m_settings.SetMotionBlur));
 
+        UIHelper.AddSpacer(panel_setingsContent, 10);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Audio";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Volume", m_settings.GetVolume, m_settings.SetVolume, 0, 1, false));
 
+        UIHelper.AddSpacer(panel_setingsContent, 10);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Other";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Show FPS", m_settings.GetShowFPS, m_settings.SetShowFPS));
+
+        UIHelper.AddSpacer(panel_setingsContent, 10);
 
         Navigation middleNav = new Navigation();
         middleNav.mode = Navigation.Mode.Explicit;

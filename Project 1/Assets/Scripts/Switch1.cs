@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+[RequireComponent(typeof(Interactable))]
 public class Switch1 : MonoBehaviour
 {
 	public bool switchOn = false;
@@ -13,35 +13,44 @@ public class Switch1 : MonoBehaviour
 	public AudioSource whileSwitchIsOnAudio;
 	public AudioSource switchingAudio;
 
-	private Animator anim;
-	private SkinnedMeshRenderer mesh;
+    private Interactable m_interact;
+	private Animator m_anim;
+	private SkinnedMeshRenderer m_mesh;
 
-	private bool targetSwitchOn;
-	private float changingSwitchTime = 0;
+	private bool m_targetSwitchOn;
+	private float m_changingSwitchTime = 0;
 
-	void Start () 
+    private void Start() 
 	{
-		anim = GetComponent<Animator>();
-		mesh = switchMesh.GetComponent<SkinnedMeshRenderer>();
+        m_interact = GetComponent<Interactable>();
+        m_anim = GetComponent<Animator>();
+		m_mesh = switchMesh.GetComponent<SkinnedMeshRenderer>();
 
-		targetSwitchOn = switchOn;
-		setSwitchEffects();
+        m_interact.Interacted += Interacted;
+
+        m_targetSwitchOn = switchOn;
+		SetSwitchEffects();
 	}
 
-	void Update () 
-	{
-		anim.SetBool("On", targetSwitchOn);
-		AnimatorStateInfo animationInfo = anim.GetCurrentAnimatorStateInfo(0);
+    private void OnDestroy()
+    {
+        m_interact.Interacted -= Interacted;
+    }
 
-		if (switchOn && !targetSwitchOn) 
+    private void Update() 
+	{
+		m_anim.SetBool("On", m_targetSwitchOn);
+		AnimatorStateInfo animationInfo = m_anim.GetCurrentAnimatorStateInfo(0);
+
+		if (switchOn && !m_targetSwitchOn) 
 		{
 			ToggleSwitch();
 		} 
-		else if (!switchOn && targetSwitchOn)
+		else if (!switchOn && m_targetSwitchOn)
 		{
-			if (changingSwitchTime < animationInfo.length)
+			if (m_changingSwitchTime < animationInfo.length)
 			{
-				changingSwitchTime += Time.deltaTime;
+				m_changingSwitchTime += Time.deltaTime;
 			}
 			else
 			{
@@ -50,23 +59,23 @@ public class Switch1 : MonoBehaviour
 		}
 	}
 
-	public void Interact () 
+	private void Interacted()
 	{
-		targetSwitchOn = !targetSwitchOn;
-		changingSwitchTime = 0;
+		m_targetSwitchOn = !m_targetSwitchOn;
+		m_changingSwitchTime = 0;
 	}
 
-	void ToggleSwitch ()
+    private void ToggleSwitch()
 	{
 		switchOn = !switchOn;
-		changingSwitchTime = 0;
-		setSwitchEffects();
+		m_changingSwitchTime = 0;
+		SetSwitchEffects();
 		switchingAudio.Play();
 	}
 
-	void setSwitchEffects ()
+    private void SetSwitchEffects()
 	{
-		mesh.material = switchOn ? onMaterial : offMaterial;
+		m_mesh.sharedMaterial = switchOn ? onMaterial : offMaterial;
 
 		whileSwitchIsOnAudio.enabled = switchOn;
 		switchingAudio.clip = switchOn ? switchTurnOnSound : switchTurnOffSound;

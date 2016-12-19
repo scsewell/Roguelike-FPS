@@ -13,20 +13,19 @@ public class DebugDisplay : MonoBehaviour
 
     private Text m_text;
     private Settings m_settings;
-
-    // Use this for initialization
-    void Awake()
+    
+    private void Awake()
     {
-        m_text = GetComponent<Text>();
         m_settings = GameObject.FindGameObjectWithTag("GameController").GetComponent<Settings>();
+        m_text = GetComponent<Text>();
     }
 
-    void Start()
+    private void Start()
     {
         m_timeLeftBeforeUpdate = fpsUpdateInterval;
     }
-    
-    void LateUpdate()
+
+    private void LateUpdate()
     {
         m_text.text = "";
 

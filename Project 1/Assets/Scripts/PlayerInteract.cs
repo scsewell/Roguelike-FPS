@@ -3,19 +3,38 @@
 public class PlayerInteract : MonoBehaviour
 {
     [SerializeField] private LayerMask m_blockingLayers;
-	[SerializeField] private string m_interactiveTag = "Interactive";
 	[SerializeField] private float m_interactDistance = 0.65f;
+
+    private Interactable m_lastHovered;
 
 	private void Update()
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_blockingLayers) && hit.collider.transform.tag == m_interactiveTag)
+        if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_blockingLayers))
         {
-            if (Controls.JustDown(GameButton.Interact))
+            Interactable interactable = hit.transform.GetComponentInParent<Interactable>();
+
+            if (m_lastHovered != null && interactable != m_lastHovered)
             {
-                hit.collider.SendMessageUpwards("Interact");
+                m_lastHovered.SetOutline(false);
             }
+
+            if (interactable != null)
+            {
+                interactable.SetOutline(true);
+                m_lastHovered = interactable;
+
+                if (Controls.JustDown(GameButton.Interact))
+                {
+                    interactable.Interact();
+                }
+            }
+        }
+        else if (m_lastHovered != null)
+        {
+            m_lastHovered.SetOutline(false);
+            m_lastHovered = null;
         }
 	}
 }

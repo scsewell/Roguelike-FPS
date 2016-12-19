@@ -13,6 +13,16 @@ public class UIHelper : MonoBehaviour
         return rt;
     }
 
+    public static RectTransform AddSpacer(RectTransform parent, float height)
+    {
+        GameObject go = new GameObject("spacer");
+        go.transform.SetParent(parent, false);
+        RectTransform rt = go.AddComponent<RectTransform>();
+        LayoutElement le = go.AddComponent<LayoutElement>();
+        le.minHeight = height;
+        return rt;
+    }
+
     public static void SetNavigationVertical(List<RectTransform> rts, Navigation startNav, Navigation middleNav, Navigation endNav)
     {
         for (int i = 0; i < rts.Count; i++)
