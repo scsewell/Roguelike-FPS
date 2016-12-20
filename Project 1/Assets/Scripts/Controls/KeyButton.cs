@@ -15,5 +15,10 @@ namespace InputController
         {
             return Input.GetKey(m_button);
         }
+
+        public string GetName()
+        {
+            return ControlNames.GetName(m_button);
+        }
     }
 }

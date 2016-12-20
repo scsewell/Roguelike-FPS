@@ -24,6 +24,11 @@ namespace InputController
             return GetAxisValue(m_axis);
         }
 
+        public string GetName()
+        {
+            return ControlNames.GetName(m_axis);
+        }
+
         private float GetAxisValue(Axis mouseAxis)
         {
             switch (mouseAxis)

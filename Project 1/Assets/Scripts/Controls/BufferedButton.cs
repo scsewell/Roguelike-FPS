@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -142,6 +141,20 @@ namespace InputController
             List<Dictionary<ButtonSource, bool>> buffer = new List<Dictionary<ButtonSource, bool>>();
             buffer.Add(m_buffers.GetRange(0, m_buffers.Count - 1).Last((gameplayUpdate) => (gameplayUpdate.Any())).Last());
             return buffer.Concat(m_buffers.Last()).ToList();
+        }
+
+        public string GetSourceNames()
+        {
+            string str = "";
+            foreach (ButtonSource source in m_sources)
+            {
+                str += source.GetName();
+                if (source != m_sources.Last())
+                {
+                    str += ", ";
+                }
+            }
+            return str;
         }
     }
 }

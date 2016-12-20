@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace InputController
@@ -83,6 +82,20 @@ namespace InputController
                 buffer.Add(m_buffers.GetRange(0, m_buffers.Count - 1).Last((gameplayUpdate) => (gameplayUpdate.Any())).Last());
             }
             return buffer.Concat(m_buffers.Last()).ToList();
+        }
+
+        public string GetSourceNames()
+        {
+            string str = "";
+            foreach (AxisSource source in m_sources)
+            {
+                str += source.GetName();
+                if (source != m_sources.Last())
+                {
+                    str += ", ";
+                }
+            }
+            return str;
         }
     }
 }

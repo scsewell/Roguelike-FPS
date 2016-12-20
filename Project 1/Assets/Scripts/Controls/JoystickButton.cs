@@ -19,6 +19,11 @@ namespace InputController
             return GetButtonValue(m_button);
         }
 
+        public string GetName()
+        {
+            return ControlNames.GetName(m_button);
+        }
+
         public static bool GetButtonValue(GamepadButton button)
         {
             switch (button)
@@ -37,27 +42,27 @@ namespace InputController
                 case GamepadButton.LTrigger:       return Input.GetAxis("TriggersL") > TRIGGER_THRESHOLD;
                 case GamepadButton.RTrigger:       return Input.GetAxis("TriggersR") > TRIGGER_THRESHOLD;
 
-                case GamepadButton.DpadLeft:       return OverThreshold(GamepadAxis.DpadX, -MAIN_THRESHOLD);
+                case GamepadButton.DpadLeft:       return OverThreshold(GamepadAxis.DpadX, MAIN_THRESHOLD);
                 case GamepadButton.DpadRight:      return OverThreshold(GamepadAxis.DpadX, MAIN_THRESHOLD);
                 case GamepadButton.DpadUp:         return OverThreshold(GamepadAxis.DpadY, MAIN_THRESHOLD);
-                case GamepadButton.DpadDown:       return OverThreshold(GamepadAxis.DpadY, -MAIN_THRESHOLD);
+                case GamepadButton.DpadDown:       return OverThreshold(GamepadAxis.DpadY, MAIN_THRESHOLD);
 
-                case GamepadButton.LStickLeft:     return OverThreshold(GamepadAxis.LStickX, -MAIN_THRESHOLD);
+                case GamepadButton.LStickLeft:     return OverThreshold(GamepadAxis.LStickX, MAIN_THRESHOLD);
                 case GamepadButton.LStickRight:    return OverThreshold(GamepadAxis.LStickX, MAIN_THRESHOLD);
                 case GamepadButton.LStickUp:       return OverThreshold(GamepadAxis.LStickY, MAIN_THRESHOLD);
-                case GamepadButton.LStickDown:     return OverThreshold(GamepadAxis.LStickY, -MAIN_THRESHOLD);
+                case GamepadButton.LStickDown:     return OverThreshold(GamepadAxis.LStickY, MAIN_THRESHOLD);
 
-                case GamepadButton.RStickLeft:     return OverThreshold(GamepadAxis.RStickX, -MAIN_THRESHOLD);
+                case GamepadButton.RStickLeft:     return OverThreshold(GamepadAxis.RStickX, MAIN_THRESHOLD);
                 case GamepadButton.RStickRight:    return OverThreshold(GamepadAxis.RStickX, MAIN_THRESHOLD);
                 case GamepadButton.RStickUp:       return OverThreshold(GamepadAxis.RStickY, MAIN_THRESHOLD);
-                case GamepadButton.RStickDown:     return OverThreshold(GamepadAxis.RStickY, -MAIN_THRESHOLD);
+                case GamepadButton.RStickDown:     return OverThreshold(GamepadAxis.RStickY, MAIN_THRESHOLD);
             }
             return false;
         }
 
         private static bool OverThreshold(GamepadAxis axis, float threshold)
         {
-            return JoystickAxis.GetAxisValue(axis) / threshold > 1;
+            return Mathf.Abs(JoystickAxis.GetAxisValue(axis)) > threshold;
         }
     }
 }

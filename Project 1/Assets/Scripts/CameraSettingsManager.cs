@@ -33,7 +33,7 @@ public class CameraSettingsManager : MonoBehaviour
         m_motionBlur.enabled = m_settings.GetMotionBlur();
 
         TonemappingColorGrading.ColorGradingSettings colorGrading = m_tonemapping.colorGrading;
-        colorGrading.basics.value = m_settings.GetBrightness();
+        colorGrading.basics.value = (m_settings.GetBrightness() / 2) + 0.5f;
         m_tonemapping.colorGrading = colorGrading;
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace InputController
+﻿using UnityEngine;
+
+namespace InputController
 {
     public class ControlNames
     {
-        public string GetName(GamepadButton button)
+        public static string GetName(GamepadButton button)
         {
             switch (button)
             {
@@ -35,7 +37,7 @@
             return "None";
         }
 
-        public string GetName(GamepadAxis axis)
+        public static string GetName(GamepadAxis axis)
         {
             switch (axis)
             {
@@ -50,7 +52,7 @@
             return "None";
         }
 
-        public string GetName(MouseAxis.Axis axis)
+        public static string GetName(MouseAxis.Axis axis)
         {
             switch (axis)
             {
@@ -59,6 +61,17 @@
                 case MouseAxis.Axis.MouseY:         return "Mouse Y";
             }
             return "None";
+        }
+
+        public static string GetName(KeyCode keyCode)
+        {
+            switch (keyCode)
+            {
+                case KeyCode.Mouse0:    return "Left Mouse";
+                case KeyCode.Mouse1:    return "Right Mouse";
+                case KeyCode.Mouse2:    return "Middle Mouse";
+            }
+            return keyCode.ToString();
         }
     }
 }

@@ -1,10 +1,8 @@
 --- Short Term ---
 
-interactable object context prompt / outline
 controller run by just tapping thumbstick down once
 Add control binding to menu
 
-Muzzle Flash - Make look not bad
 Bullet holes - See decals (no ambient light!) - Use z-testing shader? - Generate geometry and cull small areas?
 
 

@@ -1,39 +1,37 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 public class Settings : MonoBehaviour
 {
     // limits on values
-	public const int MIN_FRAME_RATE = 30;
     public const float MIN_FOV = 40.0f;
     public const float MAX_FOV = 80.0f;
-    public const float MIN_BRIGHTNESS = 0.5f;
-    public const float MAX_BRIGHTNESS = 1.5f;
-    public const float MIN_SHADOW_DISTANCE = 0.0f;
-    public const float MAX_SHADOW_DISTANCE = 40.0f;
-    public const float MIN_LOOK_SENSITIVITY = 0.05f;
-    public const float MAX_LOOK_SENSITIVITY = 2;
+    public const float MIN_BRIGHTNESS = 0f;
+    public const float MAX_BRIGHTNESS = 2f;
+    public const float MIN_SHADOW_DISTANCE = 0f;
+    public const float MAX_SHADOW_DISTANCE = 40f;
+    public const float MIN_LOOK_SENSITIVITY = 0f;
+    public const float MAX_LOOK_SENSITIVITY = 2f;
     public static int[] TARGET_FRAME_RATES = { 10, 30, 60, 120, 144, 500 };
     public enum TextureResolution { LOW, MEDIUM, HIGH };
     public enum ShadowQualityLevels { OFF, LOW, MEDIUM, HIGH, ULTRA };
 
     // default values
     private const bool DEF_FULLSCREEN = true;
-    private const bool DEF_SHOW_FPS = false;
-    private const bool DEF_AA = true;
     private const bool DEF_VSYNC = true;
+    private const bool DEF_AA = true;
     private const bool DEF_BLOOM = true;
     private const bool DEF_MOTION_BLUR = true;
     private const bool DEF_SSAO = true;
+    private const bool DEF_SHOW_FPS = false;
     private const int DEF_FRAMERATE = 60;
-    private const float DEF_FOV = 65.0f;
-    private const float DEF_BRIGHTNESS = 1.0f;
-    private const float DEF_SHADOW_DISTANCE = 30.0f;
-    private const float DEF_VOLUME = 1.0f;
-    private const float DEF_LOOK_SENSITIVITY = 1.0f;
+    private const float DEF_FOV = 65;
+    private const float DEF_BRIGHTNESS = 1;
+    private const float DEF_SHADOW_DISTANCE = 30;
+    private const float DEF_VOLUME = 1;
+    private const float DEF_LOOK_SENSITIVITY = 1;
     private const TextureResolution DEF_TEXTURE_RES = TextureResolution.HIGH;
     private const ShadowQualityLevels DEF_SHADOW_QUALITY = ShadowQualityLevels.HIGH;
 
@@ -202,16 +200,17 @@ public class Settings : MonoBehaviour
 
     public string[] GetSupportedResolutions()
     {
-        string[] resolutions = new string[Screen.resolutions.Length];
-
-        for (int i = 0; i < resolutions.Length; i++)
+        List<string> resolutions = new List<string>();
+        foreach (Resolution res in Screen.resolutions)
         {
-            Resolution res = Screen.resolutions[i];
-            string resolution = res.width + " x " + res.height; 
-            resolutions[resolutions.Length - 1 - i] = resolution;
+            string resolution = res.width + " x " + res.height;
+            if (!resolutions.Contains(resolution))
+            {
+                resolutions.Add(resolution);
+            }
         }
-
-        return resolutions;
+        resolutions.Reverse();
+        return resolutions.ToArray();
     }
 
 

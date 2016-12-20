@@ -25,6 +25,11 @@ namespace InputController
             return Mathf.Sign(value) * Mathf.Pow(Mathf.Abs(value), m_exponent) * m_multiplier;
         }
 
+        public string GetName()
+        {
+            return ControlNames.GetName(m_axis);
+        }
+
         public static float GetAxisValue(GamepadAxis axis)
         {
             switch (axis)

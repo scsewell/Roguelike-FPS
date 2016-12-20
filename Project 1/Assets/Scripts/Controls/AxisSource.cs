@@ -3,5 +3,6 @@
     public interface AxisSource
     {
         float GetValue();
+        string GetName();
     }
 }

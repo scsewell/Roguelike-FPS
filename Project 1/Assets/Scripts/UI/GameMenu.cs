@@ -6,13 +6,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using InputController;
 
 public class GameMenu : MonoBehaviour
 {
+    public RectTransform prefab_header;
     public RectTransform prefab_settingsToggle;
     public RectTransform prefab_settingsSlider;
     public RectTransform prefab_settingsDropdown;
-    public RectTransform prefab_header;
+    public RectTransform prefab_controlBindings;
 
     public Canvas canvas_root;
     public Button btn_resume;
@@ -27,8 +29,10 @@ public class GameMenu : MonoBehaviour
 
     public Canvas canvas_controls;
     public RectTransform panel_controlsContent;
-    public Button btn_acceptControls;
+    public Button btn_backControls;
+    public Button btn_applyControls;
     public Button btn_useDefalutsControls;
+    public Scrollbar scrollbar_controls;
 
     private Settings m_settings;
     private Menu m_activeMenu;
@@ -83,49 +87,29 @@ public class GameMenu : MonoBehaviour
         }
 
         // ensure there is always something selected so that controllers can always be used
-        GameObject selected = EventSystem.current.currentSelectedGameObject;
-
-        if (selected == null)
+        if (EventSystem.current.currentSelectedGameObject == null)
         {
             switch (m_activeMenu)
             {
                 case Menu.Root: btn_resume.Select(); break;
                 case Menu.Settings: btn_backSettings.Select(); break;
-                case Menu.Controls: btn_acceptControls.Select(); break;
+                case Menu.Controls: btn_backControls.Select(); break;
             }
-        }
-        else
-        {
-            /*
-            RectTransform selectedParent = selected.transform.parent.GetComponent<RectTransform>();
-
-            if (selectedParent != null && m_settingPanels.Contains(selectedParent))
-            {
-                Vector3[] corners = new Vector3[4];
-                selectedParent.GetWorldCorners(corners);
-
-                Vector3 center = Vector3.zero;
-                foreach (Vector3 corner in corners)
-                {
-                    center += corner;
-                }
-                center /= 4;
-
-                if (!RectTransformUtility.RectangleContainsScreenPoint(panel_settingsViewport, RectTransformUtility.WorldToScreenPoint(null, center)))
-                {
-                    scrollbar_settings.value = 1 - (m_settingPanels.IndexOf(selectedParent) * 1.25f / m_settingPanels.Count);
-                }
-            }
-            */
         }
     }
 
     private void InitMenu()
     {
+        Navigation tempNav;
+        Navigation explicitNav = new Navigation();
+        explicitNav.mode = Navigation.Mode.Explicit;
+
+        int GroupSpacing = 10;
+
         // Create settings panels
         m_settingPanels = new List<RectTransform>();
 
-        UIHelper.AddSpacer(panel_setingsContent, 10);
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Screen";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Resolution", m_settings.GetResolution, m_settings.SetResolution, m_settings.GetSupportedResolutions()));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Fullscreen", m_settings.GetFullscreen, m_settings.SetFullscreen));
@@ -134,7 +118,7 @@ public class GameMenu : MonoBehaviour
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Field Of View", m_settings.GetFieldOfView, m_settings.SetFieldOfView, Settings.MIN_FOV, Settings.MAX_FOV, true));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Brightness", m_settings.GetBrightness, m_settings.SetBrightness, Settings.MIN_BRIGHTNESS, Settings.MAX_BRIGHTNESS, false));
 
-        UIHelper.AddSpacer(panel_setingsContent, 10);
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Quality";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Shadow Quality", m_settings.GetShadowQuality, m_settings.SetShadowQuality, Enum.GetNames(typeof(Settings.ShadowQualityLevels))));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Shadow Distance", m_settings.GetShadowDistance, m_settings.SetShadowDistance, Settings.MIN_SHADOW_DISTANCE, Settings.MAX_SHADOW_DISTANCE, true));
@@ -144,44 +128,73 @@ public class GameMenu : MonoBehaviour
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Bloom", m_settings.GetBloom, m_settings.SetBloom));
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Motion Blur", m_settings.GetMotionBlur, m_settings.SetMotionBlur));
 
-        UIHelper.AddSpacer(panel_setingsContent, 10);
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Audio";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Volume", m_settings.GetVolume, m_settings.SetVolume, 0, 1, false));
 
-        UIHelper.AddSpacer(panel_setingsContent, 10);
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
         UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Other";
         m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Show FPS", m_settings.GetShowFPS, m_settings.SetShowFPS));
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
 
-        UIHelper.AddSpacer(panel_setingsContent, 10);
-
-        Navigation middleNav = new Navigation();
-        middleNav.mode = Navigation.Mode.Explicit;
-
-        Navigation topNav = middleNav;
-        topNav.selectOnUp = btn_applySettings;
+        Navigation settigsTopNav = explicitNav;
+        settigsTopNav.selectOnUp = btn_applySettings;
         
-        Navigation bottomNav = middleNav;
+        UIHelper.SetNavigationVertical(m_settingPanels, settigsTopNav, explicitNav, explicitNav);
 
-        UIHelper.SetNavigationVertical(m_settingPanels, topNav, middleNav, bottomNav);
+        Selectable firstSetting = m_settingPanels.First().GetComponentInChildren<Selectable>();
 
-        Navigation nav;
-        Selectable first = m_settingPanels[0].GetComponentInChildren<Selectable>();
+        tempNav = btn_backSettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_backSettings.navigation = tempNav;
 
-        nav = btn_backSettings.navigation;
-        nav.selectOnDown = first;
-        btn_backSettings.navigation = nav;
+        tempNav = btn_applySettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_applySettings.navigation = tempNav;
 
-        nav = btn_applySettings.navigation;
-        nav.selectOnDown = first;
-        btn_applySettings.navigation = nav;
-
-        nav = btn_loadDefalutsSettings.navigation;
-        nav.selectOnDown = first;
-        btn_loadDefalutsSettings.navigation = nav;
-
+        tempNav = btn_loadDefalutsSettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_loadDefalutsSettings.navigation = tempNav;
 
         // Create controls panels
         m_controlPanels = new List<RectTransform>();
+
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_controlsContent).GetComponentInChildren<Text>().text = "General";
+        m_controlPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_controlsContent).GetComponent<PanelSlider>().Init("Look Sensitivity", m_settings.GetLookSensitivity, m_settings.SetLookSensitivity, Settings.MIN_LOOK_SENSITIVITY, Settings.MAX_LOOK_SENSITIVITY, false));
+
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_controlsContent).GetComponentInChildren<Text>().text = "Bindings";
+
+        foreach (KeyValuePair<GameButton, BufferedButton> button in Controls.Buttons)
+        {
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button.Key.ToString(), button.Value.GetSourceNames));
+        }
+        foreach (KeyValuePair<GameAxis, BufferedAxis> axis in Controls.Axis)
+        {
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis.Key.ToString(), axis.Value.GetSourceNames));
+        }
+
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+
+        Navigation controlsTopNav = explicitNav;
+        controlsTopNav.selectOnUp = btn_applyControls;
+
+        UIHelper.SetNavigationVertical(m_controlPanels, controlsTopNav, explicitNav, explicitNav);
+
+        Selectable firstControl = m_controlPanels.First().GetComponentInChildren<Selectable>();
+
+        tempNav = btn_backControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_backControls.navigation = tempNav;
+
+        tempNav = btn_applyControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_applyControls.navigation = tempNav;
+
+        tempNav = btn_useDefalutsControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_useDefalutsControls.navigation = tempNav;
     }
 
     public bool IsMenuOpen()
@@ -197,6 +210,8 @@ public class GameMenu : MonoBehaviour
         canvas_settings.enabled = (menu == Menu.Settings);
         canvas_controls.enabled = (menu == Menu.Controls);
 
+        RefreshSettings();
+
         EventSystem.current.SetSelectedGameObject(null);
     }
 
@@ -206,8 +221,7 @@ public class GameMenu : MonoBehaviour
         yield return null;
         scrollbar.value = 1;
     }
-
-    // Main Menu
+    
     public void Resume()
     {
         SetMenu(Menu.None);
@@ -221,7 +235,6 @@ public class GameMenu : MonoBehaviour
     public void OpenSettings()
     {
         SetMenu(Menu.Settings);
-        RefreshSettings();
     }
 
     public void OpenControls()
@@ -229,18 +242,16 @@ public class GameMenu : MonoBehaviour
         SetMenu(Menu.Controls);
     }
 
+    public void BackToRootMenu()
+    {
+        SetMenu(Menu.Root);
+    }
+
     public void Quit()
     {
         Application.Quit();
     }
-
-    // Settings
-    public void BackToRootMenu()
-    {
-        SetMenu(Menu.Root);
-        RefreshSettings();
-    }
-
+    
     private void RefreshSettings()
     {
         foreach (RectTransform rt in m_settingPanels)
@@ -262,6 +273,26 @@ public class GameMenu : MonoBehaviour
             }
         }
         StartCoroutine(RefreshScrollbar(scrollbar_settings));
+
+        foreach (RectTransform rt in m_controlPanels)
+        {
+            PanelToggle toggle = rt.GetComponent<PanelToggle>();
+            PanelSlider slider = rt.GetComponent<PanelSlider>();
+            PanelControlBinding binding = rt.GetComponent<PanelControlBinding>();
+            if (toggle)
+            {
+                toggle.Load();
+            }
+            else if (slider)
+            {
+                slider.Load();
+            }
+            else if (binding)
+            {
+                binding.Load();
+            }
+        }
+        StartCoroutine(RefreshScrollbar(scrollbar_controls));
     }
 
     public void ApplySettings()
@@ -298,14 +329,9 @@ public class GameMenu : MonoBehaviour
         RefreshSettings();
     }
 
-    // Controls
-    public void AcceptControls()
-    {
-        SetMenu(Menu.Root);
-    }
-
     public void UseDefaultControls()
     {
-
+        Controls.loadDefaultControls();
+        RefreshSettings();
     }
 }

@@ -1,77 +1,44 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class PanelControlBinding : MonoBehaviour
 {
-    /*
-    private Transform m_buttonP;
-    private Transform m_buttonJ;
-    private BufferedButton m_button;
-    private InputAxis m_axis;
+    private Button m_button;
+    private Text m_bindingText;
+    private Text m_controlText;
 
-    void Awake()
+    public delegate string GetVal();
+    private GetVal m_get;
+
+    private void Awake()
     {
-        m_buttonP = transform.FindChild("Button_PC");
-        m_buttonJ = transform.FindChild("Button_Joystick");
+        m_button = GetComponentInChildren<Button>();
+        m_controlText = GetComponentInChildren<Text>();
+        m_bindingText = m_button.GetComponentInChildren<Text>();
     }
 
-    public ButtonSource GetPButton()
+    public RectTransform Init(string name, GetVal get)
     {
-        return m_buttonP.GetComponent<ButtonSource>();
+        m_controlText.text = name;
+        m_get = get;
+
+        Load();
+
+        return GetComponent<RectTransform>();
+    }
+    
+    public void Load()
+    {
+        m_bindingText.text = m_get();
     }
 
-    public ButtonSource GetJButton()
+    public void SetNav(Navigation nav)
     {
-        return m_buttonJ.GetComponent<ButtonSource>();
+        m_button.navigation = nav;
     }
 
-    public void SetNavigation(PanelControlBinding panelAbove, PanelControlBinding panelBelow, Scrollbar scrollbar, ButtonSource above)
+    public void OnButtonPressed()
     {
-        Navigation pNav = new Navigation();
-        Navigation jNav = new Navigation();
 
-        pNav.mode = Navigation.Mode.Explicit;
-        jNav.mode = Navigation.Mode.Explicit;
-
-        if (panelAbove)
-        {
-            pNav.selectOnUp = panelAbove.GetPButton();
-            jNav.selectOnUp = panelAbove.GetJButton();
-        }
-        if (panelBelow)
-        {
-            pNav.selectOnDown = panelBelow.GetPButton();
-            jNav.selectOnDown = panelBelow.GetJButton();
-        }
-        else
-        {
-            pNav.selectOnDown = above;
-            jNav.selectOnDown = above;
-        }
-
-        pNav.selectOnRight = GetJButton();
-        jNav.selectOnLeft = GetPButton();
-        jNav.selectOnRight = scrollbar;
-
-        m_buttonP.GetComponent<ButtonSource>().navigation = pNav;
-        m_buttonJ.GetComponent<ButtonSource>().navigation = jNav;
     }
-
-    public void Initialize(BufferedButton button)
-    {
-        GetComponentInChildren<Text>().text = button.name;
-        m_buttonP.GetComponentInChildren<Text>().text = button.pcButton.ToString();
-        m_buttonJ.GetComponentInChildren<Text>().text = button.joystickButton.Name;
-        m_button = button;
-    }
-
-    public void Initialize(InputAxis axis)
-    {
-        GetComponentInChildren<Text>().text = axis.name;
-        m_buttonP.GetComponentInChildren<Text>().text = axis.mouseAxis.Name;
-        m_buttonJ.GetComponentInChildren<Text>().text = axis.joystickAxis.Name;
-        m_axis = axis;
-    }
-    */
 }

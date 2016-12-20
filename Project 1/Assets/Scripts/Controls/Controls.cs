@@ -24,14 +24,14 @@ public enum GameAxis
     LookX,
     LookY,
     MoveX,
-    MoveY
+    MoveY,
 }
 
-[RequireComponent(typeof(ControlsEarlyUpdate))]
 
 /*
  * Stores and maintains user constrols.
  */
+[RequireComponent(typeof(ControlsEarlyUpdate))]
 public class Controls : MonoBehaviour
 {
     private static Dictionary<GameButton, BufferedButton> m_buttons;

@@ -3,5 +3,6 @@
     public interface ButtonSource
     {
         bool IsDown();
+        string GetName();
     }
 }
