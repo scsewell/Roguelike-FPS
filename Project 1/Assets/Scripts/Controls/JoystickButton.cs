@@ -2,7 +2,7 @@
 
 namespace InputController
 {
-    public class JoystickButton : IButtonSource
+    public class JoystickButton : ISource<bool>
     {
         private const float MAIN_THRESHOLD = 0.5f;
         private const float TRIGGER_THRESHOLD = 0.3f;
@@ -14,7 +14,7 @@ namespace InputController
             m_button = button;
         }
     
-        public bool IsDown()
+        public bool GetValue()
         {
             return GetButtonValue(m_button);
         }

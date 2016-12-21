@@ -5,7 +5,7 @@ namespace InputController
     /*
      * Stores an axis type input for a joystick.
      */
-    public class JoystickAxis : IAxisSource
+    public class JoystickAxis : ISource<float>
     {
         private GamepadAxis m_axis;
         private float m_exponent;

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class Interpolator<T>
+﻿public class Interpolator<T>
 {
     private IInterpolated<T> m_interpolated;
 

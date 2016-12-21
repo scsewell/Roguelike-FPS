@@ -6,11 +6,9 @@ public class BulletHoles : MonoBehaviour
     [SerializeField] private int m_maxHoleCount = 50;
     [SerializeField] private float m_minScale = 0.025f;
     [SerializeField] private float m_maxScale = 0.03f;
-    [SerializeField] private int m_fadeWait = 500;
-    [SerializeField] private float m_fadeSpeed = 1f;
     [SerializeField] private float m_basePitch = 2.15f;
     [SerializeField] private float m_pitchVariation = 0.5f;
-    [SerializeField] private AudioClip[] m_bulletSounds = new AudioClip[1];
+    [SerializeField] private AudioClip[] m_bulletSounds;
 
     private static List<Transform> m_bulletHoles;
 
@@ -35,23 +33,6 @@ public class BulletHoles : MonoBehaviour
         m_audioSource.pitch = m_basePitch + (Random.value - 0.5f) * m_pitchVariation;
         m_audioSource.Play();
 	}
-
-    private void Update()
-    {
-        if (m_audioSource != null && !m_audioSource.isPlaying)
-        {
-            Destroy(m_audioSource);
-        }
-        /*
-		if (fadeWait == 0) {
-    		GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color, new Color(1,1,1,0), Time.deltaTime * fadeSpeed);
-    		if(GetComponent<Renderer>().material.color.a <= .05)
-       			Object.Destroy (this.gameObject);
-		} else {
-			fadeWait--;
-		}
-        */
-    }
 
     public void SetParent(Transform parent)
     {

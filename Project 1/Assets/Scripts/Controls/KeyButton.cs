@@ -2,7 +2,7 @@
 
 namespace InputController
 {
-    class KeyButton : IButtonSource
+    class KeyButton : ISource<bool>
     {
         private KeyCode m_button;
 
@@ -11,7 +11,7 @@ namespace InputController
             m_button = button;
         }
 
-        public bool IsDown()
+        public bool GetValue()
         {
             return Input.GetKey(m_button);
         }

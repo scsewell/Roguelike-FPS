@@ -5,7 +5,7 @@ namespace InputController
     /*
      * Stores an axis type input for a pair of keys.
      */
-    public class KeyAxis : IAxisSource
+    public class KeyAxis : ISource<float>
     {
         private KeyCode m_negative;
         private KeyCode m_positive;

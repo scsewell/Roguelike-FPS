@@ -3,7 +3,7 @@
     /*
      * Stores an axis type input for a pair of keys.
      */
-    public class JoystickButtonAxis : IAxisSource
+    public class JoystickButtonAxis : ISource<float>
     {
         private GamepadButton m_negative;
         private GamepadButton m_positive;

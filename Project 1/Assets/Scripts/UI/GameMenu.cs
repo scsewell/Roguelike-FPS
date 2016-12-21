@@ -14,6 +14,7 @@ public class GameMenu : MonoBehaviour
     public RectTransform prefab_settingsToggle;
     public RectTransform prefab_settingsSlider;
     public RectTransform prefab_settingsDropdown;
+    public RectTransform prefab_headerBindings;
     public RectTransform prefab_controlBindings;
 
     public Canvas canvas_root;
@@ -164,15 +165,15 @@ public class GameMenu : MonoBehaviour
         m_controlPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_controlsContent).GetComponent<PanelSlider>().Init("Look Sensitivity", m_settings.GetLookSensitivity, m_settings.SetLookSensitivity, Settings.MIN_LOOK_SENSITIVITY, Settings.MAX_LOOK_SENSITIVITY, false));
 
         UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_controlsContent).GetComponentInChildren<Text>().text = "Bindings";
+        UIHelper.Create(prefab_headerBindings, panel_controlsContent);
 
         foreach (KeyValuePair<GameButton, BufferedButton> button in Controls.Buttons)
         {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button.Key.ToString(), button.Value.GetSourceNames));
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button.Key.ToString(), button.Value.GetSourceInfo));
         }
         foreach (KeyValuePair<GameAxis, BufferedAxis> axis in Controls.Axis)
         {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis.Key.ToString(), axis.Value.GetSourceNames));
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis.Key.ToString(), axis.Value.GetSourceInfo));
         }
 
         UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);

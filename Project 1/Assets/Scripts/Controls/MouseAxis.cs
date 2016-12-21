@@ -5,7 +5,7 @@ namespace InputController
     /*
      * Stores an axis type input for the mouse.
      */
-    public class MouseAxis : IAxisSource
+    public class MouseAxis : ISource<float>
     {
         public enum Axis
         {

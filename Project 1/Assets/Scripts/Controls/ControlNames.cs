@@ -4,6 +4,27 @@ namespace InputController
 {
     public class ControlNames
     {
+        public static string GetName(GameButton button)
+        {
+            switch (button)
+            {
+                case GameButton.Menu:       return "Toggle Menu";
+            }
+            return button.ToString();
+        }
+
+        public static string GetName(GameAxis axis)
+        {
+            switch (axis)
+            {
+                case GameAxis.MoveX:        return "Strafe";
+                case GameAxis.MoveY:        return "Move";
+                case GameAxis.LookX:        return "Look Horizontal";
+                case GameAxis.LookY:        return "Look Vertical";
+            }
+            return axis.ToString();
+        }
+
         public static string GetName(GamepadButton button)
         {
             switch (button)
