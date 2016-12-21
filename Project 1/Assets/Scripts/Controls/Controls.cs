@@ -98,66 +98,66 @@ public class Controls : MonoBehaviour
         m_buttons.Add(GameButton.Menu, new BufferedButton(false, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.Escape),
-            new JoystickButton(GamepadButton.Start)
+            new JoystickButton(GamepadButton.Start),
         }));
         m_buttons.Add(GameButton.Jump, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.Space),
-            new JoystickButton(GamepadButton.A)
+            new JoystickButton(GamepadButton.A),
         }));
         m_buttons.Add(GameButton.Run, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.LeftShift),
-            new JoystickButton(GamepadButton.LStick)
+            new JoystickButton(GamepadButton.LStick),
         }));
         m_buttons.Add(GameButton.Crouch, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.C),
-            new JoystickButton(GamepadButton.B)
+            new JoystickButton(GamepadButton.B),
         }));
         m_buttons.Add(GameButton.Fire, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.Mouse0),
-            new JoystickButton(GamepadButton.RTrigger)
+            new JoystickButton(GamepadButton.RTrigger),
         }));
         m_buttons.Add(GameButton.Aim, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.Mouse1),
-            new JoystickButton(GamepadButton.LTrigger)
+            new JoystickButton(GamepadButton.LTrigger),
         }));
         m_buttons.Add(GameButton.Reload, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.R),
-            new JoystickButton(GamepadButton.Y)
+            new JoystickButton(GamepadButton.Y),
         }));
         m_buttons.Add(GameButton.Interact, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.F),
-            new JoystickButton(GamepadButton.X)
+            new JoystickButton(GamepadButton.X),
         }));
 
 
         m_axis = new Dictionary<GameAxis, BufferedAxis>();
-        
-        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, new List<ISource<float>>
+
+        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, new List<ISource<float>>
         {
-            new MouseAxis(MouseAxis.Axis.MouseX),
-            new JoystickAxis(GamepadAxis.RStickX, 2.0f, 1.0f)
-        }));
-        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, new List<ISource<float>>
-        {
-            new MouseAxis(MouseAxis.Axis.MouseY),
-            new JoystickAxis(GamepadAxis.RStickY, 2.0f, 1.0f)
+            new KeyAxis(KeyCode.S, KeyCode.W),
+            new JoystickAxis(GamepadAxis.LStickY, 1.0f, 1.0f),
         }));
         m_axis.Add(GameAxis.MoveX, new BufferedAxis(true, new List<ISource<float>>
         {
             new KeyAxis(KeyCode.A, KeyCode.D),
-            new JoystickAxis(GamepadAxis.LStickX, 1.0f, 1.0f)
+            new JoystickAxis(GamepadAxis.LStickX, 1.0f, 1.0f),
         }));
-        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, new List<ISource<float>>
+        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, new List<ISource<float>>
         {
-            new KeyAxis(KeyCode.S, KeyCode.W),
-            new JoystickAxis(GamepadAxis.LStickY, 1.0f, 1.0f)
+            new MouseAxis(MouseAxis.Axis.MouseX),
+            new JoystickAxis(GamepadAxis.RStickX, 2.0f, 1.0f),
+        }));
+        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, new List<ISource<float>>
+        {
+            new MouseAxis(MouseAxis.Axis.MouseY),
+            new JoystickAxis(GamepadAxis.RStickY, 2.0f, 1.0f),
         }));
     }
 

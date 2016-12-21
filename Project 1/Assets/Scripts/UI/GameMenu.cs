@@ -169,11 +169,11 @@ public class GameMenu : MonoBehaviour
 
         foreach (KeyValuePair<GameButton, BufferedButton> button in Controls.Buttons)
         {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button.Key.ToString(), button.Value.GetSourceInfo));
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(ControlNames.GetName(button.Key), button.Value.GetSourceInfo));
         }
         foreach (KeyValuePair<GameAxis, BufferedAxis> axis in Controls.Axis)
         {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis.Key.ToString(), axis.Value.GetSourceInfo));
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(ControlNames.GetName(axis.Key), axis.Value.GetSourceInfo));
         }
 
         UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);

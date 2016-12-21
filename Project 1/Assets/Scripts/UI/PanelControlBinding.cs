@@ -35,17 +35,14 @@ public class PanelControlBinding : MonoBehaviour
     {
         foreach (SourceType sourceType in Enum.GetValues(typeof(SourceType)))
         {
-            List<SourceInfo> sourceInfo = m_get();
+            List<SourceInfo> sourceInfo = m_get().Where(info => info.Type == sourceType).ToList();
             string str = "";
             foreach (SourceInfo info in sourceInfo)
             {
-                if (info.Type == sourceType)
+                str += info.Name;
+                if (info != sourceInfo.Last())
                 {
-                    str += info.Name;
-                    if (info != sourceInfo.Last())
-                    {
-                        str += ", ";
-                    }
+                    str += ", ";
                 }
             }
             m_bindingText[(int)sourceType].text = str;
