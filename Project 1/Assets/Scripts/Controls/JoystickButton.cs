@@ -2,7 +2,7 @@
 
 namespace InputController
 {
-    public class JoystickButton : ButtonSource
+    public class JoystickButton : IButtonSource
     {
         private const float MAIN_THRESHOLD = 0.5f;
         private const float TRIGGER_THRESHOLD = 0.3f;
@@ -22,6 +22,11 @@ namespace InputController
         public string GetName()
         {
             return ControlNames.GetName(m_button);
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.Joystick;
         }
 
         public static bool GetButtonValue(GamepadButton button)

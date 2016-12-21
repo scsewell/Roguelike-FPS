@@ -1,8 +1,7 @@
 ﻿namespace InputController
 {
-    public interface ButtonSource
+    public interface IButtonSource : ISource
     {
         bool IsDown();
-        string GetName();
     }
 }

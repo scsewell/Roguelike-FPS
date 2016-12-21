@@ -34,22 +34,22 @@ namespace InputController
                 case GamepadButton.RStickLeft:      return "R Stick Left";
                 case GamepadButton.RStickRight:     return "R Stick Right";
             }
-            return "None";
+            return null;
         }
 
         public static string GetName(GamepadAxis axis)
         {
             switch (axis)
             {
-                case GamepadAxis.LStickX:           return "L Stick X";
-                case GamepadAxis.LStickY:           return "L Stick Y";
-                case GamepadAxis.RStickX:           return "R Stick X";
-                case GamepadAxis.RStickY:           return "R Stick Y";
-                case GamepadAxis.DpadX:             return "Dpad X";
-                case GamepadAxis.DpadY:             return "Dpad Y";
+                case GamepadAxis.LStickX:           return "L Stick Horizontal";
+                case GamepadAxis.LStickY:           return "L Stick Vertical";
+                case GamepadAxis.RStickX:           return "R Stick Horizontal";
+                case GamepadAxis.RStickY:           return "R Stick Vertical";
+                case GamepadAxis.DpadX:             return "Dpad Horizontal";
+                case GamepadAxis.DpadY:             return "Dpad Vertical";
                 case GamepadAxis.Triggers:          return "Triggers";
             }
-            return "None";
+            return null;
         }
 
         public static string GetName(MouseAxis.Axis axis)
@@ -57,10 +57,10 @@ namespace InputController
             switch (axis)
             {
                 case MouseAxis.Axis.ScrollWheel:    return "ScrollWheel";
-                case MouseAxis.Axis.MouseX:         return "Mouse X";
-                case MouseAxis.Axis.MouseY:         return "Mouse Y";
+                case MouseAxis.Axis.MouseX:         return "Mouse Horizontal";
+                case MouseAxis.Axis.MouseY:         return "Mouse Vertical";
             }
-            return "None";
+            return null;
         }
 
         public static string GetName(KeyCode keyCode)

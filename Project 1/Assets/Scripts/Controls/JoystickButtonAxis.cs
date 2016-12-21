@@ -3,7 +3,7 @@
     /*
      * Stores an axis type input for a pair of keys.
      */
-    public class JoystickButtonAxis : AxisSource
+    public class JoystickButtonAxis : IAxisSource
     {
         private GamepadButton m_negative;
         private GamepadButton m_positive;
@@ -25,6 +25,11 @@
         public string GetName()
         {
             return ControlNames.GetName(m_positive) + "-" + ControlNames.GetName(m_negative);
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.Joystick;
         }
 
         private float GetButtonValue(GamepadButton button)

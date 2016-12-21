@@ -5,7 +5,7 @@ namespace InputController
     /*
      * Stores an axis type input for a joystick.
      */
-    public class JoystickAxis : AxisSource
+    public class JoystickAxis : IAxisSource
     {
         private GamepadAxis m_axis;
         private float m_exponent;
@@ -28,6 +28,11 @@ namespace InputController
         public string GetName()
         {
             return ControlNames.GetName(m_axis);
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.Joystick;
         }
 
         public static float GetAxisValue(GamepadAxis axis)

@@ -1,8 +1,7 @@
 ﻿namespace InputController
 {
-    public interface AxisSource
+    public interface IAxisSource : ISource
     {
         float GetValue();
-        string GetName();
     }
 }

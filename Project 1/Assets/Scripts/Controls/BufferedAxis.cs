@@ -8,8 +8,8 @@ namespace InputController
      */
     public class BufferedAxis
     {
-        private List<AxisSource> m_sources;
-        private List<List<Dictionary<AxisSource, float>>> m_buffers;
+        private List<IAxisSource> m_sources;
+        private List<List<Dictionary<IAxisSource, float>>> m_buffers;
 
         private bool m_canBeMuted;
         public bool CanBeMuted
@@ -17,19 +17,19 @@ namespace InputController
             get { return m_canBeMuted; }
         }
 
-        public BufferedAxis(bool canBeMuted, List<AxisSource> sources)
+        public BufferedAxis(bool canBeMuted, List<IAxisSource> sources)
         {
             m_canBeMuted = canBeMuted;
-            m_sources = new List<AxisSource>(sources);
+            m_sources = new List<IAxisSource>(sources);
 
-            m_buffers = new List<List<Dictionary<AxisSource, float>>>();
-            m_buffers.Add(new List<Dictionary<AxisSource, float>>());
-            m_buffers.Last().Add(new Dictionary<AxisSource, float>());
-            foreach (AxisSource source in m_sources)
+            m_buffers = new List<List<Dictionary<IAxisSource, float>>>();
+            m_buffers.Add(new List<Dictionary<IAxisSource, float>>());
+            m_buffers.Last().Add(new Dictionary<IAxisSource, float>());
+            foreach (IAxisSource source in m_sources)
             {
                 m_buffers.Last().Last().Add(source, source.GetValue());
             }
-            m_buffers.Add(new List<Dictionary<AxisSource, float>>());
+            m_buffers.Add(new List<Dictionary<IAxisSource, float>>());
         }
 
         /*
@@ -53,9 +53,9 @@ namespace InputController
          */
         public void RecordUpdateState()
         {
-            m_buffers.Last().Add(new Dictionary<AxisSource, float>());
+            m_buffers.Last().Add(new Dictionary<IAxisSource, float>());
 
-            foreach (AxisSource source in m_sources)
+            foreach (IAxisSource source in m_sources)
             {
                 m_buffers.Last().Last().Add(source, source.GetValue());
             }
@@ -71,12 +71,12 @@ namespace InputController
             {
                 m_buffers.RemoveAt(0);
             }
-            m_buffers.Add(new List<Dictionary<AxisSource, float>>());
+            m_buffers.Add(new List<Dictionary<IAxisSource, float>>());
         }
 
-        private List<Dictionary<AxisSource, float>> GetRelevantInput()
+        private List<Dictionary<IAxisSource, float>> GetRelevantInput()
         {
-            List<Dictionary<AxisSource, float>> buffer = new List<Dictionary<AxisSource, float>>();
+            List<Dictionary<IAxisSource, float>> buffer = new List<Dictionary<IAxisSource, float>>();
             if (m_buffers.Last().Count == 0)
             {
                 buffer.Add(m_buffers.GetRange(0, m_buffers.Count - 1).Last((gameplayUpdate) => (gameplayUpdate.Any())).Last());
@@ -84,18 +84,14 @@ namespace InputController
             return buffer.Concat(m_buffers.Last()).ToList();
         }
 
-        public string GetSourceNames()
+        public List<KeyValuePair<SourceType, string>> GetSourceNames()
         {
-            string str = "";
-            foreach (AxisSource source in m_sources)
+            List<KeyValuePair<SourceType, string>> sourceNames = new List<KeyValuePair<SourceType, string>>();
+            foreach (ISource source in m_sources)
             {
-                str += source.GetName();
-                if (source != m_sources.Last())
-                {
-                    str += ", ";
-                }
+                sourceNames.Add(new KeyValuePair<SourceType, string>(source.GetSourceType(), source.GetName()));
             }
-            return str;
+            return sourceNames;
         }
     }
 }

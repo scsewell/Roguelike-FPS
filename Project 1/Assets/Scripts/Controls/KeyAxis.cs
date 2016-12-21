@@ -5,7 +5,7 @@ namespace InputController
     /*
      * Stores an axis type input for a pair of keys.
      */
-    public class KeyAxis : AxisSource
+    public class KeyAxis : IAxisSource
     {
         private KeyCode m_negative;
         private KeyCode m_positive;
@@ -30,6 +30,11 @@ namespace InputController
         private float GetKeyValue(KeyCode key)
         {
             return Input.GetKey(key) ? 1 : 0;
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.MouseKeyboard;
         }
     }
 }

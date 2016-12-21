@@ -95,42 +95,42 @@ public class Controls : MonoBehaviour
     {
         m_buttons = new Dictionary<GameButton, BufferedButton>();
         
-        m_buttons.Add(GameButton.Menu, new BufferedButton(false, new List<ButtonSource>
+        m_buttons.Add(GameButton.Menu, new BufferedButton(false, new List<IButtonSource>
         {
             new KeyButton(KeyCode.Escape),
             new JoystickButton(GamepadButton.Start)
         }));
-        m_buttons.Add(GameButton.Fire, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Fire, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.Mouse0),
             new JoystickButton(GamepadButton.RTrigger)
         }));
-        m_buttons.Add(GameButton.Aim, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Aim, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.Mouse1),
             new JoystickButton(GamepadButton.LTrigger)
         }));
-        m_buttons.Add(GameButton.Reload, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Reload, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.R),
             new JoystickButton(GamepadButton.Y)
         }));
-        m_buttons.Add(GameButton.Jump, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Jump, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.Space),
             new JoystickButton(GamepadButton.A)
         }));
-        m_buttons.Add(GameButton.Run, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Run, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.LeftShift),
             new JoystickButton(GamepadButton.LStick)
         }));
-        m_buttons.Add(GameButton.Crouch, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Crouch, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.C),
             new JoystickButton(GamepadButton.B)
         }));
-        m_buttons.Add(GameButton.Interact, new BufferedButton(true, new List<ButtonSource>
+        m_buttons.Add(GameButton.Interact, new BufferedButton(true, new List<IButtonSource>
         {
             new KeyButton(KeyCode.F),
             new JoystickButton(GamepadButton.X)
@@ -139,22 +139,22 @@ public class Controls : MonoBehaviour
 
         m_axis = new Dictionary<GameAxis, BufferedAxis>();
         
-        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, new List<AxisSource>
+        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, new List<IAxisSource>
         {
             new MouseAxis(MouseAxis.Axis.MouseX),
             new JoystickAxis(GamepadAxis.RStickX, 2.0f, 1.0f)
         }));
-        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, new List<AxisSource>
+        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, new List<IAxisSource>
         {
             new MouseAxis(MouseAxis.Axis.MouseY),
             new JoystickAxis(GamepadAxis.RStickY, 2.0f, 1.0f)
         }));
-        m_axis.Add(GameAxis.MoveX, new BufferedAxis(true, new List<AxisSource>
+        m_axis.Add(GameAxis.MoveX, new BufferedAxis(true, new List<IAxisSource>
         {
             new KeyAxis(KeyCode.A, KeyCode.D),
             new JoystickAxis(GamepadAxis.LStickX, 1.0f, 1.0f)
         }));
-        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, new List <AxisSource>
+        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, new List <IAxisSource>
         {
             new KeyAxis(KeyCode.S, KeyCode.W),
             new JoystickAxis(GamepadAxis.LStickY, 1.0f, 1.0f)

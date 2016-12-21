@@ -8,8 +8,8 @@ namespace InputController
      */
     public class BufferedButton
     {
-        private List<ButtonSource> m_sources;
-        private List<List<Dictionary<ButtonSource, bool>>> m_buffers;
+        private List<IButtonSource> m_sources;
+        private List<List<Dictionary<IButtonSource, bool>>> m_buffers;
 
         private bool m_canBeMuted;
         public bool CanBeMuted
@@ -17,10 +17,10 @@ namespace InputController
             get { return m_canBeMuted; }
         }
 
-        public BufferedButton(bool canBeMuted, List<ButtonSource> sources)
+        public BufferedButton(bool canBeMuted, List<IButtonSource> sources)
         {
             m_canBeMuted = canBeMuted;
-            m_sources = new List<ButtonSource>(sources);
+            m_sources = new List<IButtonSource>(sources);
             ResetBuffers();
         }
 
@@ -29,14 +29,14 @@ namespace InputController
          */
         public void ResetBuffers()
         {
-            m_buffers = new List<List<Dictionary<ButtonSource, bool>>>();
-            m_buffers.Add(new List<Dictionary<ButtonSource, bool>>());
-            m_buffers.Last().Add(new Dictionary<ButtonSource, bool>());
-            foreach (ButtonSource source in m_sources)
+            m_buffers = new List<List<Dictionary<IButtonSource, bool>>>();
+            m_buffers.Add(new List<Dictionary<IButtonSource, bool>>());
+            m_buffers.Last().Add(new Dictionary<IButtonSource, bool>());
+            foreach (IButtonSource source in m_sources)
             {
                 m_buffers.Last().Last().Add(source, source.IsDown());
             }
-            m_buffers.Add(new List<Dictionary<ButtonSource, bool>>());
+            m_buffers.Add(new List<Dictionary<IButtonSource, bool>>());
         }
 
         /*
@@ -53,7 +53,7 @@ namespace InputController
          */
         public bool JustDown()
         {
-            List<Dictionary<ButtonSource, bool>> buffer = GetRelevantInput();
+            List<Dictionary<IButtonSource, bool>> buffer = GetRelevantInput();
 
             for (int i = buffer.Count - 1; i > 0; i--)
             {
@@ -70,7 +70,7 @@ namespace InputController
          */
         public bool JustUp()
         {
-            List<Dictionary<ButtonSource, bool>> buffer = GetRelevantInput();
+            List<Dictionary<IButtonSource, bool>> buffer = GetRelevantInput();
 
             for (int i = buffer.Count - 1; i > 0; i--)
             {
@@ -87,7 +87,7 @@ namespace InputController
          */
         public bool VisualJustDown()
         {
-            List<Dictionary<ButtonSource, bool>> buffer = GetRelevantInput();
+            List<Dictionary<IButtonSource, bool>> buffer = GetRelevantInput();
 
             if (buffer.Count > 1 && buffer[buffer.Count - 1].Values.Any(boolie => boolie) && !buffer[buffer.Count - 2].Values.Any(boolie => boolie))
             {
@@ -101,7 +101,7 @@ namespace InputController
          */
         public bool VisualJustUp()
         {
-            List<Dictionary<ButtonSource, bool>> buffer = GetRelevantInput();
+            List<Dictionary<IButtonSource, bool>> buffer = GetRelevantInput();
 
             if (buffer.Count > 1 && !buffer[buffer.Count - 1].Values.Any(boolie => boolie) && buffer[buffer.Count - 2].Values.Any(boolie => boolie))
             {
@@ -115,9 +115,9 @@ namespace InputController
          */
         public void RecordUpdateState()
         {
-            m_buffers.Last().Add(new Dictionary<ButtonSource, bool>());
+            m_buffers.Last().Add(new Dictionary<IButtonSource, bool>());
 
-            foreach (ButtonSource source in m_sources)
+            foreach (IButtonSource source in m_sources)
             {
                 m_buffers.Last().Last().Add(source, source.IsDown());
             }
@@ -133,28 +133,24 @@ namespace InputController
             {
                 m_buffers.RemoveAt(0);
             }
-            m_buffers.Add(new List<Dictionary<ButtonSource, bool>>());
+            m_buffers.Add(new List<Dictionary<IButtonSource, bool>>());
         }
 
-        private List<Dictionary<ButtonSource, bool>> GetRelevantInput()
+        private List<Dictionary<IButtonSource, bool>> GetRelevantInput()
         {
-            List<Dictionary<ButtonSource, bool>> buffer = new List<Dictionary<ButtonSource, bool>>();
+            List<Dictionary<IButtonSource, bool>> buffer = new List<Dictionary<IButtonSource, bool>>();
             buffer.Add(m_buffers.GetRange(0, m_buffers.Count - 1).Last((gameplayUpdate) => (gameplayUpdate.Any())).Last());
             return buffer.Concat(m_buffers.Last()).ToList();
         }
-
-        public string GetSourceNames()
+        
+        public List<KeyValuePair<SourceType, string>> GetSourceNames()
         {
-            string str = "";
-            foreach (ButtonSource source in m_sources)
+            List<KeyValuePair<SourceType, string>> sourceNames = new List<KeyValuePair<SourceType, string>>();
+            foreach (ISource source in m_sources)
             {
-                str += source.GetName();
-                if (source != m_sources.Last())
-                {
-                    str += ", ";
-                }
+                sourceNames.Add(new KeyValuePair<SourceType, string>(source.GetSourceType(), source.GetName()));
             }
-            return str;
+            return sourceNames;
         }
     }
 }

@@ -5,9 +5,14 @@ namespace InputController
     /*
      * Stores an axis type input for the mouse.
      */
-    public class MouseAxis : AxisSource
+    public class MouseAxis : IAxisSource
     {
-        public enum Axis { None, ScrollWheel, MouseX, MouseY }
+        public enum Axis
+        {
+            ScrollWheel,
+            MouseX,
+            MouseY
+        }
 
         private Axis m_axis;
         private float m_threshold;
@@ -27,6 +32,11 @@ namespace InputController
         public string GetName()
         {
             return ControlNames.GetName(m_axis);
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.MouseKeyboard;
         }
 
         private float GetAxisValue(Axis mouseAxis)

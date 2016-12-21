@@ -2,7 +2,7 @@
 
 namespace InputController
 {
-    class KeyButton : ButtonSource
+    class KeyButton : IButtonSource
     {
         private KeyCode m_button;
 
@@ -19,6 +19,11 @@ namespace InputController
         public string GetName()
         {
             return ControlNames.GetName(m_button);
+        }
+
+        public SourceType GetSourceType()
+        {
+            return SourceType.MouseKeyboard;
         }
     }
 }
