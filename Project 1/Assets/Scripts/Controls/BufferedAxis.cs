@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace InputController
@@ -8,8 +9,11 @@ namespace InputController
      */
     public class BufferedAxis : BufferedSource<float>
     {
-        public BufferedAxis(bool canBeMuted, List<ISource<float>> sources) : base(canBeMuted, sources)
+        private float m_exponent;
+
+        public BufferedAxis(bool canBeMuted, float exponent, List<ISource<float>> sources) : base(canBeMuted, sources)
         {
+            m_exponent = exponent;
         }
 
         /*
@@ -17,7 +21,7 @@ namespace InputController
          */
         public float AverageValue()
         {
-            return GetRelevantInput(false).Average(sourceInputs => sourceInputs.Values.Sum());
+            return GetRelevantInput(false).Average(sourceInputs => sourceInputs.ToList().Sum(input => GetInputValue(input)));
         }
 
         /*
@@ -25,7 +29,15 @@ namespace InputController
          */
         public float CumulativeValue()
         {
-            return GetRelevantInput(false).Sum(sourceInputs => sourceInputs.Values.Sum());
+            return GetRelevantInput(false).Sum(sourceInputs => sourceInputs.ToList().Sum(input => GetInputValue(input)));
+        }
+
+        /*
+         * Applies modifications to the input values based on the type of source as required.
+         */
+        private float GetInputValue(KeyValuePair<ISource<float>, float> input)
+        {
+            return (input.Key.GetSourceType() == SourceType.Joystick) ? Mathf.Sign(input.Value) * Mathf.Pow(Mathf.Abs(input.Value), m_exponent) : input.Value;
         }
     }
 }

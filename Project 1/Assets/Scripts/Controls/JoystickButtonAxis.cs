@@ -7,19 +7,17 @@
     {
         private GamepadButton m_negative;
         private GamepadButton m_positive;
-        private float m_multiplier;
 
-        public JoystickButtonAxis(GamepadButton negative, GamepadButton positive, float multiplier)
+        public JoystickButtonAxis(GamepadButton negative, GamepadButton positive)
         {
             m_negative = negative;
             m_positive = positive;
-            m_multiplier = multiplier;
         }
 
         // returns the value of the axis
         public float GetValue()
         {
-            return (GetButtonValue(m_positive) - GetButtonValue(m_negative)) * m_multiplier;
+            return GetButtonValue(m_positive) - GetButtonValue(m_negative);
         }
 
         public string GetName()

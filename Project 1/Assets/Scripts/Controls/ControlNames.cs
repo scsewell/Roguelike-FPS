@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 namespace InputController
 {
@@ -92,7 +93,13 @@ namespace InputController
                 case KeyCode.Mouse1:    return "Right Mouse";
                 case KeyCode.Mouse2:    return "Middle Mouse";
             }
-            return keyCode.ToString();
+            // return the keycode with spaces inserted before capital letters
+            string s = keyCode.ToString();
+            return string.Join(string.Empty,
+                    s.Select((x, i) => (
+                         char.IsUpper(x) && i > 0 &&
+                         (char.IsLower(s[i - 1]) || (i < s.Count() - 1 && char.IsLower(s[i + 1])))
+                    ) ? " " + x : x.ToString()).ToArray());
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using InputController;
 
 
@@ -139,25 +140,25 @@ public class Controls : MonoBehaviour
 
         m_axis = new Dictionary<GameAxis, BufferedAxis>();
 
-        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, new List<ISource<float>>
+        m_axis.Add(GameAxis.MoveY, new BufferedAxis(true, 1f, new List<ISource<float>>
         {
             new KeyAxis(KeyCode.S, KeyCode.W),
-            new JoystickAxis(GamepadAxis.LStickY, 1.0f, 1.0f),
+            new JoystickAxis(GamepadAxis.LStickY),
         }));
-        m_axis.Add(GameAxis.MoveX, new BufferedAxis(true, new List<ISource<float>>
+        m_axis.Add(GameAxis.MoveX, new BufferedAxis(true, 1f, new List<ISource<float>>
         {
             new KeyAxis(KeyCode.A, KeyCode.D),
-            new JoystickAxis(GamepadAxis.LStickX, 1.0f, 1.0f),
+            new JoystickAxis(GamepadAxis.LStickX),
         }));
-        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, new List<ISource<float>>
+        m_axis.Add(GameAxis.LookX, new BufferedAxis(true, 2f, new List<ISource<float>>
         {
             new MouseAxis(MouseAxis.Axis.MouseX),
-            new JoystickAxis(GamepadAxis.RStickX, 2.0f, 1.0f),
+            new JoystickAxis(GamepadAxis.RStickX),
         }));
-        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, new List<ISource<float>>
+        m_axis.Add(GameAxis.LookY, new BufferedAxis(true, 2f, new List<ISource<float>>
         {
             new MouseAxis(MouseAxis.Axis.MouseY),
-            new JoystickAxis(GamepadAxis.RStickY, 2.0f, 1.0f),
+            new JoystickAxis(GamepadAxis.RStickY),
         }));
     }
 
@@ -206,5 +207,160 @@ public class Controls : MonoBehaviour
     {
         BufferedAxis bufferedAxis = m_axis[axis];
         return (m_isMuted && bufferedAxis.CanBeMuted) ? 0 : bufferedAxis.CumulativeValue();
+    }
+
+
+    public enum RebindState { None, Button, Axis, KeyAxis, ButtonAxis }
+    private static RebindState m_rebindState = RebindState.None;
+    public static RebindState rebindState
+    {
+        get { return m_rebindState; }
+    }
+
+    private static BufferedButton m_rebindingButton = null;
+    private static BufferedAxis m_rebindingAxis = null;
+    private static List<KeyCode> m_rebindingPreviousKeys = new List<KeyCode>();
+    private static List<GamepadButton> m_rebindingPreviousButtons = new List<GamepadButton>();
+    private static KeyCode m_rebindingAxisKey;
+    private static GamepadButton m_rebindingAxisButton;
+    private static Action m_onRebindComplete;
+
+    /*
+     * When rebinding detects any appropriate inputs.
+     */
+    private void Update()
+    {
+        if (m_rebindState == RebindState.Axis)
+        {
+            ISource<float> source = GetAxisSource();
+            if (source != null)
+            {
+                m_rebindState = RebindState.None;
+                m_rebindingAxis.AddSource(source);
+                m_onRebindComplete();
+            }
+            else
+            {
+                List<KeyCode> activeKeys = FindActiveKeys(true);
+                List<GamepadButton> activeButtons = FindActiveButtons(true);
+                if (activeButtons.Count > 0)
+                {
+                    m_rebindState = RebindState.ButtonAxis;
+                    m_rebindingAxisButton = activeButtons.First();
+                }
+                else if (activeKeys.Count > 0)
+                {
+                    m_rebindState = RebindState.KeyAxis;
+                    m_rebindingAxisKey = activeKeys.First();
+                }
+            }
+        }
+        else if (m_rebindState == RebindState.Button)
+        {
+            ISource<bool> source = GetButtonSource();
+            if (source != null)
+            {
+                m_rebindState = RebindState.None;
+                m_rebindingButton.AddSource(source);
+                m_onRebindComplete();
+            }
+        }
+        else if (m_rebindState == RebindState.ButtonAxis)
+        {
+            List<GamepadButton> activeButtons = FindActiveButtons(true);
+            if (activeButtons.Count > 0)
+            {
+                m_rebindState = RebindState.None;
+                m_rebindingAxis.AddSource(new JoystickButtonAxis(activeButtons.First(), m_rebindingAxisButton));
+                m_onRebindComplete();
+            }
+        }
+        else if (m_rebindState == RebindState.KeyAxis)
+        {
+            List<KeyCode> activeKeys = FindActiveKeys(true);
+            if (activeKeys.Count > 0)
+            {
+                m_rebindState = RebindState.None;
+                m_rebindingAxis.AddSource(new KeyAxis(activeKeys.First(), m_rebindingAxisKey));
+                m_onRebindComplete();
+            }
+        }
+
+        m_rebindingPreviousKeys = FindActiveKeys(false);
+        m_rebindingPreviousButtons = FindActiveButtons(false);
+    }
+    
+    public static void AddBinding(BufferedButton button, Action onRebindComplete)
+    {
+        if (m_rebindState == RebindState.None)
+        {
+            m_rebindState = RebindState.Button;
+            m_rebindingButton = button;
+
+            m_onRebindComplete = onRebindComplete;
+            m_rebindingPreviousKeys = FindActiveKeys(false);
+            m_rebindingPreviousButtons = FindActiveButtons(false);
+        }
+    }
+
+    public static void AddBinding(BufferedAxis axis, Action onRebindComplete)
+    {
+        if (m_rebindState == RebindState.None)
+        {
+            m_rebindState = RebindState.Axis;
+            m_rebindingAxis = axis;
+
+            m_onRebindComplete = onRebindComplete;
+            m_rebindingPreviousKeys = FindActiveKeys(false);
+            m_rebindingPreviousButtons = FindActiveButtons(false);
+        }
+    }
+
+    private static ISource<bool> GetButtonSource()
+    {
+        List<GamepadButton> activeButtons = FindActiveButtons(true);
+        if (activeButtons.Count > 0)
+        {
+            return new JoystickButton(activeButtons.First());
+        }
+        List<KeyCode> activeKeys = FindActiveKeys(true);
+        if (activeKeys.Count > 0)
+        {
+            return new KeyButton(activeKeys.First());
+        }
+        return null;
+    }
+    
+    private static ISource<float> GetAxisSource()
+    {
+        foreach (GamepadAxis axis in Enum.GetValues(typeof(GamepadAxis)))
+        {
+            if (JoystickAxis.GetAxisValue(axis) > 0.5f)
+            {
+                return new JoystickAxis(axis);
+            }
+        }
+        foreach (MouseAxis.Axis axis in Enum.GetValues(typeof(MouseAxis.Axis)))
+        {
+            if (MouseAxis.GetAxisValue(axis) > 0.5f)
+            {
+                return new MouseAxis(axis);
+            }
+        }
+        return null;
+    }
+
+    private static List<KeyCode> FindActiveKeys(bool ignorePrevious)
+    {
+        return Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(
+            button => KeyButton.GetButtonValue(button) && (!ignorePrevious || !m_rebindingPreviousKeys.Contains(button))
+            ).ToList();
+    }
+
+    private static List<GamepadButton> FindActiveButtons(bool ignorePrevious)
+    {
+        return Enum.GetValues(typeof(GamepadButton)).Cast<GamepadButton>().Where(
+            button => JoystickButton.GetButtonValue(button) && (!ignorePrevious || !m_rebindingPreviousButtons.Contains(button))
+            ).ToList();
     }
 }

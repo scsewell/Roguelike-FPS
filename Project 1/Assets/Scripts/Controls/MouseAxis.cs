@@ -26,7 +26,7 @@ namespace InputController
         // returns the value of the relevant axis
         public float GetValue()
         {
-            return GetAxisValue(m_axis);
+            return GetAxisValue(m_axis, m_threshold);
         }
 
         public string GetName()
@@ -39,20 +39,20 @@ namespace InputController
             return SourceType.MouseKeyboard;
         }
 
-        private float GetAxisValue(Axis mouseAxis)
+        public static float GetAxisValue(Axis mouseAxis, float thresh = 0)
         {
             switch (mouseAxis)
             {
-                case Axis.ScrollWheel: return ThresholdValue(Input.GetAxis("Mouse ScrollWheel")) * 0.08f / Time.deltaTime;
-                case Axis.MouseX: return ThresholdValue(Input.GetAxis("Mouse X")) * 0.008f / Time.deltaTime;
-                case Axis.MouseY: return ThresholdValue(Input.GetAxis("Mouse Y")) * 0.008f / Time.deltaTime;
+                case Axis.ScrollWheel: return ThresholdValue(Input.GetAxis("Mouse ScrollWheel"), thresh) * 0.08f / Time.deltaTime;
+                case Axis.MouseX: return ThresholdValue(Input.GetAxis("Mouse X"), thresh) * 0.008f / Time.deltaTime;
+                case Axis.MouseY: return ThresholdValue(Input.GetAxis("Mouse Y"), thresh) * 0.008f / Time.deltaTime;
             }
             return 0;
         }
 
-        private float ThresholdValue(float value)
+        private static float ThresholdValue(float value, float thresh)
         {
-            return Mathf.Abs(value) > m_threshold ? value : 0;
+            return Mathf.Abs(value) > thresh ? value : 0;
         }
     }
 }

@@ -8,21 +8,15 @@ namespace InputController
     public class JoystickAxis : ISource<float>
     {
         private GamepadAxis m_axis;
-        private float m_exponent;
-        private float m_multiplier;
 
-        public JoystickAxis(GamepadAxis axis, float exponent, float multiplier)
+        public JoystickAxis(GamepadAxis axis)
         {
             m_axis = axis;
-            m_exponent = exponent;
-            m_multiplier = multiplier;
         }
-
-        // returns the value of the relevant axis, and applies an exponent while preserving the +/-
+        
         public float GetValue()
         {
-            float value = GetAxisValue(m_axis);
-            return Mathf.Sign(value) * Mathf.Pow(Mathf.Abs(value), m_exponent) * m_multiplier;
+            return GetAxisValue(m_axis);
         }
 
         public string GetName()
@@ -52,7 +46,7 @@ namespace InputController
                 case GamepadAxis.RStickY:
                     return -Input.GetAxis("R_YAxis");
                 case GamepadAxis.Triggers:
-                    //*
+                    /*
                     return Input.GetAxis("Triggers");
                     /*/
                     float LTrigger = Input.GetAxis("TriggersL");

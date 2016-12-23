@@ -13,7 +13,7 @@ namespace InputController
 
         public bool GetValue()
         {
-            return Input.GetKey(m_button);
+            return GetButtonValue(m_button);
         }
 
         public string GetName()
@@ -24,6 +24,11 @@ namespace InputController
         public SourceType GetSourceType()
         {
             return SourceType.MouseKeyboard;
+        }
+
+        public static bool GetButtonValue(KeyCode keyCode)
+        {
+            return Input.GetKey(keyCode);
         }
     }
 }

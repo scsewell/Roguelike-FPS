@@ -11,8 +11,12 @@ public class PanelControlBinding : MonoBehaviour
     private Text[] m_bindingText;
     private Text m_controlText;
 
-    public delegate List<SourceInfo> GetVal();
-    private GetVal m_get;
+    private KeyValuePair<GameButton, BufferedButton> m_buttonSource;
+    private KeyValuePair<GameAxis, BufferedAxis> m_axisSource;
+    
+    private Func<List<SourceInfo>> m_getSourceInfo;
+    private Action<KeyValuePair<GameButton, BufferedButton>> m_onEditButton;
+    private Action<KeyValuePair<GameAxis, BufferedAxis>> m_onEditAxis;
 
     private void Awake()
     {
@@ -21,10 +25,24 @@ public class PanelControlBinding : MonoBehaviour
         m_bindingText = m_button.GetComponentsInChildren<Text>();
     }
 
-    public RectTransform Init(string name, GetVal get)
+    public RectTransform Init(KeyValuePair<GameButton, BufferedButton> buttonSource, Action<KeyValuePair<GameButton, BufferedButton>> onEdit)
     {
-        m_controlText.text = name;
-        m_get = get;
+        m_buttonSource = buttonSource;
+        m_controlText.text = ControlNames.GetName(buttonSource.Key);
+        m_getSourceInfo = buttonSource.Value.GetSourceInfos;
+        m_onEditButton = onEdit;
+
+        Load();
+
+        return GetComponent<RectTransform>();
+    }
+
+    public RectTransform Init(KeyValuePair<GameAxis, BufferedAxis> axisSource, Action<KeyValuePair<GameAxis, BufferedAxis>> onEdit)
+    {
+        m_axisSource = axisSource;
+        m_controlText.text = ControlNames.GetName(axisSource.Key);
+        m_getSourceInfo = axisSource.Value.GetSourceInfos;
+        m_onEditAxis = onEdit;
 
         Load();
 
@@ -35,7 +53,7 @@ public class PanelControlBinding : MonoBehaviour
     {
         foreach (SourceType sourceType in Enum.GetValues(typeof(SourceType)))
         {
-            List<SourceInfo> sourceInfo = m_get().Where(info => info.Type == sourceType).ToList();
+            List<SourceInfo> sourceInfo = m_getSourceInfo().Where(info => info.Type == sourceType).ToList();
             string str = "";
             foreach (SourceInfo info in sourceInfo)
             {
@@ -56,6 +74,13 @@ public class PanelControlBinding : MonoBehaviour
 
     public void OnButtonPressed()
     {
-
+        if (m_onEditButton != null)
+        {
+            m_onEditButton(m_buttonSource);
+        }
+        if (m_onEditAxis != null)
+        {
+            m_onEditAxis(m_axisSource);
+        }
     }
 }

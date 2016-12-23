@@ -30,6 +30,8 @@ namespace InputController
          */
         public void ResetBuffers()
         {
+            m_sources = m_sources.OrderBy(s => (int)s.GetSourceType()).ToList();
+
             m_buffers = new List<List<Dictionary<ISource<T>, T>>>();
             m_buffers.Add(new List<Dictionary<ISource<T>, T>>());
             m_buffers.Last().Add(new Dictionary<ISource<T>, T>());
@@ -85,7 +87,7 @@ namespace InputController
         /*
          * Gets information about the sources for this buffer.
          */
-        public List<SourceInfo> GetSourceInfo()
+        public List<SourceInfo> GetSourceInfos()
         {
             List<SourceInfo> sourceInfo = new List<SourceInfo>();
             foreach (ISource<T> source in m_sources)
@@ -93,6 +95,35 @@ namespace InputController
                 sourceInfo.Add(new SourceInfo(source.GetSourceType(), source.GetName()));
             }
             return sourceInfo;
+        }
+
+        /*
+         * Adds a new source and resets the buffer.
+         */
+        public void AddSource(ISource<T> source)
+        {
+            if (!Contains(source))
+            {
+                m_sources.Add(source);
+                ResetBuffers();
+            }
+        }
+
+        /*
+         * Removes a source and resets the buffer.
+         */
+        public void RemoveSource(int index)
+        {
+            m_sources.RemoveAt(index);
+            ResetBuffers();
+        }
+
+        /*
+         * Checks if a source is already used in the buffer.
+         */
+        private bool Contains(ISource<T> source)
+        {
+            return m_sources.Any(s => s.GetName() == source.GetName() && s.GetSourceType() == source.GetSourceType());
         }
     }
 }
