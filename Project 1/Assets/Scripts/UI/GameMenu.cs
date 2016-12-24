@@ -80,12 +80,12 @@ public class GameMenu : MonoBehaviour
         Cursor.visible = IsMenuOpen();
 
         // prevent unwanted user input when menu is open
-        Controls.IsMuted = IsMenuOpen();
+        Controls.Instance.IsMuted = IsMenuOpen();
 
         // toggle the menu if the menu button was hit, or if the cancel button was hit go back a menu
-        if (Controls.rebindState == Controls.RebindState.None)
+        if (Controls.Instance.rebindState == Controls.RebindState.None)
         {
-            if (Controls.JustDown(GameButton.Menu))
+            if (Controls.Instance.JustDown(GameButton.Menu))
             {
                 SetMenu(IsMenuOpen() ? Menu.None : Menu.Root);
             }
@@ -115,7 +115,7 @@ public class GameMenu : MonoBehaviour
 
         // display correct rebind message if applicable
         string rebindMessage = "";
-        switch (Controls.rebindState)
+        switch (Controls.Instance.rebindState)
         {
             case Controls.RebindState.Button: rebindMessage = "Press any key..."; break;
             case Controls.RebindState.Axis: rebindMessage = "Use any axis, or press a key for the axis <b>positive</b> direction..."; break;
@@ -193,11 +193,11 @@ public class GameMenu : MonoBehaviour
         UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
         UIHelper.Create(prefab_headerBindings, panel_controlsContent);
 
-        foreach (KeyValuePair<GameButton, BufferedButton> button in Controls.Buttons)
+        foreach (KeyValuePair<GameButton, BufferedButton> button in Controls.Instance.Buttons)
         {
             m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button, OpenBindings));
         }
-        foreach (KeyValuePair<GameAxis, BufferedAxis> axis in Controls.Axis)
+        foreach (KeyValuePair<GameAxis, BufferedAxis> axis in Controls.Instance.Axes)
         {
             m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis, OpenBindings));
         }
@@ -444,14 +444,29 @@ public class GameMenu : MonoBehaviour
             }
         }
 
+        foreach (RectTransform rt in m_controlPanels)
+        {
+            PanelToggle toggle = rt.GetComponent<PanelToggle>();
+            PanelSlider slider = rt.GetComponent<PanelSlider>();
+            if (toggle)
+            {
+                toggle.Apply();
+            }
+            else if (slider)
+            {
+                slider.Apply();
+            }
+        }
+
         m_settings.ApplySettings();
         m_settings.SaveSettings();
+        Controls.Instance.Save();
         RefreshSettings();
     }
 
     public void LoadDefaultSettings()
     {
-        m_settings.LoadDefaults();
+        m_settings.LoadDefaultSettings();
         m_settings.ApplySettings();
         m_settings.SaveSettings();
         RefreshSettings();
@@ -459,7 +474,8 @@ public class GameMenu : MonoBehaviour
 
     public void UseDefaultControls()
     {
-        Controls.loadDefaultControls();
+        Controls.Instance.LoadDefaults();
+        m_settings.LoadDefaultControls();
         RefreshSettings();
     }
 
@@ -473,12 +489,12 @@ public class GameMenu : MonoBehaviour
     {
         if (!m_editButton.Equals(default(KeyValuePair<GameButton, BufferedButton>)))
         {
-            Controls.AddBinding(m_editButton.Value, OnRebindComplete);
+            Controls.Instance.AddBinding(m_editButton.Value, OnRebindComplete);
             SetMenu(Menu.Rebinding);
         }
         if (!m_editAxis.Equals(default(KeyValuePair<GameAxis, BufferedAxis>)))
         {
-            Controls.AddBinding(m_editAxis.Value, OnRebindComplete);
+            Controls.Instance.AddBinding(m_editAxis.Value, OnRebindComplete);
             SetMenu(Menu.Rebinding);
         }
     }

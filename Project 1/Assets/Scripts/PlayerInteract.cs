@@ -25,7 +25,7 @@ public class PlayerInteract : MonoBehaviour
                 interactable.SetOutline(true);
                 m_lastHovered = interactable;
 
-                if (Controls.JustDown(GameButton.Interact))
+                if (Controls.Instance.JustDown(GameButton.Interact))
                 {
                     interactable.Interact();
                 }

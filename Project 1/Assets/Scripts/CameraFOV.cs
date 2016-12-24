@@ -27,7 +27,7 @@ public class CameraFOV : MonoBehaviour
     {
 		float targetFieldOfView = m_settings.GetFieldOfView();
 
-		if (Controls.IsDown(GameButton.Aim) && !m_character.IsRunning())
+		if (Controls.Instance.IsDown(GameButton.Aim) && !m_character.IsRunning())
         {
 			targetFieldOfView = m_settings.GetFieldOfView() * m_aimFieldOfViewRatio;
 		}

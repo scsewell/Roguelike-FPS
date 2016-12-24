@@ -2,11 +2,11 @@
 
 public class ControlsEarlyUpdate : MonoBehaviour
 {
-    Controls m_controls;
+    ControlsUpdate m_controls;
 
 	private void Awake()
     {
-        m_controls = GetComponent<Controls>();
+        m_controls = GetComponent<ControlsUpdate>();
     }
 	
 	private void Update()

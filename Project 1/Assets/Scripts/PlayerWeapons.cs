@@ -18,12 +18,12 @@ public class PlayerWeapons : MonoBehaviour
 
 	private void Update()
     {
-		if (Controls.IsDown(GameButton.Fire))
+		if (Controls.Instance.IsDown(GameButton.Fire))
         {
 			BroadcastMessage("Fire");
 		}
 
-		if (Controls.IsDown(GameButton.Reload) && !m_character.IsJumping())
+		if (Controls.Instance.IsDown(GameButton.Reload) && !m_character.IsJumping())
         {
 			BroadcastMessage("Reload");
 		}

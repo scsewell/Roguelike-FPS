@@ -236,7 +236,7 @@ public class Settings : MonoBehaviour
         AudioListener.volume = m_volume;
     }
 
-    public void LoadDefaults()
+    public void LoadDefaultSettings()
     {
         m_fullscreen        = DEF_FULLSCREEN;
         m_showFPS           = DEF_SHOW_FPS;
@@ -250,11 +250,15 @@ public class Settings : MonoBehaviour
         m_brightness        = DEF_BRIGHTNESS;
         m_shadowDistance    = DEF_SHADOW_DISTANCE;
         m_volume            = DEF_VOLUME;
-        m_lookSensitivity   = DEF_LOOK_SENSITIVITY;
         m_textureRes        = DEF_TEXTURE_RES;
         m_shadowQuality     = DEF_SHADOW_QUALITY;
 
         m_resolution = Screen.resolutions[Screen.resolutions.Length - 1];
+    }
+
+    public void LoadDefaultControls()
+    {
+        m_lookSensitivity = DEF_LOOK_SENSITIVITY;
     }
 
     public void SaveSettings()

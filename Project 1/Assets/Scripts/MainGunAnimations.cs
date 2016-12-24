@@ -55,8 +55,8 @@ public class MainGunAnimations : MonoBehaviour
         m_anim.SetFloat("LookVertical", m_hLook);
         m_anim.SetFloat("LookHorizontal", m_vLook);
         m_anim.SetFloat("ReloadSpeed", 2.0f / m_gun.GetReloadSpeed());
-        m_anim.SetBool("Aiming Change", Controls.JustUp(GameButton.Aim) || Controls.JustDown(GameButton.Aim));
-		m_anim.SetBool("Aiming", Controls.IsDown(GameButton.Aim));
+        m_anim.SetBool("Aiming Change", Controls.Instance.JustUp(GameButton.Aim) || Controls.Instance.JustDown(GameButton.Aim));
+		m_anim.SetBool("Aiming", Controls.Instance.IsDown(GameButton.Aim));
 		m_anim.SetBool("Running", m_character.IsRunning());
 		m_anim.SetBool("Jump", m_character.IsJumping());
 		m_anim.SetBool("Reloading", m_gun.IsReloading());

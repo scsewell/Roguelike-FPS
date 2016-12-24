@@ -10,6 +10,8 @@ namespace InputController
             switch (button)
             {
                 case GameButton.Menu:       return "Toggle Menu";
+                case GameButton.RunHold:    return "Run";
+                case GameButton.RunTap:     return "Tap to Run";
             }
             return button.ToString();
         }

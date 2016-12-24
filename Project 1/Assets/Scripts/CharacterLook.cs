@@ -26,8 +26,8 @@ public class CharacterLook : MonoBehaviour
 	private void FixedUpdate()
     {
         float sensitivity = 60 * Mathf.Pow((m_settings.GetLookSensitivity() / 2) + 0.5f, 3) * (m_cam.fieldOfView / m_settings.GetFieldOfView());
-        m_deltaX = Controls.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
-        m_deltaY = Controls.AverageValue(GameAxis.LookY) * m_sensitivityY * sensitivity * Time.fixedDeltaTime;
+        m_deltaX = Controls.Instance.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
+        m_deltaY = Controls.Instance.AverageValue(GameAxis.LookY) * m_sensitivityY * sensitivity * Time.fixedDeltaTime;
 
         transform.Rotate(0, m_deltaX, 0);
 
