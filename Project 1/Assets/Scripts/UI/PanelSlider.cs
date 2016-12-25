@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PanelSlider : MonoBehaviour
+public class PanelSlider : MonoBehaviour, ISettingPanel
 {
     public Text label;
     public Text valueText;
@@ -28,9 +28,6 @@ public class PanelSlider : MonoBehaviour
         slider.minValue = min;
         slider.maxValue = max;
         slider.wholeNumbers = m_intOnly;
-
-        Load();
-
         return GetComponent<RectTransform>();
     }
 

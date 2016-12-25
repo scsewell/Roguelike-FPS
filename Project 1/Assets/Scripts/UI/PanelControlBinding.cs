@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InputController;
 
-public class PanelControlBinding : MonoBehaviour
+public class PanelControlBinding : MonoBehaviour, ISettingPanel
 {
     private Button m_button;
     private Text[] m_bindingText;
@@ -31,9 +31,6 @@ public class PanelControlBinding : MonoBehaviour
         m_controlText.text = ControlNames.GetName(buttonSource.Key);
         m_getSourceInfo = buttonSource.Value.GetSourceInfos;
         m_onEditButton = onEdit;
-
-        Load();
-
         return GetComponent<RectTransform>();
     }
 
@@ -43,12 +40,16 @@ public class PanelControlBinding : MonoBehaviour
         m_controlText.text = ControlNames.GetName(axisSource.Key);
         m_getSourceInfo = axisSource.Value.GetSourceInfos;
         m_onEditAxis = onEdit;
-
-        Load();
-
         return GetComponent<RectTransform>();
     }
-    
+
+    public void SetNav(Navigation nav)
+    {
+        m_button.navigation = nav;
+    }
+
+    public void Apply() {}
+
     public void Load()
     {
         foreach (SourceType sourceType in Enum.GetValues(typeof(SourceType)))
@@ -65,11 +66,6 @@ public class PanelControlBinding : MonoBehaviour
             }
             m_bindingText[(int)sourceType].text = str;
         }
-    }
-
-    public void SetNav(Navigation nav)
-    {
-        m_button.navigation = nav;
     }
 
     public void OnButtonPressed()

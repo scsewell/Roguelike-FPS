@@ -10,24 +10,39 @@ using Newtonsoft.Json;
  */ 
 public class Controls
 {
-    private static Controls m_instance = new Controls();
-    public static Controls Instance
+    // limits on values
+    public const float MIN_LOOK_SENSITIVITY = 0f;
+    public const float MAX_LOOK_SENSITIVITY = 2f;
+
+    // default values
+    private const float DEF_LOOK_SENSITIVITY = 1;
+
+
+    // settings
+    private float m_lookSensitivity;
+    public float GetLookSensitivity()
     {
-        get { return m_instance; }
+        return m_lookSensitivity;
+    }
+    public void SetLookSensitivity(float value)
+    {
+        m_lookSensitivity = value;
     }
 
-    private Dictionary<GameButton, BufferedButton> m_buttons;
+
+    private Dictionary<GameButton, BufferedButton> m_buttons = new Dictionary<GameButton, BufferedButton>();
     public Dictionary<GameButton, BufferedButton> Buttons
     {
         get { return m_buttons; }
     }
-
-    private Dictionary<GameAxis, BufferedAxis> m_axes;
+    
+    private Dictionary<GameAxis, BufferedAxis> m_axes = new Dictionary<GameAxis, BufferedAxis>();
     public Dictionary<GameAxis, BufferedAxis> Axes
     {
         get { return m_axes; }
     }
 
+    [JsonIgnore]
     private bool m_isMuted = false;
     public bool IsMuted
     {
@@ -36,26 +51,30 @@ public class Controls
     }
 
     public enum RebindState { None, Button, Axis, KeyAxis, ButtonAxis }
+    [JsonIgnore]
     private RebindState m_rebindState = RebindState.None;
     public RebindState rebindState
     {
         get { return m_rebindState; }
     }
 
-    private BufferedButton m_rebindingButton = null;
-    private BufferedAxis m_rebindingAxis = null;
-    private List<KeyCode> m_rebindingPreviousKeys = new List<KeyCode>();
-    private List<GamepadButton> m_rebindingPreviousButtons = new List<GamepadButton>();
-    private KeyCode m_rebindingAxisKey;
-    private GamepadButton m_rebindingAxisButton;
-    private Action m_onRebindComplete;
-    
+    [JsonIgnore] private BufferedButton m_rebindingButton = null;
+    [JsonIgnore] private BufferedAxis m_rebindingAxis = null;
+    [JsonIgnore] private List<KeyCode> m_rebindingPreviousKeys = new List<KeyCode>();
+    [JsonIgnore] private List<GamepadButton> m_rebindingPreviousButtons = new List<GamepadButton>();
+    [JsonIgnore] private KeyCode m_rebindingAxisKey;
+    [JsonIgnore] private GamepadButton m_rebindingAxisButton;
+    [JsonIgnore] private Action m_onRebindComplete = null;
 
-    private Controls()
+
+    private static Controls m_instance = new Controls();
+    public static Controls Instance
     {
-        m_buttons = new Dictionary<GameButton, BufferedButton>();
-        m_axes = new Dictionary<GameAxis, BufferedAxis>();
+        get { return m_instance; }
+    }
 
+    public Controls()
+    {
         LoadDefaults();
     }
 
@@ -162,6 +181,8 @@ public class Controls
      */
     public void LoadDefaults()
     {
+        m_lookSensitivity = DEF_LOOK_SENSITIVITY;
+
         m_buttons = new Dictionary<GameButton, BufferedButton>();
         
         m_buttons.Add(GameButton.Menu, new BufferedButton(false, new List<ISource<bool>>
@@ -353,6 +374,13 @@ public class Controls
         return Enum.GetValues(typeof(GamepadButton)).Cast<GamepadButton>().Where(
             button => JoystickButton.GetButtonValue(button) && (!ignorePrevious || !m_rebindingPreviousButtons.Contains(button))
             ).ToList();
+    }
+
+    public void CopyFrom(Controls controls)
+    {
+        SetLookSensitivity(controls.GetLookSensitivity());
+        m_buttons = controls.Buttons;
+        m_axes = controls.Axes;
     }
 
     public void Save()

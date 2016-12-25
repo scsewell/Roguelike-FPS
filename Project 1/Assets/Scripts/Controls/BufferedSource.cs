@@ -12,7 +12,7 @@ namespace InputController
         protected List<ISource<T>> m_sources;
         private List<List<Dictionary<ISource<T>, T>>> m_buffers;
 
-        private bool m_canBeMuted;
+        protected bool m_canBeMuted;
         public bool CanBeMuted
         {
             get { return m_canBeMuted; }
@@ -21,7 +21,14 @@ namespace InputController
         protected BufferedSource(bool canBeMuted, List<ISource<T>> sources)
         {
             m_canBeMuted = canBeMuted;
-            m_sources = new List<ISource<T>>(sources);
+            if (sources != null)
+            {
+                m_sources = new List<ISource<T>>(sources);
+            }
+            else
+            {
+                m_sources = new List<ISource<T>>();
+            }
             ResetBuffers();
         }
 

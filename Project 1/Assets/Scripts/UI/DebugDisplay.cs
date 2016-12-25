@@ -7,16 +7,14 @@ public class DebugDisplay : MonoBehaviour
     public float fpsUpdateInterval = 0.5f;
 
     private int m_framesOverInterval = 0;
-    private float m_fpsOverInterval = 0.0f;
+    private float m_fpsOverInterval = 0f;
     private float m_timeLeftBeforeUpdate;
     private float m_fps;
 
     private Text m_text;
-    private Settings m_settings;
     
     private void Awake()
     {
-        m_settings = GameObject.FindGameObjectWithTag("GameController").GetComponent<Settings>();
         m_text = GetComponent<Text>();
     }
 
@@ -43,7 +41,7 @@ public class DebugDisplay : MonoBehaviour
         }
 
         // set display information
-        if (m_settings.GetShowFPS())
+        if (Settings.Instance.GetShowFPS())
         {
             m_text.text += "fps: " + m_fps + "\n";
         }

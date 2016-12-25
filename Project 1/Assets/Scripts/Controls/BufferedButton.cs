@@ -8,9 +8,7 @@ namespace InputController
      */
     public class BufferedButton : BufferedSource<bool>
     {
-        public BufferedButton(bool canBeMuted, List<ISource<bool>> sources) : base(canBeMuted, sources)
-        {
-        }
+        public BufferedButton(bool canBeMuted, List<ISource<bool>> sources) : base(canBeMuted, sources) {}
 
         /*
          * Returns true if any of the relevant keyboard or joystick keys are down this frame.

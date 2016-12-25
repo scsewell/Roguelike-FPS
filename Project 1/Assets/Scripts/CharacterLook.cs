@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class CharacterLook : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class CharacterLook : MonoBehaviour
     [SerializeField] private float m_minimumY = -80.0f;
     [SerializeField] private float m_maximumY = 80.0f;
     
-	private Settings m_settings;
     private PlayerWeapons m_weapons;
     private Camera m_cam;
 
@@ -18,14 +16,13 @@ public class CharacterLook : MonoBehaviour
 
     private void Start() 
     {
-		m_settings = GameObject.FindGameObjectWithTag("GameController").GetComponent<Settings>();
         m_weapons = transform.GetComponentInChildren<PlayerWeapons>();
         m_cam = transform.GetComponentInChildren<Camera>();
     }
 
 	private void FixedUpdate()
     {
-        float sensitivity = 60 * Mathf.Pow((m_settings.GetLookSensitivity() / 2) + 0.5f, 3) * (m_cam.fieldOfView / m_settings.GetFieldOfView());
+        float sensitivity = 60 * Mathf.Pow((Controls.Instance.GetLookSensitivity() / 2) + 0.5f, 3) * (m_cam.fieldOfView / Settings.Instance.GetFieldOfView());
         m_deltaX = Controls.Instance.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
         m_deltaY = Controls.Instance.AverageValue(GameAxis.LookY) * m_sensitivityY * sensitivity * Time.fixedDeltaTime;
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Settings : MonoBehaviour
+public class Settings
 {
     // limits on values
     public const float MIN_FOV = 40.0f;
@@ -12,8 +12,6 @@ public class Settings : MonoBehaviour
     public const float MAX_BRIGHTNESS = 2f;
     public const float MIN_SHADOW_DISTANCE = 0f;
     public const float MAX_SHADOW_DISTANCE = 40f;
-    public const float MIN_LOOK_SENSITIVITY = 0f;
-    public const float MAX_LOOK_SENSITIVITY = 2f;
     public static int[] TARGET_FRAME_RATES = { 10, 30, 60, 120, 144, 500 };
     public enum TextureResolution { LOW, MEDIUM, HIGH };
     public enum ShadowQualityLevels { OFF, LOW, MEDIUM, HIGH, ULTRA };
@@ -31,9 +29,9 @@ public class Settings : MonoBehaviour
     private const float DEF_BRIGHTNESS = 1;
     private const float DEF_SHADOW_DISTANCE = 30;
     private const float DEF_VOLUME = 1;
-    private const float DEF_LOOK_SENSITIVITY = 1;
     private const TextureResolution DEF_TEXTURE_RES = TextureResolution.HIGH;
     private const ShadowQualityLevels DEF_SHADOW_QUALITY = ShadowQualityLevels.HIGH;
+
 
     // settings
     private bool m_fullscreen;
@@ -45,7 +43,7 @@ public class Settings : MonoBehaviour
     {
         m_fullscreen = value;
     }
-
+    
     private bool m_showFPS;
     public bool GetShowFPS()
     {
@@ -146,16 +144,6 @@ public class Settings : MonoBehaviour
         m_volume = value;
     }
 
-    private float m_lookSensitivity;
-    public float GetLookSensitivity()
-    {
-        return m_lookSensitivity;
-    }
-    public void SetLookSensitivity(float value)
-    {
-        m_lookSensitivity = value;
-    }
-
     private int m_frameRate;
     public string GetFrameRate()
     {
@@ -214,9 +202,15 @@ public class Settings : MonoBehaviour
     }
 
 
-    private void Awake()
+    private static Settings m_instance = new Settings();
+    public static Settings Instance
     {
-        LoadSettings();
+        get { return m_instance; }
+    }
+
+    public Settings()
+    {
+        LoadDefaults();
     }
 
 	public void ApplySettings()
@@ -225,7 +219,7 @@ public class Settings : MonoBehaviour
 
         if (m_resolution.width != Screen.currentResolution.width || m_resolution.height != Screen.currentResolution.height || m_fullscreen != Screen.fullScreen)
         {
-            Screen.SetResolution(m_resolution.width, m_resolution.height, m_fullscreen);
+            Screen.SetResolution(m_resolution.width, m_resolution.height, m_fullscreen, m_frameRate);
         }
 
         QualitySettings.SetQualityLevel((int)m_shadowQuality);
@@ -236,7 +230,7 @@ public class Settings : MonoBehaviour
         AudioListener.volume = m_volume;
     }
 
-    public void LoadDefaultSettings()
+    public void LoadDefaults()
     {
         m_fullscreen        = DEF_FULLSCREEN;
         m_showFPS           = DEF_SHOW_FPS;
@@ -256,54 +250,32 @@ public class Settings : MonoBehaviour
         m_resolution = Screen.resolutions[Screen.resolutions.Length - 1];
     }
 
-    public void LoadDefaultControls()
+    public void CopyFrom(Settings settings)
     {
-        m_lookSensitivity = DEF_LOOK_SENSITIVITY;
+        SetFullscreen(settings.GetFullscreen());
+        SetShowFPS(settings.GetShowFPS());
+        SetAntialiasing(settings.GetAntialiasing());
+        SetVsync(settings.GetVsync());
+        SetBloom(settings.GetBloom());
+        SetMotionBlur(settings.GetMotionBlur());
+        SetSSAO(settings.GetSSAO());
+        SetFrameRate(settings.GetFrameRate());
+        SetFieldOfView(settings.GetFieldOfView());
+        SetBrightness(settings.GetBrightness());
+        SetShadowDistance(settings.GetShadowDistance());
+        SetVolume(settings.GetVolume());
+        SetTextureResolution(settings.GetTextureResolution());
+        SetShadowQuality(settings.GetShadowQuality());
+        SetResolution(settings.GetResolution());
     }
 
-    public void SaveSettings()
+    public void Save()
     {
-		PlayerPrefsExtras.SetBool("Fullscreen", m_fullscreen);
-		PlayerPrefsExtras.SetBool("Vsync", m_vsync);
-		PlayerPrefsExtras.SetBool("Antialiasing", m_antialiasing);
-		PlayerPrefsExtras.SetBool("Bloom", m_bloom);
-		PlayerPrefsExtras.SetBool("MotionBlur", m_motionBlur);
-		PlayerPrefsExtras.SetBool("SSAO", m_SSAO);
-        PlayerPrefsExtras.SetBool("ShowFPS", m_showFPS);
-        PlayerPrefs.SetInt("FrameRate", m_frameRate);
-        PlayerPrefs.SetInt("ResolutionX", m_resolution.width);
-        PlayerPrefs.SetInt("ResolutionY", m_resolution.height);
-        PlayerPrefs.SetFloat("FieldOfView", m_fieldOfView);
-		PlayerPrefs.SetFloat("Brightness", m_brightness);
-		PlayerPrefs.SetFloat("ShadowDistance", m_shadowDistance);
-		PlayerPrefs.SetFloat("Volume", m_volume);
-		PlayerPrefs.SetFloat("LookSensitivity", m_lookSensitivity);
-        PlayerPrefs.SetInt("TextureRes", (int)m_textureRes);
-        PlayerPrefs.SetInt("ShadowQuality", (int)m_shadowQuality);
+        FileIO.WriteSettings(m_instance);
     }
 	
-	public void LoadSettings()
+	public void Load()
     {
-        m_fullscreen        = PlayerPrefsExtras.GetBool("Fullscreen", DEF_FULLSCREEN);
-		m_vsync             = PlayerPrefsExtras.GetBool("Vsync", DEF_VSYNC);
-		m_antialiasing      = PlayerPrefsExtras.GetBool("Antialiasing", DEF_AA);
-		m_bloom             = PlayerPrefsExtras.GetBool("Bloom", DEF_BLOOM);
-		m_motionBlur        = PlayerPrefsExtras.GetBool("MotionBlur", DEF_MOTION_BLUR);
-		m_SSAO              = PlayerPrefsExtras.GetBool("SSAO", DEF_SSAO);
-        m_showFPS           = PlayerPrefsExtras.GetBool("ShowFPS", DEF_SHOW_FPS);
-        m_frameRate         = PlayerPrefs.GetInt("FrameRate", DEF_FRAMERATE);
-
-        Resolution defRes = Screen.resolutions[Screen.resolutions.Length - 1];
-        m_resolution = new Resolution();
-        m_resolution.width  = PlayerPrefs.GetInt("ResolutionX", defRes.width);
-        m_resolution.height = PlayerPrefs.GetInt("ResolutionY", defRes.height);
-
-        m_fieldOfView       = PlayerPrefs.GetFloat("FieldOfView", DEF_FOV);
-		m_brightness        = PlayerPrefs.GetFloat("Brightness", DEF_BRIGHTNESS);
-		m_shadowDistance    = PlayerPrefs.GetFloat("ShadowDistance", DEF_SHADOW_DISTANCE);
-		m_volume            = PlayerPrefs.GetFloat("Volume", DEF_VOLUME);
-        m_lookSensitivity   = PlayerPrefs.GetFloat("LookSensitivity", DEF_LOOK_SENSITIVITY);
-        m_textureRes        = (TextureResolution)PlayerPrefs.GetInt("TextureRes", (int)DEF_TEXTURE_RES);
-        m_shadowQuality     = (ShadowQualityLevels)PlayerPrefs.GetInt("ShadowQuality", (int)DEF_SHADOW_QUALITY);
+        m_instance.CopyFrom(FileIO.ReadSettings());
     }
 }

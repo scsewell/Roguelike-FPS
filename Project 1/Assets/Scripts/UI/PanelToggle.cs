@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PanelToggle : MonoBehaviour
+public class PanelToggle : MonoBehaviour, ISettingPanel
 {
     public Text label;
     public Toggle toggle;
@@ -19,9 +19,6 @@ public class PanelToggle : MonoBehaviour
         label.text = name;
         m_get = get;
         m_set = set;
-
-        Load();
-
         return GetComponent<RectTransform>();
     }
 

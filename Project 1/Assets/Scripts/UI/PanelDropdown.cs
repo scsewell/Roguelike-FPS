@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class PanelDropdown : MonoBehaviour
+public class PanelDropdown : MonoBehaviour, ISettingPanel
 {
     public Text label;
     public Dropdown dropdown;
@@ -30,8 +30,6 @@ public class PanelDropdown : MonoBehaviour
             options.Add(new Dropdown.OptionData(value));
         }
         dropdown.AddOptions(options);
-
-        Load();
 
         return GetComponent<RectTransform>();
     }
