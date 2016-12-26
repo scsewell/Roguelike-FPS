@@ -1,61 +1,43 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class PanelSlider : MonoBehaviour, ISettingPanel
 {
     public Text label;
     public Text valueText;
     public Slider slider;
-
-    public delegate float GetVal();
-    public delegate void SetVal(float val);
-
-    private float m_val;
-    private float m_min;
-    private float m_max;
+    
     private bool m_intOnly;
-    private GetVal m_get;
-    private SetVal m_set;
+    private Action<float> m_set;
 
-    public RectTransform Init(string name, GetVal get, SetVal set, float min, float max, bool intOnly)
+    public RectTransform Init(string name, Func<float> get, Action<float> set, float min, float max, bool intOnly)
     {
-        label.text = name;
-        m_get = get;
         m_set = set;
         m_intOnly = intOnly;
 
+        label.text = name;
         slider.minValue = min;
         slider.maxValue = max;
         slider.wholeNumbers = m_intOnly;
-        return GetComponent<RectTransform>();
-    }
+        slider.value = get();
+        UpdateText();
 
-    public void SetNav(Navigation nav)
-    {
-        slider.navigation = nav;
+        return GetComponent<RectTransform>();
     }
 
     public void Apply()
     {
-        m_set(m_val);
-    }
-
-    public void Load()
-    {
-        m_val = m_get();
-        slider.value = m_val;
-        UpdateText();
+        m_set(slider.value);
     }
 
     public void OnValueChanged()
     {
-        m_val = slider.value;
         UpdateText();
     }
 
     private void UpdateText()
     {
-        valueText.text = m_intOnly ? m_val.ToString() : (Mathf.Round(m_val * 100) / 100.0f).ToString();
+        valueText.text = m_intOnly ? slider.value.ToString() : (Mathf.Round(slider.value * 100) / 100.0f).ToString();
     }
 }

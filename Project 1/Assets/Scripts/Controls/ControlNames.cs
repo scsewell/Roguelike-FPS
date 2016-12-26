@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Linq;
 
 namespace InputController
@@ -92,9 +91,54 @@ namespace InputController
         {
             switch (keyCode)
             {
-                case KeyCode.Mouse0:    return "Left Mouse";
-                case KeyCode.Mouse1:    return "Right Mouse";
-                case KeyCode.Mouse2:    return "Middle Mouse";
+                case KeyCode.AltGr:         return "Alt Gr";
+                case KeyCode.Ampersand:     return "&";
+                case KeyCode.Asterisk:      return "*";
+                case KeyCode.At:            return "@";
+                case KeyCode.BackQuote:     return "`";
+                case KeyCode.Backslash:     return "\\";
+                case KeyCode.Caret:         return "^";
+                case KeyCode.Colon:         return ":";
+                case KeyCode.Comma:         return ",";
+                case KeyCode.Dollar:        return "$";
+                case KeyCode.DoubleQuote:   return "\"";
+                case KeyCode.Equals:        return "=";
+                case KeyCode.Exclaim:       return "!";
+                case KeyCode.Greater:       return ">";
+                case KeyCode.Hash:          return "#";
+                case KeyCode.LeftAlt:       return "Left Alt";
+                case KeyCode.LeftBracket:   return "[";
+                case KeyCode.LeftCommand:   return "Left Cmd";
+                case KeyCode.LeftControl:   return "Left Ctrl";
+                case KeyCode.LeftParen:     return "(";
+                case KeyCode.LeftShift:     return "Left Shift";
+                case KeyCode.LeftWindows:   return "Left Windows";
+                case KeyCode.Less:          return "<";
+                case KeyCode.Minus:         return "-";
+                case KeyCode.Period:        return ".";
+                case KeyCode.Plus:          return "+";
+                case KeyCode.Question:      return "?";
+                case KeyCode.Quote:         return "'";
+                case KeyCode.RightAlt:      return "Right Alt";
+                case KeyCode.RightBracket:  return "]";
+                case KeyCode.RightCommand:  return "Right Cmd";
+                case KeyCode.RightControl:  return "Right Ctrl";
+                case KeyCode.RightParen:    return ")";
+                case KeyCode.RightShift:    return "Right Shift";
+                case KeyCode.RightWindows:  return "Right Windows";
+                case KeyCode.Semicolon:     return ";";
+                case KeyCode.Slash:         return "/";
+                case KeyCode.Underscore:    return "_";
+                    
+                case KeyCode.UpArrow:       return "Up";
+                case KeyCode.DownArrow:     return "Down";
+                case KeyCode.LeftArrow:     return "Left";
+                case KeyCode.RightArrow:    return "Right";
+
+                case KeyCode.Mouse0:        return "Left Mouse";
+                case KeyCode.Mouse1:        return "Right Mouse";
+                case KeyCode.Mouse2:        return "Middle Mouse";
+
                 case KeyCode.Alpha0:
                 case KeyCode.Alpha1:
                 case KeyCode.Alpha2:
@@ -104,9 +148,28 @@ namespace InputController
                 case KeyCode.Alpha6:
                 case KeyCode.Alpha7:
                 case KeyCode.Alpha8:
-                case KeyCode.Alpha9:    return keyCode.ToString().Replace("Alpha","");
+                case KeyCode.Alpha9:        return keyCode.ToString().Replace("Alpha","");
+                    
+                case KeyCode.KeypadDivide:  return "Num /";
+                case KeyCode.KeypadEnter:   return "Num Enter";
+                case KeyCode.KeypadEquals:  return "Num =";
+                case KeyCode.KeypadMinus:   return "Num -";
+                case KeyCode.KeypadMultiply:return "Num *";
+                case KeyCode.KeypadPeriod:  return "Num .";
+                case KeyCode.KeypadPlus:    return "Num +";
+                
+                case KeyCode.Keypad0:
+                case KeyCode.Keypad1:
+                case KeyCode.Keypad2:
+                case KeyCode.Keypad3:
+                case KeyCode.Keypad4:
+                case KeyCode.Keypad5:
+                case KeyCode.Keypad6:
+                case KeyCode.Keypad7:
+                case KeyCode.Keypad8:
+                case KeyCode.Keypad9:       return keyCode.ToString().Replace("Keypad", "Num ");
             }
-            // return the keycode with spaces inserted before capital letters
+            // by default the keycode with spaces inserted before capital letters
             string s = keyCode.ToString();
             return string.Join(string.Empty,
                     s.Select((x, i) => (

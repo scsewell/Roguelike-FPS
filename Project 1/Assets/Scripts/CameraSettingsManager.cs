@@ -6,7 +6,7 @@ public class CameraSettingsManager : MonoBehaviour
 {
     private AntiAliasing m_antiAliasing;
     private AmbientOcclusion m_ambientOcclusion;
-    private UnityStandardAssets.CinematicEffects.Bloom m_bloom;
+    private Bloom m_bloom;
     private CameraMotionBlur m_motionBlur;
     private TonemappingColorGrading m_tonemapping;
     private LensAberrations m_lensAberrations;
@@ -15,7 +15,7 @@ public class CameraSettingsManager : MonoBehaviour
     {
         m_antiAliasing = GetComponent<AntiAliasing>();
         m_ambientOcclusion = GetComponent<AmbientOcclusion>();
-        m_bloom = GetComponent<UnityStandardAssets.CinematicEffects.Bloom>();
+        m_bloom = GetComponent<Bloom>();
         m_motionBlur = GetComponent<CameraMotionBlur>();
         m_tonemapping = GetComponent<TonemappingColorGrading>();
         m_lensAberrations = GetComponent<LensAberrations>();

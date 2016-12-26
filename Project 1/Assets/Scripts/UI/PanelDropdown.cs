@@ -1,28 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
 
 public class PanelDropdown : MonoBehaviour, ISettingPanel
 {
     public Text label;
     public Dropdown dropdown;
-
-    public delegate string GetVal();
-    public delegate void SetVal(string val);
-
-    private string m_val;
+    
     private string[] m_values;
-    private GetVal m_get;
-    private SetVal m_set;
+    private Action<string> m_set;
 
-    public RectTransform Init(string name, GetVal get, SetVal set, string[] values)
+    public RectTransform Init(string name, Func<string> get, Action<string> set, string[] values)
     {
-        label.text = name;
-        m_get = get;
         m_set = set;
-
         m_values = values;
-
+        label.text = name;
+        
         dropdown.ClearOptions();
         List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
         foreach (string value in m_values)
@@ -31,35 +25,20 @@ public class PanelDropdown : MonoBehaviour, ISettingPanel
         }
         dropdown.AddOptions(options);
 
-        return GetComponent<RectTransform>();
-    }
-
-    public void SetNav(Navigation nav)
-    {
-        dropdown.navigation = nav;
-    }
-
-    public void Apply()
-    {
-        m_set(m_val);
-    }
-
-    public void Load()
-    {
-        m_val = m_get();
-
         for (int i = 0; i < m_values.Length; i++)
         {
-            if (m_values[i].Equals(m_val))
+            if (m_values[i].Equals(get()))
             {
                 dropdown.value = i;
                 break;
             }
         }
+
+        return GetComponent<RectTransform>();
     }
 
-    public void OnValueChanged()
+    public void Apply()
     {
-        m_val = m_values[dropdown.value];
+        m_set(m_values[dropdown.value]);
     }
 }

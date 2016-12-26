@@ -112,10 +112,17 @@ public class MainGun : MonoBehaviour
 		
 		if (Physics.Raycast(m_bulletEmitter.position, direction, out hit, m_range, m_hitLayers))
         {
+            HitboxCollider hitbox = hit.transform.GetComponentInParent<HitboxCollider>();
+            if (hitbox != null)
+            {
+                hitbox.Damage(m_damage);
+            }
+
             if (hit.rigidbody)
             {
                 hit.rigidbody.AddForceAtPosition(m_force * direction, hit.point);
             }
+
 			if (hit.transform.root.tag == m_bleedObjects)
             {	
 				if (m_bloodParticles)
@@ -137,8 +144,6 @@ public class MainGun : MonoBehaviour
                     hole.GetComponent<BulletHoles>().SetParent(hit.collider.transform);
 				}
 			}
-
-			hit.collider.SendMessage("RecieveDamage", m_damage, SendMessageOptions.DontRequireReceiver);
         }
         m_bulletsLeft--;
 

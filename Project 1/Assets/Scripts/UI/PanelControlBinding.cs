@@ -31,6 +31,8 @@ public class PanelControlBinding : MonoBehaviour, ISettingPanel
         m_controlText.text = ControlNames.GetName(buttonSource.Key);
         m_getSourceInfo = buttonSource.Value.GetSourceInfos;
         m_onEditButton = onEdit;
+
+        Load();
         return GetComponent<RectTransform>();
     }
 
@@ -40,12 +42,9 @@ public class PanelControlBinding : MonoBehaviour, ISettingPanel
         m_controlText.text = ControlNames.GetName(axisSource.Key);
         m_getSourceInfo = axisSource.Value.GetSourceInfos;
         m_onEditAxis = onEdit;
-        return GetComponent<RectTransform>();
-    }
 
-    public void SetNav(Navigation nav)
-    {
-        m_button.navigation = nav;
+        Load();
+        return GetComponent<RectTransform>();
     }
 
     public void Apply() {}

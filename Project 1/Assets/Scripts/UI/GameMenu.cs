@@ -62,15 +62,11 @@ public class GameMenu : MonoBehaviour
     private void Awake()
     {
         Settings.Instance.Load();
-        Settings.Instance.ApplySettings();
-
-        m_editSettings = new Settings();
-        m_editControls = new Controls();
+        Settings.Instance.Apply();
     }
 
     private void Start()
     {
-        InitMenu();
         SetMenu(Menu.None);
     }
 
@@ -126,105 +122,6 @@ public class GameMenu : MonoBehaviour
         txt_rebindMessage.text = rebindMessage;
     }
 
-    private void InitMenu()
-    {
-        Navigation tempNav;
-        Navigation explicitNav = new Navigation();
-        explicitNav.mode = Navigation.Mode.Explicit;
-
-        int GroupSpacing = 10;
-
-        // Create settings panels
-        m_settingPanels = new List<RectTransform>();
-
-        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Screen";
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Resolution",m_editSettings.GetResolution, m_editSettings.SetResolution, m_editSettings.GetSupportedResolutions()));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Fullscreen", m_editSettings.GetFullscreen, m_editSettings.SetFullscreen));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Target Frame Rate", m_editSettings.GetFrameRate, m_editSettings.SetFrameRate, Settings.TARGET_FRAME_RATES.Select(x => x.ToString()).ToArray()));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("VSync", m_editSettings.GetVsync, m_editSettings.SetVsync));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Field Of View", m_editSettings.GetFieldOfView, m_editSettings.SetFieldOfView, Settings.MIN_FOV, Settings.MAX_FOV, true));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Brightness", m_editSettings.GetBrightness, m_editSettings.SetBrightness, Settings.MIN_BRIGHTNESS, Settings.MAX_BRIGHTNESS, false));
-
-        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Quality";
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Shadow Quality", m_editSettings.GetShadowQuality, m_editSettings.SetShadowQuality, Enum.GetNames(typeof(Settings.ShadowQualityLevels))));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Shadow Distance", m_editSettings.GetShadowDistance, m_editSettings.SetShadowDistance, Settings.MIN_SHADOW_DISTANCE, Settings.MAX_SHADOW_DISTANCE, true));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Texture Quality", m_editSettings.GetTextureResolution, m_editSettings.SetTextureResolution, Enum.GetNames(typeof(Settings.TextureResolution))));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Antialiasing", m_editSettings.GetAntialiasing, m_editSettings.SetAntialiasing));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("SSAO", m_editSettings.GetSSAO, m_editSettings.SetSSAO));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Bloom", m_editSettings.GetBloom, m_editSettings.SetBloom));
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Motion Blur", m_editSettings.GetMotionBlur, m_editSettings.SetMotionBlur));
-
-        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Audio";
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Volume", m_editSettings.GetVolume, m_editSettings.SetVolume, 0, 1, false));
-
-        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Other";
-        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Show FPS", m_editSettings.GetShowFPS, m_editSettings.SetShowFPS));
-        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
-
-        Navigation settigsTopNav = explicitNav;
-        settigsTopNav.selectOnUp = btn_applySettings;
-        
-        UIHelper.SetNavigationVertical(m_settingPanels, settigsTopNav, explicitNav, explicitNav);
-
-        Selectable firstSetting = m_settingPanels.First().GetComponentInChildren<Selectable>();
-
-        tempNav = btn_backSettings.navigation;
-        tempNav.selectOnDown = firstSetting;
-        btn_backSettings.navigation = tempNav;
-
-        tempNav = btn_applySettings.navigation;
-        tempNav.selectOnDown = firstSetting;
-        btn_applySettings.navigation = tempNav;
-
-        tempNav = btn_loadDefalutsSettings.navigation;
-        tempNav.selectOnDown = firstSetting;
-        btn_loadDefalutsSettings.navigation = tempNav;
-
-        // Create controls panels
-        m_controlPanels = new List<RectTransform>();
-
-        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
-        UIHelper.Create(prefab_header, panel_controlsContent).GetComponentInChildren<Text>().text = "General";
-        m_controlPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_controlsContent).GetComponent<PanelSlider>().Init("Look Sensitivity", m_editControls.GetLookSensitivity, m_editControls.SetLookSensitivity, Controls.MIN_LOOK_SENSITIVITY, Controls.MAX_LOOK_SENSITIVITY, false));
-
-        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
-        UIHelper.Create(prefab_headerBindings, panel_controlsContent);
-
-        foreach (KeyValuePair<GameButton, BufferedButton> button in m_editControls.Buttons)
-        {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button, OpenBindings));
-        }
-        foreach (KeyValuePair<GameAxis, BufferedAxis> axis in m_editControls.Axes)
-        {
-            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis, OpenBindings));
-        }
-
-        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
-
-        Navigation controlsTopNav = explicitNav;
-        controlsTopNav.selectOnUp = btn_applyControls;
-
-        UIHelper.SetNavigationVertical(m_controlPanels, controlsTopNav, explicitNav, explicitNav);
-
-        Selectable firstControl = m_controlPanels.First().GetComponentInChildren<Selectable>();
-
-        tempNav = btn_backControls.navigation;
-        tempNav.selectOnDown = firstControl;
-        btn_backControls.navigation = tempNav;
-
-        tempNav = btn_applyControls.navigation;
-        tempNav.selectOnDown = firstControl;
-        btn_applyControls.navigation = tempNav;
-
-        tempNav = btn_useDefalutsControls.navigation;
-        tempNav.selectOnDown = firstControl;
-        btn_useDefalutsControls.navigation = tempNav;
-    }
-
     public bool IsMenuOpen()
     {
         return m_activeMenu != Menu.None;
@@ -232,15 +129,27 @@ public class GameMenu : MonoBehaviour
 
     private void SetMenu(Menu menu)
     {
-        m_activeMenu = menu;
-
         canvas_root.enabled = (menu == Menu.Root);
         canvas_settings.enabled = (menu == Menu.Settings);
         canvas_controls.enabled = (menu == Menu.Controls);
         canvas_bindings.enabled = (menu == Menu.Bindings);
         canvas_rebinding.enabled = (menu == Menu.Rebinding);
 
-        RefreshSettings();
+        bool fromRoot = m_activeMenu == Menu.Root;
+        m_activeMenu = menu;
+
+        if (fromRoot)
+        {
+            StartCoroutine(RefreshScrollbar(scrollbar_settings));
+            StartCoroutine(RefreshScrollbar(scrollbar_controls));
+        }
+
+        switch (menu)
+        {
+            case Menu.Settings: RefreshSettings(); break;
+            case Menu.Controls: RefreshControls(fromRoot); break;
+            case Menu.Bindings: RefreshBindings(); break;
+        }
 
         if (!(menu == Menu.Bindings || menu == Menu.Rebinding))
         {
@@ -265,13 +174,6 @@ public class GameMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    private IEnumerator RefreshScrollbar(Scrollbar scrollbar)
-    {
-        yield return null;
-        yield return null;
-        scrollbar.value = 1;
-    }
-    
     public void Resume()
     {
         SetMenu(Menu.None);
@@ -318,25 +220,193 @@ public class GameMenu : MonoBehaviour
     {
         Application.Quit();
     }
-    
+
+    public void ApplySettings()
+    {
+        m_settingPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Apply());
+        Settings.Instance = m_editSettings;
+        Settings.Instance.Apply();
+        Settings.Instance.Save();
+        RefreshSettings();
+    }
+
+    public void ApplyControls()
+    {
+        m_controlPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Apply());
+        Controls.Instance = m_editControls;
+        Controls.Instance.Save();
+        RefreshControls(true);
+    }
+
+    public void LoadDefaultSettings()
+    {
+        Settings.Instance.LoadDefaults();
+        Settings.Instance.Apply();
+        Settings.Instance.Save();
+        RefreshSettings();
+    }
+
+    public void UseDefaultControls()
+    {
+        Controls.Instance.LoadDefaults();
+        Controls.Instance.Save();
+        RefreshControls(true);
+    }
+
+    private void Rebind(int index)
+    {
+        RemoveBinding(index);
+        AddBinding();
+    }
+
+    public void AddBinding()
+    {
+        if (!m_editButton.Equals(default(KeyValuePair<GameButton, BufferedButton>)))
+        {
+            Controls.Instance.AddBinding(m_editButton.Value, OnRebindComplete);
+            SetMenu(Menu.Rebinding);
+        }
+        if (!m_editAxis.Equals(default(KeyValuePair<GameAxis, BufferedAxis>)))
+        {
+            Controls.Instance.AddBinding(m_editAxis.Value, OnRebindComplete);
+            SetMenu(Menu.Rebinding);
+        }
+    }
+
+    private void RemoveBinding(int index)
+    {
+        if (!m_editButton.Equals(default(KeyValuePair<GameButton, BufferedButton>)))
+        {
+            m_editButton.Value.RemoveSource(index);
+            RefreshBindings();
+        }
+        if (!m_editAxis.Equals(default(KeyValuePair<GameAxis, BufferedAxis>)))
+        {
+            m_editAxis.Value.RemoveSource(index);
+            RefreshBindings();
+        }
+    }
+
+    private IEnumerator RefreshScrollbar(Scrollbar scrollbar)
+    {
+        yield return null;
+        scrollbar.value = 1;
+    }
+
     private void RefreshSettings()
     {
-        Settings.Instance.Load();
-        Controls.Instance.Load();
+        m_editSettings = JsonConverter.SerializedCopy(Settings.Instance);
 
-        // update settings menu 
-        m_settingPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Load());
-        StartCoroutine(RefreshScrollbar(scrollbar_settings));
+        panel_setingsContent.Cast<Transform>().ToList().ForEach(panel => Destroy(panel.gameObject));
+        m_settingPanels = new List<RectTransform>();
 
-        // update controls menu
-        m_controlPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Load());
-        StartCoroutine(RefreshScrollbar(scrollbar_controls));
-        
-        // update bindings menu if open
-        if (m_bindingPanels != null)
+        int GroupSpacing = 10;
+
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Screen";
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Resolution", m_editSettings.GetResolution, m_editSettings.SetResolution, Settings.GetSupportedResolutions()));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Fullscreen", m_editSettings.GetFullscreen, m_editSettings.SetFullscreen));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Target Frame Rate", m_editSettings.GetFrameRate, m_editSettings.SetFrameRate, Settings.TARGET_FRAME_RATES.Select(x => x.ToString()).ToArray()));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("VSync", m_editSettings.GetVsync, m_editSettings.SetVsync));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Field Of View", m_editSettings.GetFieldOfView, m_editSettings.SetFieldOfView, Settings.MIN_FOV, Settings.MAX_FOV, true));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Brightness", m_editSettings.GetBrightness, m_editSettings.SetBrightness, Settings.MIN_BRIGHTNESS, Settings.MAX_BRIGHTNESS, false));
+
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Quality";
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Shadow Quality", m_editSettings.GetShadowQuality, m_editSettings.SetShadowQuality, Enum.GetNames(typeof(Settings.ShadowQualityLevels))));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Shadow Distance", m_editSettings.GetShadowDistance, m_editSettings.SetShadowDistance, Settings.MIN_SHADOW_DISTANCE, Settings.MAX_SHADOW_DISTANCE, true));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsDropdown, panel_setingsContent).GetComponent<PanelDropdown>().Init("Texture Quality", m_editSettings.GetTextureResolution, m_editSettings.SetTextureResolution, Enum.GetNames(typeof(Settings.TextureResolution))));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Antialiasing", m_editSettings.GetAntialiasing, m_editSettings.SetAntialiasing));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("SSAO", m_editSettings.GetSSAO, m_editSettings.SetSSAO));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Bloom", m_editSettings.GetBloom, m_editSettings.SetBloom));
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Motion Blur", m_editSettings.GetMotionBlur, m_editSettings.SetMotionBlur));
+
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Audio";
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_setingsContent).GetComponent<PanelSlider>().Init("Volume", m_editSettings.GetVolume, m_editSettings.SetVolume, 0, 1, false));
+
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_setingsContent).GetComponentInChildren<Text>().text = "Other";
+        m_settingPanels.Add(UIHelper.Create(prefab_settingsToggle, panel_setingsContent).GetComponent<PanelToggle>().Init("Show FPS", m_editSettings.GetShowFPS, m_editSettings.SetShowFPS));
+        UIHelper.AddSpacer(panel_setingsContent, GroupSpacing);
+
+        Navigation explicitNav = new Navigation();
+        explicitNav.mode = Navigation.Mode.Explicit;
+
+        Navigation settigsTopNav = explicitNav;
+        settigsTopNav.selectOnUp = btn_applySettings;
+        UIHelper.SetNavigationVertical(m_settingPanels, settigsTopNav, explicitNav, explicitNav);
+
+        Selectable firstSetting = m_settingPanels.First().GetComponentInChildren<Selectable>();
+        Navigation tempNav;
+
+        tempNav = btn_backSettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_backSettings.navigation = tempNav;
+
+        tempNav = btn_applySettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_applySettings.navigation = tempNav;
+
+        tempNav = btn_loadDefalutsSettings.navigation;
+        tempNav.selectOnDown = firstSetting;
+        btn_loadDefalutsSettings.navigation = tempNav;
+    }
+
+    private void RefreshControls(bool resetControls)
+    {
+        if (resetControls)
         {
-            m_bindingPanels.ForEach(panel => Destroy(panel.gameObject));
+            m_editControls = JsonConverter.SerializedCopy(Controls.Instance);
         }
+
+        panel_controlsContent.Cast<Transform>().ToList().ForEach(panel => Destroy(panel.gameObject));
+        m_controlPanels = new List<RectTransform>();
+
+        int GroupSpacing = 10;
+
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+        UIHelper.Create(prefab_header, panel_controlsContent).GetComponentInChildren<Text>().text = "General";
+        m_controlPanels.Add(UIHelper.Create(prefab_settingsSlider, panel_controlsContent).GetComponent<PanelSlider>().Init("Look Sensitivity", m_editControls.GetLookSensitivity, m_editControls.SetLookSensitivity, Controls.MIN_LOOK_SENSITIVITY, Controls.MAX_LOOK_SENSITIVITY, false));
+
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+        UIHelper.Create(prefab_headerBindings, panel_controlsContent);
+        foreach (KeyValuePair<GameButton, BufferedButton> button in m_editControls.Buttons)
+        {
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(button, OpenBindings));
+        }
+        foreach (KeyValuePair<GameAxis, BufferedAxis> axis in m_editControls.Axes)
+        {
+            m_controlPanels.Add(UIHelper.Create(prefab_controlBindings, panel_controlsContent).GetComponent<PanelControlBinding>().Init(axis, OpenBindings));
+        }
+        UIHelper.AddSpacer(panel_controlsContent, GroupSpacing);
+
+        Navigation explicitNav = new Navigation();
+        explicitNav.mode = Navigation.Mode.Explicit;
+
+        Navigation controlsTopNav = explicitNav;
+        controlsTopNav.selectOnUp = btn_applyControls;
+        UIHelper.SetNavigationVertical(m_controlPanels, controlsTopNav, explicitNav, explicitNav);
+
+        Selectable firstControl = m_controlPanels.First().GetComponentInChildren<Selectable>();
+        Navigation tempNav;
+
+        tempNav = btn_backControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_backControls.navigation = tempNav;
+
+        tempNav = btn_applyControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_applyControls.navigation = tempNav;
+
+        tempNav = btn_useDefalutsControls.navigation;
+        tempNav.selectOnDown = firstControl;
+        btn_useDefalutsControls.navigation = tempNav;
+    }
+
+    private void RefreshBindings()
+    {
+        panel_currentBindings.Cast<Transform>().ToList().ForEach(panel => Destroy(panel.gameObject));
         m_bindingPanels = new List<PanelRebind>();
 
         int index = 0;
@@ -390,66 +460,6 @@ public class GameMenu : MonoBehaviour
             Navigation nav = btn_newBinding.navigation;
             nav.selectOnUp = m_bindingPanels[0].buttonBinding;
             btn_newBinding.navigation = nav;
-        }
-    }
-
-    public void ApplySettings()
-    {
-        m_settingPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Apply());
-        m_controlPanels.ForEach(rt => rt.GetComponent<ISettingPanel>().Apply());
-
-        Settings.Instance.ApplySettings();
-        Settings.Instance.Save();
-        Controls.Instance.Save();
-        RefreshSettings();
-    }
-
-    public void LoadDefaultSettings()
-    {
-        Settings.Instance.LoadDefaults();
-        Settings.Instance.ApplySettings();
-        Settings.Instance.Save();
-        RefreshSettings();
-    }
-
-    public void UseDefaultControls()
-    {
-        Controls.Instance.LoadDefaults();
-        Controls.Instance.Save();
-        RefreshSettings();
-    }
-
-    private void Rebind(int index)
-    {
-        RemoveBinding(index);
-        AddBinding();
-    }
-
-    public void AddBinding()
-    {
-        if (!m_editButton.Equals(default(KeyValuePair<GameButton, BufferedButton>)))
-        {
-            Controls.Instance.AddBinding(m_editButton.Value, OnRebindComplete);
-            SetMenu(Menu.Rebinding);
-        }
-        if (!m_editAxis.Equals(default(KeyValuePair<GameAxis, BufferedAxis>)))
-        {
-            Controls.Instance.AddBinding(m_editAxis.Value, OnRebindComplete);
-            SetMenu(Menu.Rebinding);
-        }
-    }
-
-    private void RemoveBinding(int index)
-    {
-        if (!m_editButton.Equals(default(KeyValuePair<GameButton, BufferedButton>)))
-        {
-            m_editButton.Value.RemoveSource(index);
-            RefreshSettings();
-        }
-        if (!m_editAxis.Equals(default(KeyValuePair<GameAxis, BufferedAxis>)))
-        {
-            m_editAxis.Value.RemoveSource(index);
-            RefreshSettings();
         }
     }
 }

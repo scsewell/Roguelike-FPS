@@ -71,6 +71,7 @@ public class Controls
     public static Controls Instance
     {
         get { return m_instance; }
+        set { m_instance = value; }
     }
 
     public Controls()
@@ -374,13 +375,6 @@ public class Controls
         return Enum.GetValues(typeof(GamepadButton)).Cast<GamepadButton>().Where(
             button => JoystickButton.GetButtonValue(button) && (!ignorePrevious || !m_rebindingPreviousButtons.Contains(button))
             ).ToList();
-    }
-
-    public void CopyFrom(Controls controls)
-    {
-        SetLookSensitivity(controls.GetLookSensitivity());
-        m_buttons = controls.Buttons;
-        m_axes = controls.Axes;
     }
 
     public void Save()

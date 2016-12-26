@@ -186,7 +186,7 @@ public class Settings
         m_resolution.height = int.Parse(split[1].Trim());
     }
 
-    public string[] GetSupportedResolutions()
+    public static string[] GetSupportedResolutions()
     {
         List<string> resolutions = new List<string>();
         foreach (Resolution res in Screen.resolutions)
@@ -206,6 +206,7 @@ public class Settings
     public static Settings Instance
     {
         get { return m_instance; }
+        set { m_instance = value; }
     }
 
     public Settings()
@@ -213,7 +214,7 @@ public class Settings
         LoadDefaults();
     }
 
-	public void ApplySettings()
+	public void Apply()
     {
         Application.targetFrameRate = m_frameRate;
 
@@ -250,25 +251,6 @@ public class Settings
         m_resolution = Screen.resolutions[Screen.resolutions.Length - 1];
     }
 
-    public void CopyFrom(Settings settings)
-    {
-        SetFullscreen(settings.GetFullscreen());
-        SetShowFPS(settings.GetShowFPS());
-        SetAntialiasing(settings.GetAntialiasing());
-        SetVsync(settings.GetVsync());
-        SetBloom(settings.GetBloom());
-        SetMotionBlur(settings.GetMotionBlur());
-        SetSSAO(settings.GetSSAO());
-        SetFrameRate(settings.GetFrameRate());
-        SetFieldOfView(settings.GetFieldOfView());
-        SetBrightness(settings.GetBrightness());
-        SetShadowDistance(settings.GetShadowDistance());
-        SetVolume(settings.GetVolume());
-        SetTextureResolution(settings.GetTextureResolution());
-        SetShadowQuality(settings.GetShadowQuality());
-        SetResolution(settings.GetResolution());
-    }
-
     public void Save()
     {
         FileIO.WriteSettings(m_instance);
@@ -276,6 +258,6 @@ public class Settings
 	
 	public void Load()
     {
-        m_instance.CopyFrom(FileIO.ReadSettings());
+        m_instance = FileIO.ReadSettings();
     }
 }
