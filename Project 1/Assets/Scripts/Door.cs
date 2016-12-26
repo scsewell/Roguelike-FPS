@@ -25,7 +25,7 @@ public class Door : MonoBehaviour
         m_anim.SetBool("Open", m_doorUp);
     }
 
-    private void Interact()
+    private void Interact(Transform interacted, Vector3 interactPoint)
     {
         m_doorUp = !m_doorUp;
     }

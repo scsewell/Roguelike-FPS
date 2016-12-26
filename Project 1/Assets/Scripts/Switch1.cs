@@ -59,7 +59,7 @@ public class Switch1 : MonoBehaviour
 		}
 	}
 
-	private void Interacted()
+	private void Interacted(Transform interacted, Vector3 interactPoint)
 	{
 		m_targetSwitchOn = !m_targetSwitchOn;
 		m_changingSwitchTime = 0;

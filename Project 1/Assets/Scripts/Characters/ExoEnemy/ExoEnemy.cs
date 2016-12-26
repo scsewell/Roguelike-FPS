@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class ExoEnemy : MonoBehaviour
 {
@@ -9,12 +10,16 @@ public class ExoEnemy : MonoBehaviour
 
     private ExoEnemyAnimation m_anim;
     private Health m_health;
+    private Interactable m_interact;
     private CapsuleCollider m_collider;
+
+    private Action<Interactable> m_endInteract;
 
     private void Start()
     {
         m_anim = GetComponent<ExoEnemyAnimation>();
         m_health = GetComponent<Health>();
+        m_interact = GetComponent<Interactable>();
         m_collider = GetComponent<CapsuleCollider>();
 
         if (!m_useExo)
@@ -23,24 +28,47 @@ public class ExoEnemy : MonoBehaviour
         }
 
         m_health.OnDie += OnDie;
+        m_interact.InteractStart += OnInteractStart;
+        m_interact.InteractEnd += OnInteractEnd;
+
+        m_interact.enabled = false;
     }
 
     private void OnDestroy()
     {
         m_health.OnDie -= OnDie;
+        m_interact.InteractStart -= OnInteractStart;
+        m_interact.InteractEnd -= OnInteractEnd;
     }
 
     private void OnDie()
     {
         m_anim.OnDie();
+        m_interact.enabled = true;
         m_collider.enabled = false;
+    }
+
+    private void OnInteractStart(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteract)
+    {
+        m_endInteract = endInteract;
+        m_anim.GrabBody(interacted, interactPoint);
+    }
+
+    private void OnInteractEnd()
+    {
+        m_anim.ReleaseBody();
     }
 
     private void Update()
     {
-        if (m_health.IsAlive)
-        {
-            m_anim.Animate();
-        }
+        m_anim.Animate();
 	}
+
+    public void EndInteract()
+    {
+        if (m_endInteract != null)
+        {
+            m_endInteract(m_interact);
+        }
+    }
 }

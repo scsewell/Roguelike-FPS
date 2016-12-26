@@ -1,20 +1,17 @@
 --- Short Term ---
 
-controller run by just tapping thumbstick down once
-Add control binding to menu
-
 Bullet holes - See decals (no ambient light!) - Use z-testing shader? - Generate geometry and cull small areas?
-
+Drag bodies
+Interact animation
+Better shadows
+Pathfinding
 
 --- Long Term ---
 
 AI
 Generate fancier rooms
 Corridor and prop art
-minimap?
+minimap
 
 
---- Looking out for ---
-
-crouch wierdness
-aim fastness
+--- Looking Out For ---
