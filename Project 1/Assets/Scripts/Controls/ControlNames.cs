@@ -12,6 +12,7 @@ namespace InputController
                 case GameButton.Menu:       return "Toggle Menu";
                 case GameButton.RunHold:    return "Run";
                 case GameButton.RunTap:     return "Tap to Run";
+                case GameButton.Weapon1:    return "Weapon 1";
             }
             return button.ToString();
         }

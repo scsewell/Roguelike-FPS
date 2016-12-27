@@ -29,6 +29,6 @@ public class CameraFOV : MonoBehaviour
 			targetFieldOfView = Settings.Instance.GetFieldOfView() * m_aimFieldOfViewRatio;
 		}
 
-		m_cam.fieldOfView = Mathf.Lerp(GetComponent<Camera>().fieldOfView, targetFieldOfView, Time.deltaTime * m_changeRate);
+		m_cam.fieldOfView = Mathf.Lerp(m_cam.fieldOfView, targetFieldOfView, Time.deltaTime * m_changeRate);
 	}
 }

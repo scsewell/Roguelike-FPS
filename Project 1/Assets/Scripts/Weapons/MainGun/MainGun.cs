@@ -15,7 +15,7 @@ public class MainGun : MonoBehaviour, IWeapon
 	[SerializeField] private float m_crouchInaccuracyMultiplier = 0.5f;
 	[SerializeField] private float m_shotRecoilAmount = 20f;
 	[SerializeField] private float m_recoilStabilizeSpeed =1.25f;
-
+    
     [SerializeField] private TextMesh m_bulletGUI;
     [SerializeField] private TextMesh m_clipsGUI;
     [SerializeField] private Transform m_bulletEmitter;
@@ -35,12 +35,17 @@ public class MainGun : MonoBehaviour, IWeapon
     private GunBlocking m_blocking;
 
     private IEnumerator m_reload;
-    private bool m_reloading = false;
-	private float m_recoilIncrease = 0;
 	private int m_bulletsLeft = 0;
+	private float m_recoilIncrease = 0;
 	private float m_nextFireTime = 0;
 
-	private void Start()
+    private bool m_holster = true;
+    public bool Holster
+    {
+        get { return m_holster; }
+    }
+
+    private void Start()
     {
 		m_character = transform.root.GetComponent<CharacterMovement>();
         m_weapons = transform.GetComponentInParent<PlayerWeapons>();
@@ -64,9 +69,19 @@ public class MainGun : MonoBehaviour, IWeapon
         m_clipsGUI.text = m_clips.ToString();
     }
 
+    public void SetHolster(bool holster)
+    {
+        m_holster = holster;
+    }
+
     public void Fire()
     {
-		if (!m_reloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
+        if (m_bulletsLeft == 0)
+        {
+            Reload();
+        }
+
+        if (!IsReloading() && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
         {
 			if (Time.time > m_nextFireTime + m_fireRate)
             {
@@ -82,18 +97,12 @@ public class MainGun : MonoBehaviour, IWeapon
                 StartCoroutine(FinishFire());
 			}
         }
-
-        if (m_bulletsLeft == 0)
-        {
-            Reload();
-        }
     }
 
     public void Reload()
     {
-        if (!m_reloading && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
+        if (!IsReloading() && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
         {
-            m_reloading = true;
             m_sound.PlayReloadStart();
             m_reload = FinishReload();
             StartCoroutine(m_reload);
@@ -102,18 +111,31 @@ public class MainGun : MonoBehaviour, IWeapon
 
     public void CancelReload()
     {
-        StopCoroutine(m_reload);
-        m_reloading = false;
+        if (m_reload != null)
+        {
+            StopCoroutine(m_reload);
+            m_reload = null;
+        }
     }
 
     public bool IsReloading()
     {
-        return m_reloading;
+        return m_reload != null;
+    }
+
+    public bool IsHolstered()
+    {
+        return m_anim.IsHostered();
     }
 
     public float GetReloadSpeed()
     {
         return m_reloadTime;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 
     private void FireOneShot()
@@ -183,7 +205,7 @@ public class MainGun : MonoBehaviour, IWeapon
         yield return new WaitForSeconds(m_reloadTime - 0.2f);
         m_sound.PlayReloadEnd();
         yield return new WaitForSeconds(0.2f);
-        m_reloading = false;
+        m_reload = null;
 		m_bulletsLeft = m_bulletsPerClip;
 		m_clips--;
 	}

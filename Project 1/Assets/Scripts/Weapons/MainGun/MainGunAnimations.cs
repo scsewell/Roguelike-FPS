@@ -28,9 +28,9 @@ public class MainGunAnimations : MonoBehaviour
 
     private void Start() 
     {
-        m_look = transform.root.GetComponent<CharacterLook>();
         m_moveDirection = transform.root.GetComponent<CharacterInput>();
         m_character = transform.root.GetComponent<CharacterMovement>();
+        m_look = transform.root.GetComponent<CharacterLook>();
         m_interact = GetComponentInParent<PlayerInteract>();
         m_gun = GetComponent<MainGun>();
 		m_anim = GetComponent<Animator>();
@@ -64,7 +64,7 @@ public class MainGunAnimations : MonoBehaviour
 		m_anim.SetBool("Reloading", m_gun.IsReloading());
         m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
         m_anim.SetBool("Interact", m_interact.Interacted);
-        m_anim.SetBool("Lowered", m_interact.IsInteracting);
+        m_anim.SetBool("Lowered", m_gun.Holster);
 
         m_recoilTimeLeft -= Time.deltaTime;
     }
@@ -73,4 +73,9 @@ public class MainGunAnimations : MonoBehaviour
     {
         m_recoilTimeLeft = m_recoilTime;
 	}
+
+    public bool IsHostered()
+    {
+        return m_anim.GetCurrentAnimatorStateInfo(1).IsTag("Holstered");
+    }
 }

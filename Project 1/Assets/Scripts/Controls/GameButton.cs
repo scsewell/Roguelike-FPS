@@ -4,6 +4,7 @@
 public enum GameButton
 {
     Menu,
+    Weapon1,
     Fire,
     Aim,
     Reload,

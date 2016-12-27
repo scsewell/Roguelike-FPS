@@ -209,6 +209,11 @@ public class Controls
             new KeyButton(KeyCode.C),
             new JoystickButton(GamepadButton.B),
         }));
+        m_buttons.Add(GameButton.Weapon1, new BufferedButton(true, new List<ISource<bool>>
+        {
+            new KeyButton(KeyCode.Alpha1),
+            new JoystickButton(GamepadButton.DpadUp),
+        }));
         m_buttons.Add(GameButton.Fire, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.Mouse0),

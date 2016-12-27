@@ -38,24 +38,17 @@ public class PlayerInteract : MonoBehaviour
         m_collider = GetComponentInParent<CharacterController>();
 
         GameObject grabPos = new GameObject("GrabPos");
-        grabPos.AddComponent<TransformInterpolator>();
         Rigidbody body = grabPos.AddComponent<Rigidbody>();
         body.isKinematic = true;
+        grabPos.AddComponent<TransformInterpolator>();
         m_grabPos = grabPos.GetComponent<Transform>();
     }
 
     private void FixedUpdate()
     {
         Vector3 goalPos = transform.position + 0.3f * Vector3.down;
-        goalPos.y = Mathf.Min(goalPos.y, m_collider.transform.TransformPoint(m_collider.center + ((m_collider.height / 2) * Vector3.down)).y + 0.5f);
-        Vector3 grabDisp = goalPos - transform.position;
-        Vector3 grapTargetPos = goalPos;
-        RaycastHit grabHit;
-        if (Physics.SphereCast(transform.position, 0.15f, grabDisp.normalized, out grabHit, grabDisp.magnitude, m_grabBlockLayers))
-        {
-            grapTargetPos = grabHit.point + (0.15f * grabHit.normal);
-        }
-        m_grabPos.position = Vector3.Lerp(m_grabPos.position, grapTargetPos, Time.deltaTime * 12f);
+        goalPos.y = Mathf.Min(goalPos.y, m_collider.transform.TransformPoint(m_collider.center + ((m_collider.height / 2) * Vector3.down)).y + 0.35f);
+        m_grabPos.position = Vector3.Lerp(m_grabPos.position, goalPos, Time.deltaTime * 12f);
     }
 
     private void Update()
