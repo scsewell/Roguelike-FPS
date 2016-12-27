@@ -16,6 +16,7 @@ public class MainGunAnimations : MonoBehaviour
     private CharacterMovement m_character;
     private CharacterLook m_look;
     private MainGun m_gun;
+    private PlayerInteract m_interact;
     private Animator m_anim;
 
     private Vector3 m_fireResetPosition;
@@ -27,11 +28,12 @@ public class MainGunAnimations : MonoBehaviour
 
     private void Start() 
     {
-		m_anim = GetComponent<Animator>();
         m_look = transform.root.GetComponent<CharacterLook>();
         m_moveDirection = transform.root.GetComponent<CharacterInput>();
         m_character = transform.root.GetComponent<CharacterMovement>();
+        m_interact = GetComponentInParent<PlayerInteract>();
         m_gun = GetComponent<MainGun>();
+		m_anim = GetComponent<Animator>();
 
 		m_fireResetPosition = transform.localPosition;
 	}
@@ -61,6 +63,8 @@ public class MainGunAnimations : MonoBehaviour
 		m_anim.SetBool("Jump", m_character.IsJumping());
 		m_anim.SetBool("Reloading", m_gun.IsReloading());
         m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
+        m_anim.SetBool("Interact", m_interact.Interact);
+        m_anim.SetBool("Lowered", m_interact.Interacting);
 
         m_recoilTimeLeft -= Time.deltaTime;
     }

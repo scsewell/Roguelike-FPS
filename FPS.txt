@@ -2,7 +2,7 @@
 
 Bullet holes - See decals (no ambient light!) - Use z-testing shader? - Generate geometry and cull small areas?
 Drag bodies
-Interact animation
+Holster weapon
 Better shadows
 Pathfinding
 
@@ -15,3 +15,5 @@ minimap
 
 
 --- Looking Out For ---
+
+Door can close on an object

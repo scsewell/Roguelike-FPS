@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class MainGun : MonoBehaviour
+public class MainGun : MonoBehaviour, IWeapon
 {
 	[SerializeField] private float m_range = 100.0f;
 	[SerializeField] private float m_fireRate = 0.05f;
@@ -32,6 +32,7 @@ public class MainGun : MonoBehaviour
     private PlayerWeapons m_weapons;
     private MainGunAnimations m_anim;
     private MainGunSounds m_sound;
+    private GunBlocking m_blocking;
 
     private IEnumerator m_reload;
     private bool m_reloading = false;
@@ -45,8 +46,9 @@ public class MainGun : MonoBehaviour
         m_weapons = transform.GetComponentInParent<PlayerWeapons>();
         m_anim = GetComponent<MainGunAnimations>();
         m_sound = GetComponent<MainGunSounds>();
+        m_blocking = GetComponentInChildren<GunBlocking>();
 
-		m_bulletsLeft = m_bulletsPerClip;
+        m_bulletsLeft = m_bulletsPerClip;
         m_muzzleFlashLight.enabled = false;
     }
 
@@ -64,7 +66,7 @@ public class MainGun : MonoBehaviour
 
     public void Fire()
     {
-		if (!m_reloading && m_bulletsLeft > 0)
+		if (!m_reloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
         {
 			if (Time.time > m_nextFireTime + m_fireRate)
             {
@@ -96,6 +98,22 @@ public class MainGun : MonoBehaviour
             m_reload = FinishReload();
             StartCoroutine(m_reload);
         }
+    }
+
+    public void CancelReload()
+    {
+        StopCoroutine(m_reload);
+        m_reloading = false;
+    }
+
+    public bool IsReloading()
+    {
+        return m_reloading;
+    }
+
+    public float GetReloadSpeed()
+    {
+        return m_reloadTime;
     }
 
     private void FireOneShot()
@@ -156,7 +174,6 @@ public class MainGun : MonoBehaviour
 
     private IEnumerator FinishFire()
     {
-        // wait a frame to turn off the flash
         yield return 0;
         m_muzzleFlashLight.enabled = false;
     }
@@ -170,14 +187,4 @@ public class MainGun : MonoBehaviour
 		m_bulletsLeft = m_bulletsPerClip;
 		m_clips--;
 	}
-	
-	public bool IsReloading()
-    {
-		return m_reloading;
-    }
-
-    public float GetReloadSpeed()
-    {
-        return m_reloadTime;
-    }
 }

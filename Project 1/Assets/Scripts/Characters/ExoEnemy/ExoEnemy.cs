@@ -43,9 +43,13 @@ public class ExoEnemy : MonoBehaviour
 
     private void OnDie()
     {
-        m_anim.OnDie();
-        m_interact.enabled = true;
         m_collider.enabled = false;
+        foreach (HitboxCollider hitbox in GetComponentsInChildren<HitboxCollider>())
+        {
+            hitbox.enabled = false;
+        }
+        m_interact.enabled = true;
+        m_anim.OnDie();
     }
 
     private void OnInteractStart(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteract)
@@ -69,6 +73,7 @@ public class ExoEnemy : MonoBehaviour
         if (m_endInteract != null)
         {
             m_endInteract(m_interact);
+            m_endInteract = null;
         }
     }
 }

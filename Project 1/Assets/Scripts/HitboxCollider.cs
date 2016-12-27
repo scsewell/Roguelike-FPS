@@ -9,13 +9,26 @@ public class HitboxCollider : MonoBehaviour
 
     private Health m_damageReciever;
 
-    private void Start()
+    private void Awake()
     {
         m_damageReciever = GetComponentInParent<Health>();
     }
 
     public void Damage(float damage)
     {
-        m_damageReciever.ApplyDamage(damage * m_damageMultiplier);
+        if (enabled)
+        {
+            m_damageReciever.ApplyDamage(damage * m_damageMultiplier);
+        }
+    }
+
+    private void OnEnable()
+    {
+        m_hitbox.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        m_hitbox.enabled = false;
     }
 }

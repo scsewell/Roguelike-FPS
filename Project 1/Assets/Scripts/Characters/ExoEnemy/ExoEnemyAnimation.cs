@@ -39,7 +39,7 @@ public class ExoEnemyAnimation : MonoBehaviour
         {
             m_grabbedColllider = m_dragLimbs.ToList().OrderBy(c => Vector3.Distance(c.collider.bounds.center, interactPoint)).First();
             m_grabJoint = m_grabbedColllider.collider.GetComponentInParent<Rigidbody>().gameObject.AddComponent<CharacterJoint>();
-            Rigidbody grabTarget = Camera.main.GetComponentInChildren<Rigidbody>();
+            Rigidbody grabTarget = Camera.main.GetComponent<PlayerInteract>().GrabTarget;
             m_grabJoint.connectedBody = grabTarget;
             m_grabJoint.autoConfigureConnectedAnchor = false;
             m_grabJoint.connectedAnchor = grabTarget.GetComponent<Transform>().InverseTransformPoint(interactPoint);
@@ -51,6 +51,7 @@ public class ExoEnemyAnimation : MonoBehaviour
             m_grabJoint.highTwistLimit = swing;
             m_grabJoint.swing1Limit = swing;
             m_grabJoint.swing2Limit = swing;
+            m_grabJoint.breakForce = 14000;
         }
     }
 
@@ -74,6 +75,10 @@ public class ExoEnemyAnimation : MonoBehaviour
             m_grabJoint.connectedAnchor = Vector3.Lerp(m_grabJoint.connectedAnchor, Vector3.zero, Time.deltaTime * m_ragdollCenterSpeed);
             m_grabJoint.anchor = Vector3.Lerp(m_grabJoint.anchor, m_grabbedColllider.pivot, Time.deltaTime * m_ragdollCenterSpeed);
         }
+        else
+        {
+            m_exoEnemy.EndInteract();
+        }
 	}
 
     private void SetRagdoll(bool activated)
@@ -89,9 +94,9 @@ public class ExoEnemyAnimation : MonoBehaviour
         foreach (Rigidbody rigidbody in m_ragdollBodies)
         {
             rigidbody.isKinematic = !activated;
-            rigidbody.drag = 1f;
             if (activated)
             {
+                rigidbody.drag = 1f;
                 //rigidbody.velocity = m_movement.ActualVelocity;
                 if (!rigidbody.GetComponent<TransformInterpolator>())
                 {
