@@ -3,11 +3,11 @@ using System.Collections;
 
 public class PlayerInteract : MonoBehaviour
 {
-    [SerializeField] private LayerMask m_blockingLayers;
+    [SerializeField] private LayerMask m_interactLayers;
 	[SerializeField] private float m_interactDistance = 0.65f;
     [SerializeField] private LayerMask m_grabBlockLayers;
-    [SerializeField] private Transform m_grabTarget;
 
+    private CharacterController m_collider;
     private Interactable m_lastHovered;
 
     private Transform m_grabPos;
@@ -16,20 +16,27 @@ public class PlayerInteract : MonoBehaviour
         get { return m_grabPos.GetComponent<Rigidbody>(); }
     }
 
-    private Interactable m_lastInteracted;
-    public bool Interacting
-    {
-        get { return m_lastInteracted != null; }
-    }
-
     private bool m_interact = false;
-    public bool Interact
+    public bool Interacted
     {
         get { return m_interact; }
     }
 
+    private Interactable m_lastInteracted;
+    public bool IsInteracting
+    {
+        get { return m_lastInteracted != null; }
+    }
+
+    public bool IsCarryingHeavy
+    {
+        get { return m_lastInteracted != null && m_lastInteracted.Heavy; }
+    }
+
     private void Awake()
     {
+        m_collider = GetComponentInParent<CharacterController>();
+
         GameObject grabPos = new GameObject("GrabPos");
         grabPos.AddComponent<TransformInterpolator>();
         Rigidbody body = grabPos.AddComponent<Rigidbody>();
@@ -39,18 +46,16 @@ public class PlayerInteract : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 goalPos = transform.position + 0.3f * Vector3.down;
+        goalPos.y = Mathf.Min(goalPos.y, m_collider.transform.TransformPoint(m_collider.center + ((m_collider.height / 2) * Vector3.down)).y + 0.5f);
+        Vector3 grabDisp = goalPos - transform.position;
+        Vector3 grapTargetPos = goalPos;
         RaycastHit grabHit;
-        Vector3 grapTargetPos;
-        Vector3 grabDisp = m_grabTarget.position - transform.position;
         if (Physics.SphereCast(transform.position, 0.15f, grabDisp.normalized, out grabHit, grabDisp.magnitude, m_grabBlockLayers))
         {
             grapTargetPos = grabHit.point + (0.15f * grabHit.normal);
         }
-        else
-        {
-            grapTargetPos = m_grabTarget.position;
-        }
-        m_grabPos.position = Vector3.Lerp(m_grabPos.position, grapTargetPos, Time.deltaTime * 16f);
+        m_grabPos.position = Vector3.Lerp(m_grabPos.position, grapTargetPos, Time.deltaTime * 12f);
     }
 
     private void Update()
@@ -66,7 +71,7 @@ public class PlayerInteract : MonoBehaviour
         if (m_lastInteracted == null)
         {
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_blockingLayers))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_interactLayers))
             {
                 Interactable interactable = hit.transform.GetComponentInParent<Interactable>();
 
@@ -82,7 +87,7 @@ public class PlayerInteract : MonoBehaviour
 
                     if (hasInteracted)
                     {
-                        if (interactable.fireOnce)
+                        if (interactable.FireOnce)
                         {
                             interactable.InteractOnce(hit.transform, hit.point);
                             StartCoroutine(ResetInteracting());

@@ -63,8 +63,8 @@ public class MainGunAnimations : MonoBehaviour
 		m_anim.SetBool("Jump", m_character.IsJumping());
 		m_anim.SetBool("Reloading", m_gun.IsReloading());
         m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
-        m_anim.SetBool("Interact", m_interact.Interact);
-        m_anim.SetBool("Lowered", m_interact.Interacting);
+        m_anim.SetBool("Interact", m_interact.Interacted);
+        m_anim.SetBool("Lowered", m_interact.IsInteracting);
 
         m_recoilTimeLeft -= Time.deltaTime;
     }

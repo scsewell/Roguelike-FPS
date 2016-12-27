@@ -51,7 +51,7 @@ public class ExoEnemyAnimation : MonoBehaviour
             m_grabJoint.highTwistLimit = swing;
             m_grabJoint.swing1Limit = swing;
             m_grabJoint.swing2Limit = swing;
-            m_grabJoint.breakForce = 14000;
+            m_grabJoint.breakForce = 15000;
         }
     }
 

@@ -4,10 +4,17 @@ using System;
 public class Interactable : MonoBehaviour
 {
     [SerializeField]
-    private bool m_fireOnce;
-    public bool fireOnce
+    private bool m_fireOnce = true;
+    public bool FireOnce
     {
         get { return m_fireOnce; }
+    }
+
+    [SerializeField]
+    private bool m_heavy = false;
+    public bool Heavy
+    {
+        get { return m_heavy; }
     }
 
     public delegate void InteractHandler(Transform interacted, Vector3 interactPoint);

@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 // Require a character controller to be attached to the same game object
 [RequireComponent(typeof(CharacterController))]
@@ -41,7 +40,8 @@ public class CharacterMovement : MonoBehaviour
 		public float maxForwardRunSpeed = 10.0f;
 		public float maxSidewaysSpeed = 10.0f;
 		public float maxBackwardsSpeed = 10.0f;
-		public float crouchHeight = 1.5f;
+        public float maxBurdenedSpeed = 4.0f;
+        public float crouchHeight = 1.5f;
 		public float standHeight = 2.0f;
 		public float crouchSpeed = 6.0f;
 
@@ -200,12 +200,15 @@ public class CharacterMovement : MonoBehaviour
     public Vector3 groundNormal = Vector3.zero;
 
     private Vector3 lastGroundNormal = Vector3.zero;
-	private Transform tr;
     private CharacterController controller;
+    private PlayerInteract m_interact;
+    private Interpolator<float> m_heightInterpolator;
+	private Transform tr;
 
     private void Awake()
 	{
-		controller = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
+        m_interact = GetComponentInChildren<PlayerInteract>();
         tr = transform;
     }
 
@@ -215,7 +218,11 @@ public class CharacterMovement : MonoBehaviour
         controller.height = movement.standHeight;
         tr.Translate(0, (controller.height - startHeight) / 2, 0);
         head.Translate(0, (controller.height - startHeight) / 8, 0, Space.World);
+
         GetComponent<TransformInterpolator>().ForgetPreviousValues();
+
+        InterpolatedFloat height = new InterpolatedFloat(() => (controller.height), val => { controller.height = val; });
+        m_heightInterpolator = gameObject.AddComponent<FloatInterpolator>().Initialize(height);
     }
 
     private void UpdateFunction()
@@ -240,16 +247,12 @@ public class CharacterMovement : MonoBehaviour
 		}
 		
 		float lastHeight = controller.height;
-		if (movement.crouching)
+	    controller.height = Mathf.Lerp(controller.height, movement.crouching ? movement.crouchHeight : movement.standHeight, Time.deltaTime * movement.crouchSpeed);
+        if (!movement.crouching)
         {
-			controller.height = Mathf.Lerp (controller.height, movement.crouchHeight, movement.crouchSpeed * Time.deltaTime);
-		}
-        else
-        {
-			controller.height = Mathf.Lerp (controller.height, movement.standHeight, movement.crouchSpeed * Time.deltaTime);
-			tr.Translate (0, (controller.height - lastHeight) / 2, 0);
-		}
-        head.transform.Translate (0, (controller.height - lastHeight) / 8, 0, Space.World);
+	        tr.Translate(0, (controller.height - lastHeight) / 2, 0);
+        }
+        head.transform.Translate(0, (controller.height - lastHeight) / 8, 0, Space.World);
 
 		// Moving platform support
 		Vector3 moveDistance = Vector3.zero;
@@ -527,7 +530,7 @@ public class CharacterMovement : MonoBehaviour
             // because players will often try to jump in the exact moment when hitting the ground after a jump
             // and ifthey hit the button a fraction of a second too soon and no new jump happens as a consequence,
             // it's confusing and it feels like the game is buggy.
-            if(jumping.enabled && canControl && (Time.time - jumping.lastButtonDownTime < 0.2))
+            if(jumping.enabled & !m_interact.IsCarryingHeavy && canControl && (Time.time - jumping.lastButtonDownTime < 0.2))
             {
                 grounded = false;
                 jumping.jumping = true;
@@ -711,15 +714,21 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
-			float forwardSpeed = movement.maxForwardWalkSpeed;
-			float backwardsSpeed = movement.maxBackwardsSpeed;
-			float sidewaysSpeed = movement.maxSidewaysSpeed;
-			
-			if (inputRunning)
+            float forwardSpeed = movement.maxForwardWalkSpeed;
+            float backwardsSpeed = movement.maxBackwardsSpeed;
+            float sidewaysSpeed = movement.maxSidewaysSpeed;
+
+            if (m_interact.IsCarryingHeavy)
+            {
+                forwardSpeed = movement.maxBurdenedSpeed;
+                backwardsSpeed = movement.maxBurdenedSpeed;
+                sidewaysSpeed = movement.maxBurdenedSpeed;
+            }
+			else if (inputRunning)
             {
 				forwardSpeed = movement.maxForwardRunSpeed;
 			}
-            else if (IsCrouching ())
+            else if (IsCrouching())
             {
 				forwardSpeed = movement.maxForwardCrouchSpeed;
 				backwardsSpeed = movement.maxForwardCrouchSpeed;

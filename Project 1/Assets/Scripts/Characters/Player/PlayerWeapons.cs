@@ -27,15 +27,15 @@ public class PlayerWeapons : MonoBehaviour
 
 	private void Update()
     {
-		if (Controls.Instance.IsDown(GameButton.Fire) && !m_interact.Interacting)
+		if (Controls.Instance.IsDown(GameButton.Fire) && !m_interact.IsInteracting)
         {
             m_currentWeapon.Fire();
 		}
-		if (Controls.Instance.IsDown(GameButton.Reload) && !m_character.IsJumping() && !m_interact.Interacting && !m_interact.Interact)
+		if (Controls.Instance.IsDown(GameButton.Reload) && !m_character.IsJumping() && !m_interact.IsInteracting && !m_interact.Interacted)
         {
             m_currentWeapon.Reload();
 		}
-        if (m_currentWeapon.IsReloading() && (m_interact.Interacting || m_interact.Interact))
+        if (m_currentWeapon.IsReloading() && (m_interact.IsInteracting || m_interact.Interacted))
         {
             m_currentWeapon.CancelReload();
         }
