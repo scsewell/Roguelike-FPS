@@ -15,18 +15,18 @@ public class MainGun : MonoBehaviour, IWeapon
 	[SerializeField] private float m_crouchInaccuracyMultiplier = 0.5f;
 	[SerializeField] private float m_shotRecoilAmount = 20f;
 	[SerializeField] private float m_recoilStabilizeSpeed =1.25f;
+    [SerializeField] private LayerMask m_hitLayers;
+    [SerializeField] private string m_bleedObjects;
     
     [SerializeField] private TextMesh m_bulletGUI;
     [SerializeField] private TextMesh m_clipsGUI;
     [SerializeField] private Transform m_bulletEmitter;
-	[SerializeField] private GameObject m_bulletHoles;
 	[SerializeField] private GameObject m_muzzleFlashPosition;
-	[SerializeField] private ParticleSystem m_muzzleFlash;
 	[SerializeField] private Light m_muzzleFlashLight;
+	[SerializeField] private Decal m_bulletHoles;
+	[SerializeField] private ParticleSystem m_muzzleFlash;
 	[SerializeField] private ParticleSystem m_sparksParticles;
-    [SerializeField] private string m_bleedObjects;
     [SerializeField] private ParticleSystem m_bloodParticles;
-    [SerializeField] private LayerMask m_hitLayers;
 
 	private CharacterMovement m_character;
     private PlayerWeapons m_weapons;
@@ -180,8 +180,9 @@ public class MainGun : MonoBehaviour, IWeapon
 				if (m_bulletHoles)
                 {
                     Quaternion rotation = Quaternion.FromToRotation(Vector3.back, hit.normal) * Quaternion.AngleAxis(Random.value * 360, Vector3.forward);
-                    GameObject hole = Instantiate(m_bulletHoles, hit.point + (hit.normal / 1000f), rotation) as GameObject;
+                    Decal hole = Instantiate(m_bulletHoles, hit.point, rotation).GetComponent<Decal>();
                     hole.GetComponent<BulletHoles>().SetParent(hit.collider.transform);
+                    hole.BuildDecal(hit.transform.gameObject);
 				}
 			}
         }

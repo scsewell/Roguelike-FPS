@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
-using System.Collections;
 using System.Collections.Generic;
 
 public class DecalSystem
@@ -18,15 +17,15 @@ public class DecalSystem
         }
     }
 
-    internal HashSet<Decal> m_decals = new HashSet<Decal>();
+    internal HashSet<DecalProjector> m_decals = new HashSet<DecalProjector>();
 
-    public void AddDecal(Decal decal)
+    public void AddDecal(DecalProjector decal)
     {
         RemoveDecal(decal);
         m_decals.Add(decal);
     }
 
-    public void RemoveDecal(Decal decal)
+    public void RemoveDecal(DecalProjector decal)
     {
         m_decals.Remove(decal);
     }
@@ -93,7 +92,7 @@ public class DecalRenderer : MonoBehaviour
 
         // render visible decals
         Plane[] clippingPlanes = GeometryUtility.CalculateFrustumPlanes(cam);
-        foreach (Decal decal in system.m_decals)
+        foreach (DecalProjector decal in system.m_decals)
         {
             if (GeometryUtility.TestPlanesAABB(clippingPlanes, decal.GetBounds()))
             {

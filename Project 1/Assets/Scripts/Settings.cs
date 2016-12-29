@@ -27,7 +27,7 @@ public class Settings
     private const int DEF_FRAMERATE = 60;
     private const float DEF_FOV = 65;
     private const float DEF_BRIGHTNESS = 1;
-    private const float DEF_SHADOW_DISTANCE = 30;
+    private const float DEF_SHADOW_DISTANCE = 20;
     private const float DEF_VOLUME = 1;
     private const TextureResolution DEF_TEXTURE_RES = TextureResolution.HIGH;
     private const ShadowQualityLevels DEF_SHADOW_QUALITY = ShadowQualityLevels.HIGH;

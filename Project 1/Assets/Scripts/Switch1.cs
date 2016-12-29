@@ -6,7 +6,7 @@ public class Switch1 : MonoBehaviour
 	public bool switchOn = false;
 	public Material onMaterial;
 	public Material offMaterial;
-	public Transform switchMesh;
+	public Renderer switchRenderer;
 
 	public AudioClip switchTurnOnSound;
 	public AudioClip switchTurnOffSound;
@@ -15,16 +15,13 @@ public class Switch1 : MonoBehaviour
 
     private Interactable m_interact;
 	private Animator m_anim;
-	private SkinnedMeshRenderer m_mesh;
 
 	private bool m_targetSwitchOn;
-	private float m_changingSwitchTime = 0;
 
     private void Start() 
 	{
         m_interact = GetComponent<Interactable>();
         m_anim = GetComponent<Animator>();
-		m_mesh = switchMesh.GetComponent<SkinnedMeshRenderer>();
 
         m_interact.Interacted += Interacted;
 
@@ -46,36 +43,27 @@ public class Switch1 : MonoBehaviour
 		{
 			ToggleSwitch();
 		} 
-		else if (!switchOn && m_targetSwitchOn)
+		else if (!switchOn && m_targetSwitchOn && animationInfo.IsTag("On"))
 		{
-			if (m_changingSwitchTime < animationInfo.length)
-			{
-				m_changingSwitchTime += Time.deltaTime;
-			}
-			else
-			{
-				ToggleSwitch();
-			}
+			ToggleSwitch();
 		}
 	}
 
 	private void Interacted(Transform interacted, Vector3 interactPoint)
 	{
 		m_targetSwitchOn = !m_targetSwitchOn;
-		m_changingSwitchTime = 0;
 	}
 
     private void ToggleSwitch()
 	{
 		switchOn = !switchOn;
-		m_changingSwitchTime = 0;
 		SetSwitchEffects();
 		switchingAudio.Play();
 	}
 
     private void SetSwitchEffects()
 	{
-		m_mesh.sharedMaterial = switchOn ? onMaterial : offMaterial;
+        switchRenderer.sharedMaterial = switchOn ? onMaterial : offMaterial;
 
 		whileSwitchIsOnAudio.enabled = switchOn;
 		switchingAudio.clip = switchOn ? switchTurnOnSound : switchTurnOffSound;

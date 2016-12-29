@@ -11,8 +11,6 @@ public class BulletHoles : MonoBehaviour
     [SerializeField] private AudioClip[] m_bulletSounds;
 
     private static List<Transform> m_bulletHoles;
-
-    private AudioSource m_audioSource;
     
 	private void Start()
     {
@@ -28,15 +26,15 @@ public class BulletHoles : MonoBehaviour
             m_bulletHoles.RemoveAt(0);
         }
 
-        m_audioSource = transform.GetComponent<AudioSource>();
-        m_audioSource.clip = m_bulletSounds[Random.Range(0, m_bulletSounds.Length)];
-        m_audioSource.pitch = m_basePitch + (Random.value - 0.5f) * m_pitchVariation;
-        m_audioSource.Play();
+        AudioSource audioSource = GetComponent<AudioSource>();
+        audioSource.clip = m_bulletSounds[Random.Range(0, m_bulletSounds.Length)];
+        audioSource.pitch = m_basePitch + (Random.value - 0.5f) * m_pitchVariation;
+        audioSource.Play();
 	}
 
     public void SetParent(Transform parent)
     {
         transform.localScale = Vector3.one * Random.Range(m_minScale, m_maxScale);
-        transform.parent = parent;
+        transform.SetParent(parent, true);
     }
 }

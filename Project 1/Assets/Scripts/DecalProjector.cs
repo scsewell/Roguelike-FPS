@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [ExecuteInEditMode]
-public class Decal : MonoBehaviour
+public class DecalProjector : MonoBehaviour
 {
     public Material m_material;
 
