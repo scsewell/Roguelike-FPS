@@ -34,18 +34,15 @@ public class Interactable : MonoBehaviour
 
     public void SetOutline(bool showOutline)
     {
-        if (enabled || (!enabled && !showOutline))
+        foreach (Outline outline in m_outlines)
         {
-            foreach (Outline outline in m_outlines)
-            {
-                outline.enabled = showOutline;
-            }
+            outline.enabled = showOutline;
         }
     }
 
     public void InteractOnce(Transform interacted, Vector3 interactPoint)
     {
-        if (enabled && Interacted != null)
+        if (Interacted != null)
         {
             Interacted(interacted, interactPoint);
         }
@@ -53,7 +50,7 @@ public class Interactable : MonoBehaviour
 
     public void StartInteract(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteraction)
     {
-        if (enabled && InteractStart != null)
+        if (InteractStart != null)
         {
             InteractStart(interacted, interactPoint, endInteraction);
         }
@@ -61,7 +58,7 @@ public class Interactable : MonoBehaviour
 
     public void EndInteract()
     {
-        if (enabled && InteractEnd != null)
+        if (InteractEnd != null)
         {
             InteractEnd();
         }

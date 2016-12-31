@@ -22,15 +22,15 @@ public class PlayerInteract : MonoBehaviour
         get { return m_interact; }
     }
 
-    private Interactable m_lastInteracted;
+    private Interactable m_currentInteraction;
     public bool IsInteracting
     {
-        get { return m_lastInteracted != null; }
+        get { return m_currentInteraction != null; }
     }
 
     public bool IsCarryingHeavy
     {
-        get { return m_lastInteracted != null && m_lastInteracted.Heavy; }
+        get { return m_currentInteraction != null && m_currentInteraction.Heavy; }
     }
 
     private void Awake()
@@ -55,13 +55,13 @@ public class PlayerInteract : MonoBehaviour
     {
         bool hasInteracted = Controls.Instance.JustDown(GameButton.Interact);
 
-        if (hasInteracted && m_lastInteracted != null)
+        if (hasInteracted && m_currentInteraction != null)
         {
-            EndInteract(m_lastInteracted);
+            EndInteract(m_currentInteraction);
             hasInteracted = false;
         }
 
-        if (m_lastInteracted == null)
+        if (m_currentInteraction == null)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_interactLayers))
@@ -73,7 +73,7 @@ public class PlayerInteract : MonoBehaviour
                     m_lastHovered.SetOutline(false);
                 }
 
-                if (interactable != null)
+                if (interactable != null && interactable.enabled)
                 {
                     interactable.SetOutline(true);
                     m_lastHovered = interactable;
@@ -87,7 +87,7 @@ public class PlayerInteract : MonoBehaviour
                         }
                         else
                         {
-                            m_lastInteracted = interactable;
+                            m_currentInteraction = interactable;
                             interactable.StartInteract(hit.transform, hit.point, EndInteract);
                         }
                     }
@@ -108,10 +108,10 @@ public class PlayerInteract : MonoBehaviour
 
     private void EndInteract(Interactable interactable)
     {
-        if (m_lastInteracted != null && interactable == m_lastInteracted)
+        if (m_currentInteraction != null && interactable == m_currentInteraction)
         {
-            m_lastInteracted.EndInteract();
-            m_lastInteracted = null;
+            m_currentInteraction.EndInteract();
+            m_currentInteraction = null;
         }
     }
 

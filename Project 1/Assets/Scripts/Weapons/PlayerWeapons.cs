@@ -5,8 +5,7 @@ using System.Collections.Generic;
 public class PlayerWeapons : MonoBehaviour
 {
     [SerializeField] private SkinnedMeshRenderer m_arms;
-
-    private CharacterMovement m_character;
+    
     private PlayerInteract m_interact;
     private List<IWeapon> m_weapons;
     private IWeapon m_currentWeapon;
@@ -20,7 +19,6 @@ public class PlayerWeapons : MonoBehaviour
 
     private void Awake()
     {
-        m_character = GetComponentInParent<CharacterMovement>();
         m_interact = GetComponentInParent<PlayerInteract>();
         m_weapons = GetComponentsInChildren<IWeapon>().ToList();
 
@@ -53,7 +51,7 @@ public class PlayerWeapons : MonoBehaviour
                 m_currentWeapon.Fire();
             }
 
-            if (Controls.Instance.JustDown(GameButton.Reload) && !m_character.IsJumping() && !m_interact.IsInteracting && !m_interact.Interacted)
+            if (Controls.Instance.JustDown(GameButton.Reload) && !m_interact.IsInteracting && !m_interact.Interacted)
             {
                 m_currentWeapon.Reload();
             }

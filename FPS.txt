@@ -1,6 +1,5 @@
 --- Short Term ---
 
-Bullet holes - See decals (no ambient light!) - Use z-testing shader? - Generate geometry and cull small areas?
 Pathfinding
 
 --- Long Term ---
