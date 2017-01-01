@@ -202,7 +202,6 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 lastGroundNormal = Vector3.zero;
     private CharacterController controller;
     private PlayerInteract m_interact;
-    private Interpolator<float> m_heightInterpolator;
 	private Transform tr;
 
     private void Awake()
@@ -219,10 +218,10 @@ public class CharacterMovement : MonoBehaviour
         tr.Translate(0, (controller.height - startHeight) / 2, 0);
         head.Translate(0, (controller.height - startHeight) / 8, 0, Space.World);
 
-        GetComponent<TransformInterpolator>().ForgetPreviousValues();
-
         InterpolatedFloat height = new InterpolatedFloat(() => (controller.height), val => { controller.height = val; });
-        m_heightInterpolator = gameObject.AddComponent<FloatInterpolator>().Initialize(height);
+        gameObject.AddComponent<FloatInterpolator>().Initialize(height);
+
+        GetComponent<TransformInterpolator>().ForgetPreviousValues();
     }
 
     private void UpdateFunction()

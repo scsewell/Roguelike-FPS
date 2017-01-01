@@ -67,7 +67,7 @@ public class ExoEnemyAnimation : MonoBehaviour
     {
         if (!m_ragdollActive)
         {
-            m_anim.SetFloat("forwardSpeed", 0);
+            m_anim.SetFloat("forwardSpeed", 2);
             m_anim.SetFloat("sidewaysSpeed", 0);
         }
         else if (m_grabJoint != null)
