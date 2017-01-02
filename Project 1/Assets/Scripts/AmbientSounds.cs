@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AmbientSounds : MonoBehaviour
 {
@@ -9,12 +8,12 @@ public class AmbientSounds : MonoBehaviour
     public AudioSource ambientAudio;
     public AudioClip[] ambientSounds;
 
-	void Update ()
+	private void Update()
     {
 		if (Random.Range(0, ambientSoundChance) < Time.deltaTime && !ambientAudio.isPlaying)
         {
-			ambientAudio.clip = (AudioClip)ambientSounds.GetValue(Random.Range(0, ambientSounds.Length));
-			ambientAudio.panStereo = (Random.Range(0, 2) - 1);
+			ambientAudio.clip = Utils.PickRandom(ambientSounds);
+            ambientAudio.panStereo = Random.Range(0, 2) - 1;
 			ambientAudio.volume = Random.Range(ambientSoundMinVolume, ambientSoundMaxVolume);
 			ambientAudio.Play();
 		}

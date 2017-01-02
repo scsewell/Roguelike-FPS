@@ -2,10 +2,10 @@
 
 public class LightSpin : MonoBehaviour
 {
-	public float spinSpeed = 1;
+	public float spinSpeed = 100;
 
 	private void Update()
     {
-		transform.Rotate(new Vector3(0, spinSpeed * Time.deltaTime * 100, 0));
+		transform.Rotate(spinSpeed * Time.deltaTime * Vector3.up);
 	}
 }

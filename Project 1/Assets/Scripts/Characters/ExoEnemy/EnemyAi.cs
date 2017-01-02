@@ -62,7 +62,7 @@ public class EnemyAi : MonoBehaviour {
 				playerFloorMaterial.color.a);
 		}
 
-		LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>> pathNodesToEnemy = null;
+		LinkedList<GraphNode<Node, Edge>> pathNodesToEnemy = null;
 
 		closestNodeToPlayer.traverseWithPath (null, ((currentNode, nodeList, edgeList) =>  {
 			if (currentNode == closestNodeToEnemy) {
@@ -99,9 +99,9 @@ public class EnemyAi : MonoBehaviour {
 		{
 			//Debug.DrawLine(enemyPosition, sweepPosition);
 
-			LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>> truncatedReliablePathNodesToEnemy = new LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>>(pathNodesToEnemy.Reverse().SkipWhile(((pathNode)=>{return !getNodeSignalReliability(pathNode, sweepPosition);})).Reverse());
+			LinkedList<GraphNode<Node, Edge>> truncatedReliablePathNodesToEnemy = new LinkedList<GraphNode<Node, Edge>>(pathNodesToEnemy.Reverse().SkipWhile(((pathNode)=>{return !getNodeSignalReliability(pathNode, sweepPosition);})).Reverse());
 
-			LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>> signalPathNodesToEnemy = new LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>>(truncatedReliablePathNodesToEnemy.Skip(truncatedReliablePathNodesToEnemy.Count - signalNodesCount));
+			LinkedList<GraphNode<Node, Edge>> signalPathNodesToEnemy = new LinkedList<GraphNode<Node, Edge>>(truncatedReliablePathNodesToEnemy.Skip(truncatedReliablePathNodesToEnemy.Count - signalNodesCount));
 
 			#if true
 			foreach (var pathNode in signalPathNodesToEnemy)
@@ -151,9 +151,9 @@ public class EnemyAi : MonoBehaviour {
 #if true
 		foreach (Vector3 sweepPosition in sweepPositions)
 		{
-			LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>> truncatedReliablePathNodesToEnemy = new LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>>(pathNodesToEnemy.Reverse().SkipWhile(((pathNode)=>{return !getNodeSignalReliability(pathNode, sweepPosition);})).Reverse());
+			LinkedList<GraphNode<Node, Edge>> truncatedReliablePathNodesToEnemy = new LinkedList<GraphNode<Node, Edge>>(pathNodesToEnemy.Reverse().SkipWhile(((pathNode)=>{return !getNodeSignalReliability(pathNode, sweepPosition);})).Reverse());
 
-			LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>> signalPathNodesToEnemy = new LinkedList<GraphNode<PathInstructionNode, PathInstructionEdge>>(truncatedReliablePathNodesToEnemy.Skip(truncatedReliablePathNodesToEnemy.Count - signalNodesCount));
+			LinkedList<GraphNode<Node, Edge>> signalPathNodesToEnemy = new LinkedList<GraphNode<Node, Edge>>(truncatedReliablePathNodesToEnemy.Skip(truncatedReliablePathNodesToEnemy.Count - signalNodesCount));
 
 			float sweepPositionSignalReading = 0;
 			float signalWeight = 1;
@@ -186,7 +186,7 @@ public class EnemyAi : MonoBehaviour {
 
 	//floats returns here could be critical later, think about
 	//this depends a lot on the structure or phsical shape of a node; currently manhatteeeen corridors
-	public bool getNodeSignalReliability (GraphNode<PathInstructionNode, PathInstructionEdge> testNode, Vector3 startPosition) 
+	public bool getNodeSignalReliability (GraphNode<Node, Edge> testNode, Vector3 startPosition) 
 	{
 		//Box test?
 		//pass in corridor scale
@@ -194,7 +194,7 @@ public class EnemyAi : MonoBehaviour {
 		return getNodeBubbleDistance(testNode, startPosition) > 2 * 1.5f;
 	}
 
-	public float getNodeBubbleDistance (GraphNode<PathInstructionNode, PathInstructionEdge> node, Vector3 enemyPosition) 
+	public float getNodeBubbleDistance (GraphNode<Node, Edge> node, Vector3 enemyPosition) 
 	{
 		Vector3 nodePosition = node.data.position;
 		return Mathf.Sqrt(Mathf.Pow(Mathf.Max( Mathf.Abs(nodePosition.x - enemyPosition.x) - 1, 0), 2) + Mathf.Pow(Mathf.Max( Mathf.Abs(nodePosition.z - enemyPosition.z) - 1, 0), 2));
@@ -212,9 +212,9 @@ public class EnemyAi : MonoBehaviour {
 		return sweepPositions;
 	}
 
-	GraphNode<PathInstructionNode, PathInstructionEdge> closestGraphNode (Vector3 enemyPosition, GraphNode<PathInstructionNode, PathInstructionEdge> rootNode)
+	GraphNode<Node, Edge> closestGraphNode (Vector3 enemyPosition, GraphNode<Node, Edge> rootNode)
 	{
-		GraphNode<PathInstructionNode, PathInstructionEdge> closestNode = null;
+		GraphNode<Node, Edge> closestNode = null;
 		float closestNodeDistance = Mathf.Infinity;
 
 		rootNode.traverse (null, ((currentNode) =>  {
@@ -227,7 +227,7 @@ public class EnemyAi : MonoBehaviour {
 		return closestNode;
 	}
 
-	static Material getFloorMaterialOfNode (GraphNode<PathInstructionNode, PathInstructionEdge> node)
+	static Material getFloorMaterialOfNode (GraphNode<Node, Edge> node)
 	{
 		return node.data.representations.First (someTransform =>  {
 			return someTransform.gameObject.name.Contains ("Floor");

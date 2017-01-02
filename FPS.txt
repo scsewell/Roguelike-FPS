@@ -10,7 +10,6 @@ Generate fancier rooms
 Corridor and prop art
 minimap
 
-
 --- Looking Out For ---
 
 Door can close on an object
