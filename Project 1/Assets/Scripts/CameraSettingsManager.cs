@@ -19,7 +19,7 @@ public class CameraSettingsManager : MonoBehaviour
 
         ColorGradingModel.Settings settings = m_postProfile.colorGrading.settings;
         ColorGradingModel.BasicSettings basicSettings = settings.basic;
-        basicSettings.postExposure = Settings.Instance.GetBrightness();
+        basicSettings.postExposure = Settings.Instance.GetBrightness() - 1;
         settings.basic = basicSettings;
         m_postProfile.colorGrading.settings = settings;
     }
