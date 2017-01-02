@@ -10,20 +10,19 @@ public class BulletHoles : MonoBehaviour
     [SerializeField] private float m_pitchVariation = 0.5f;
     [SerializeField] private AudioClip[] m_bulletSounds;
 
-    private static List<Transform> m_bulletHoles;
+    private static Queue<Transform> m_bulletHoles;
     
 	private void Start()
     {
         if (m_bulletHoles == null)
         {
-            m_bulletHoles = new List<Transform>();
+            m_bulletHoles = new Queue<Transform>();
         }
 
-        m_bulletHoles.Add(transform);
+        m_bulletHoles.Enqueue(transform);
         if (m_bulletHoles.Count > m_maxHoleCount)
         {
-            Destroy(m_bulletHoles[0].gameObject);
-            m_bulletHoles.RemoveAt(0);
+            Destroy(m_bulletHoles.Dequeue().gameObject);
         }
 
         AudioSource audioSource = GetComponent<AudioSource>();
