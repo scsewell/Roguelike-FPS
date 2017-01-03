@@ -15,19 +15,20 @@ public class CorridorGraph : MonoBehaviour
 
     public GraphNode<Node, Edge> root;
     
-    private Transform levelRoot;
-    private Transform levelNavmesh;
-    private Transform levelOther;
-
+    private Transform m_levelRoot;
+    private Transform m_levelNavmesh;
+    private Transform m_levelOther;
+    private NavMeshManager m_navMeshManager;
 
     private void Start()
     {
-        levelRoot = new GameObject("LevelMain").transform;
-        levelNavmesh = new GameObject("LevelNavmesh").transform;
-        levelOther = new GameObject("LevelOther").transform;
+        m_levelRoot = new GameObject("LevelMain").transform;
+        m_levelNavmesh = new GameObject("LevelNavmesh").transform;
+        m_levelOther = new GameObject("LevelOther").transform;
+        m_levelNavmesh.SetParent(m_levelRoot);
+        m_levelOther.SetParent(m_levelRoot);
 
-        levelNavmesh.SetParent(levelRoot);
-        levelOther.SetParent(levelRoot);
+        m_navMeshManager = m_levelNavmesh.gameObject.AddComponent<NavMeshManager>();
 
         root = new GraphNode<Node, Edge>(new Node(Vector3.zero));
         
@@ -38,6 +39,7 @@ public class CorridorGraph : MonoBehaviour
                 addSingleNode();
             }
             root.traverse(null, SkinNode);
+            m_navMeshManager.BuildNavMesh();
         }
     }
 
@@ -292,19 +294,21 @@ public class CorridorGraph : MonoBehaviour
         Vector3 tilePosition = node.data.position;
         Quaternion faceFirstNeighbour = Quaternion.Euler(0, dirIndex(neighbours.Count > 0 ? nodeDir(node, neighbours.First.Value) : "up") * 90, 0);
 
+        // place lighting
         if (Random.value < theme.lightChance)
         {
             Transform lightPrefab = Utils.PickRandom(Random.value < theme.spinLightProportion ? theme.spinLight : theme.light);
-            reps.Add(Instantiate(lightPrefab, tilePosition, faceFirstNeighbour, levelNavmesh) as Transform);
+            reps.Add(Instantiate(lightPrefab, tilePosition, faceFirstNeighbour, m_levelOther) as Transform);
         }
         
         bool isDeadEnd = neighbours.Count == 1;
-        bool isCorridor = (neighbours.Count == 2 && !((((Mathf.Abs(dirIndex(node, neighbours.First.Value) - dirIndex(node, neighbours.Last.Value))
-                    - 1) % 2) + 1) == 1));
-        
+        bool isCorridor = neighbours.Count == 2 && !((((Mathf.Abs(dirIndex(node, neighbours.First.Value) - dirIndex(node, neighbours.Last.Value)) - 1) % 2) == 0));
+
+        // place flooring
         Transform floor = Utils.PickRandom(isCorridor || isDeadEnd ? theme.floorCorridor : theme.floorJunction);
-        reps.Add(Instantiate(floor, tilePosition, faceFirstNeighbour, levelNavmesh) as Transform);
-            
+        reps.Add(Instantiate(floor, tilePosition, faceFirstNeighbour, m_levelNavmesh) as Transform);
+
+        // place roof and walls
         foreach (string direction in cardinalDirections)
         {
             Quaternion faceDirection = Quaternion.Euler(0, dirIndex(direction) * 90, 0);
@@ -316,17 +320,17 @@ public class CorridorGraph : MonoBehaviour
                 {
                     wall = Utils.PickRandom(theme.wallDeadEnd);
                 }
-                reps.Add(Instantiate(wall, tilePosition, faceDirection, levelNavmesh) as Transform);
-                reps.Add(Instantiate(Utils.PickRandom(theme.roofToWall), tilePosition, faceDirection, levelOther) as Transform);
+                reps.Add(Instantiate(wall, tilePosition, faceDirection, m_levelNavmesh) as Transform);
+                reps.Add(Instantiate(Utils.PickRandom(theme.roofToWall), tilePosition, faceDirection, m_levelOther) as Transform);
             }
             else
             {
-                reps.Add(Instantiate(Utils.PickRandom(theme.roofToCorridor), tilePosition, faceDirection, levelOther) as Transform);
+                reps.Add(Instantiate(Utils.PickRandom(theme.roofToCorridor), tilePosition, faceDirection, m_levelOther) as Transform);
             }
 
             if (directionsAttatched.Contains(direction) == directionsAttatched.Contains(cardinalDirections[(dirIndex(direction) + 1) % 4]))
             {
-                reps.Add(Instantiate(Utils.PickRandom(theme.junctionCorner), tilePosition, faceDirection, levelNavmesh) as Transform);
+                reps.Add(Instantiate(Utils.PickRandom(theme.junctionCorner), tilePosition, faceDirection, m_levelNavmesh) as Transform);
             }
         }
     }
