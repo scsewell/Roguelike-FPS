@@ -18,11 +18,6 @@ public class MainGunSounds : MonoBehaviour
         m_footsteps = transform.root.GetComponent<FootstepSounds>();
     }
 
-    public void Footstep()
-    {
-        m_footsteps.FootstepSound();
-    }
-
     public void PlayReloadStart()
     {
         m_audioSource.clip = m_reloadStart;
@@ -45,5 +40,15 @@ public class MainGunSounds : MonoBehaviour
 		m_audioSource.pitch = m_bulletFirePitch;
 		m_audioSource.volume = m_bulletFireVolume;
 		m_audioSource.Play();
+    }
+
+    public void FootstepL()
+    {
+        m_footsteps.FootstepL();
+    }
+
+    public void FootstepR()
+    {
+        m_footsteps.FootstepR();
     }
 }

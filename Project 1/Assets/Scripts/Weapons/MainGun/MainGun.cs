@@ -140,7 +140,7 @@ public class MainGun : MonoBehaviour, IWeapon
 
     private void FireOneShot()
     {
-		float inaccuracy = (m_baseInaccuracy * m_movementInaccuracyMultiplier * m_character.movement.velocity.magnitude) + m_baseInaccuracy;	
+		float inaccuracy = (m_baseInaccuracy * m_movementInaccuracyMultiplier * m_character.GetVelocity().magnitude) + m_baseInaccuracy;	
 
 		if (m_character.IsCrouching())
         {

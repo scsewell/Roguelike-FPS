@@ -12,7 +12,7 @@ public class MainGunAnimations : MonoBehaviour
     [SerializeField] private bool m_useBlocking = false;
     [SerializeField] private GunBlocking m_gunBlocking;
 
-    private CharacterInput m_moveDirection;
+    private CharacterInput m_input;
     private CharacterMovement m_character;
     private CharacterLook m_look;
     private MainGun m_gun;
@@ -28,7 +28,7 @@ public class MainGunAnimations : MonoBehaviour
 
     private void Start() 
     {
-        m_moveDirection = transform.root.GetComponent<CharacterInput>();
+        m_input = transform.root.GetComponent<CharacterInput>();
         m_character = transform.root.GetComponent<CharacterMovement>();
         m_look = transform.root.GetComponent<CharacterLook>();
         m_interact = GetComponentInParent<PlayerInteract>();
@@ -43,11 +43,12 @@ public class MainGunAnimations : MonoBehaviour
         bool recoiling = (m_recoilTimeLeft > 0);
         
 		transform.localPosition = Vector3.Lerp(transform.localPosition, recoiling ? m_recoilPosition : m_fireResetPosition, (recoiling ? m_recoilSpeed : m_recoilResetSpeed) * Time.deltaTime);
-        
-        m_h = Mathf.MoveTowards(m_h, m_moveDirection.GetMoveDirection().x, Time.deltaTime * m_movementAdjustRate);
-        m_v = Mathf.MoveTowards(m_v, m_moveDirection.GetMoveDirection().z, Time.deltaTime * m_movementAdjustRate);
-        m_h = Mathf.Lerp(m_h, m_moveDirection.GetMoveDirection().x, Time.deltaTime * m_movementSmoothing);
-        m_v = Mathf.Lerp(m_v, m_moveDirection.GetMoveDirection().z, Time.deltaTime * m_movementSmoothing);
+
+        Vector3 moveInput = m_input.GetMoveInput();
+        m_h = Mathf.MoveTowards(m_h, moveInput.x, Time.deltaTime * m_movementAdjustRate);
+        m_v = Mathf.MoveTowards(m_v, moveInput.z, Time.deltaTime * m_movementAdjustRate);
+        m_h = Mathf.Lerp(m_h, moveInput.x, Time.deltaTime * m_movementSmoothing);
+        m_v = Mathf.Lerp(m_v, moveInput.z, Time.deltaTime * m_movementSmoothing);
         
         m_hLook = Mathf.Lerp(m_hLook, m_look.GetDeltaX(), Time.deltaTime * m_rotateSmoothing);
         m_vLook = Mathf.Lerp(m_vLook, m_look.GetDeltaY(), Time.deltaTime * m_rotateSmoothing);

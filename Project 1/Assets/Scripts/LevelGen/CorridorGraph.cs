@@ -76,7 +76,7 @@ public class CorridorGraph : MonoBehaviour
         }
         
         GraphEdge<Node, Edge> validEdge;
-        GraphNode<Node, Edge> newNode = addNodeUsingDirection(validNode, validInstruction, out validEdge);
+        addNodeUsingDirection(validNode, validInstruction, out validEdge);
     }
 
     private void findValidNodeAndInstructionToAdd(out GraphNode<Node, Edge> validNode, out string validInstruction)

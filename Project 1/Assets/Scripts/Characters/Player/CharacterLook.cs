@@ -12,7 +12,7 @@ public class CharacterLook : MonoBehaviour
 
     private float m_deltaX = 0;
     private float m_deltaY = 0;
-    private float m_rotationY = 0.0f;
+    private float m_rotationY = 0;
 
     private void Start() 
     {

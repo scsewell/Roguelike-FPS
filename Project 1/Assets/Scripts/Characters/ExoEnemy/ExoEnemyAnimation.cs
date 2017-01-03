@@ -20,7 +20,7 @@ public class ExoEnemyAnimation : MonoBehaviour
     private void Start()
     {
         m_exoEnemy = GetComponent<ExoEnemy>();
-        m_anim = GetComponentInChildren<Animator>();
+        m_anim = GetComponent<Animator>();
         m_ragdollBodies = GetComponentsInChildren<Rigidbody>();
         m_ragdollColliders = GetComponentsInChildren<RagdollCollider>();
 
@@ -67,7 +67,7 @@ public class ExoEnemyAnimation : MonoBehaviour
     {
         if (!m_ragdollActive)
         {
-            m_anim.SetFloat("forwardSpeed", 2);
+            m_anim.SetFloat("forwardSpeed", 1);
             m_anim.SetFloat("sidewaysSpeed", 0);
         }
         else if (m_grabJoint != null)
