@@ -196,6 +196,11 @@ public class Controls
             new KeyButton(KeyCode.Space),
             new JoystickButton(GamepadButton.A),
         }));
+        m_buttons.Add(GameButton.Crouch, new BufferedButton(true, new List<ISource<bool>>
+        {
+            new KeyButton(KeyCode.C),
+            new JoystickButton(GamepadButton.B),
+        }));
         m_buttons.Add(GameButton.RunHold, new BufferedButton(true, new List<ISource<bool>>
         {
             new KeyButton(KeyCode.LeftShift),
@@ -203,16 +208,6 @@ public class Controls
         m_buttons.Add(GameButton.RunTap, new BufferedButton(true, new List<ISource<bool>>
         {
             new JoystickButton(GamepadButton.LStick),
-        }));
-        m_buttons.Add(GameButton.Crouch, new BufferedButton(true, new List<ISource<bool>>
-        {
-            new KeyButton(KeyCode.C),
-            new JoystickButton(GamepadButton.B),
-        }));
-        m_buttons.Add(GameButton.Weapon1, new BufferedButton(true, new List<ISource<bool>>
-        {
-            new KeyButton(KeyCode.Alpha1),
-            new JoystickButton(GamepadButton.DpadUp),
         }));
         m_buttons.Add(GameButton.Fire, new BufferedButton(true, new List<ISource<bool>>
         {
@@ -233,6 +228,16 @@ public class Controls
         {
             new KeyButton(KeyCode.F),
             new JoystickButton(GamepadButton.X),
+        }));
+        m_buttons.Add(GameButton.Weapon1, new BufferedButton(true, new List<ISource<bool>>
+        {
+            new KeyButton(KeyCode.Alpha1),
+            new JoystickButton(GamepadButton.DpadLeft),
+        }));
+        m_buttons.Add(GameButton.Flashlight, new BufferedButton(true, new List<ISource<bool>>
+        {
+            new KeyButton(KeyCode.L),
+            new JoystickButton(GamepadButton.DpadUp),
         }));
 
 

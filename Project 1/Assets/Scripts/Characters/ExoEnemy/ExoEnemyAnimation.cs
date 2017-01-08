@@ -113,6 +113,10 @@ public class ExoEnemyAnimation : MonoBehaviour
         {
             collider.SetEnabled(activated);
         }
+        foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            renderer.updateWhenOffscreen = activated;
+        }
     }
 }
 

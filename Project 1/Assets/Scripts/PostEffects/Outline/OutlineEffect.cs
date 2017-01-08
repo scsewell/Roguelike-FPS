@@ -99,29 +99,32 @@ public class OutlineEffect : MonoBehaviour
 
 		if (m_outlines != null)
         {
-			for (int i = 0; i < m_outlines.Count; i++)
+            foreach (Outline outline in m_outlines)
             {
-                if (m_outlines[i] != null)
+                Renderer renderer = outline.GetComponent<Renderer>();
+                if (renderer == null || !renderer.enabled)
                 {
-                    m_outlines[i].originalMaterial = m_outlines[i].GetComponent<Renderer>().sharedMaterial;
-                    m_outlines[i].originalLayer = m_outlines[i].gameObject.layer;
-
-                    if (m_outlines[i].blockOutlines)
-                    {
-                        m_outlines[i].GetComponent<Renderer>().sharedMaterial = m_outlineEraseMaterial;
-                    }
-                    else
-                    {
-                        m_outlines[i].GetComponent<Renderer>().sharedMaterial = GetMaterialFromID(m_outlines[i].color);
-                    }
-
-                    if (m_outlines[i].GetComponent<Renderer>() is MeshRenderer)
-                    {
-                        m_outlines[i].GetComponent<Renderer>().sharedMaterial.mainTexture = m_outlines[i].originalMaterial.mainTexture;
-                    }
-
-                    m_outlines[i].gameObject.layer = LayerMask.NameToLayer("Outline");
+                    continue;
                 }
+
+                outline.originalMaterial = renderer.sharedMaterial;
+                outline.originalLayer = outline.gameObject.layer;
+
+                if (outline.blockOutlines)
+                {
+                    renderer.sharedMaterial = m_outlineEraseMaterial;
+                }
+                else
+                {
+                    renderer.sharedMaterial = GetMaterialFromID(outline.color);
+                }
+
+                if (renderer is MeshRenderer)
+                {
+                    renderer.sharedMaterial.mainTexture = outline.originalMaterial.mainTexture;
+                }
+
+                outline.gameObject.layer = LayerMask.NameToLayer("Outline");
             }
         }
 
@@ -129,18 +132,20 @@ public class OutlineEffect : MonoBehaviour
 
         if (m_outlines != null)
         {
-            for (int i = 0; i < m_outlines.Count; i++)
+            foreach (Outline outline in m_outlines)
             {
-                if (m_outlines[i] != null)
+                Renderer renderer = outline.GetComponent<Renderer>();
+                if (renderer == null || !renderer.enabled)
                 {
-                    if (m_outlines[i].GetComponent<Renderer>() is MeshRenderer)
-                    {
-						m_outlines[i].GetComponent<Renderer>().sharedMaterial.mainTexture = null;
-                    }
-
-					m_outlines[i].GetComponent<Renderer>().sharedMaterial = m_outlines[i].originalMaterial;
-					m_outlines[i].gameObject.layer = m_outlines[i].originalLayer;
+                    continue;
                 }
+
+                if (renderer is MeshRenderer)
+                {
+                    renderer.sharedMaterial.mainTexture = null;
+                }
+                renderer.sharedMaterial = outline.originalMaterial;
+                outline.gameObject.layer = outline.originalLayer;
             }
         }
     }
