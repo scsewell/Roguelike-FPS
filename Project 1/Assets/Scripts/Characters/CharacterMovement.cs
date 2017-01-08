@@ -26,7 +26,7 @@ public class CharacterMovement : MonoBehaviour
         public float maxSidewaysSpeed = 10.0f;
         public float maxBackwardsSpeed = 10.0f;
         public float maxBurdenedSpeed = 4.0f;
-        public float crouchSpeed = 6.0f;
+        public float heightChangeRate = 6.0f;
         public float crouchHeight = 1.5f;
         public float standHeight = 2.0f;
         
@@ -38,14 +38,6 @@ public class CharacterMovement : MonoBehaviour
         public float gravity = 9.81f;
         public float maxFallSpeed = 20.0f;
     }
-
-    public enum MovementTransferOnJump
-    {
-        None, // The jump is not affected by velocity of floor at all.
-        InitTransfer, // Jump gets its initial velocity from the floor, then gradualy comes to a stop.
-        PermaTransfer, // Jump gets its initial velocity from the floor, and keeps that velocity until landing.
-        PermaLocked // Jump is relative to the movement of the last touched floor and will move together with that floor.
-    }
     
     [Serializable]
     public class CharacterMotorJumping
@@ -56,52 +48,47 @@ public class CharacterMovement : MonoBehaviour
         public float perpAmount = 0.0f;
         public float steepPerpAmount = 0.5f;
 
-        [System.NonSerialized]
+        [NonSerialized]
         public bool holdingJumpButton = false;
-
-        // the time we jumped at(Used to determine for how long to apply extra jump power after jumping.)
-        [System.NonSerialized]
-        public float lastStartTime = 0.0f;
-
-        [System.NonSerialized]
-        public float lastButtonDownTime = -100.0f;
-
-        [System.NonSerialized]
+        [NonSerialized]
+        public float lastStartTime = 0;
+        [NonSerialized]
+        public float lastButtonDownTime = -100;
+        [NonSerialized]
         public Vector3 jumpDir = Vector3.up;
     }
-    
+
+    public enum MovementTransferOnJump
+    {
+        None, // The jump is not affected by velocity of floor at all.
+        InitTransfer, // Jump gets its initial velocity from the floor, then gradualy comes to a stop.
+        PermaTransfer, // Jump gets its initial velocity from the floor, and keeps that velocity until landing.
+        PermaLocked // Jump is relative to the movement of the last touched floor and will move together with that floor.
+    }
+
     [Serializable]
     public class CharacterMotorMovingPlatform
     {
         public bool enabled = true;
-
         public MovementTransferOnJump movementTransfer = MovementTransferOnJump.PermaTransfer;
 
-        [System.NonSerialized]
+        [NonSerialized]
         public Transform hitPlatform;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Transform activePlatform;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Vector3 activeLocalPoint;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Vector3 activeGlobalPoint;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Quaternion activeLocalRotation;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Quaternion activeGlobalRotation;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Matrix4x4 lastMatrix;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public Vector3 platformVelocity;
-
-        [System.NonSerialized]
+        [NonSerialized]
         public bool newPlatform;
     }
 
@@ -124,17 +111,16 @@ public class CharacterMovement : MonoBehaviour
     private CharacterMotorSliding m_sliding = new CharacterMotorSliding();
 
     private CharacterController m_controller;
+    private CollisionFlags m_collisionFlags;
     private Vector3 m_groundNormal = Vector3.zero;
     private Vector3 m_lastGroundNormal = Vector3.zero;
-    private bool m_grounded = true;
-
-    private bool m_isJumping = false;
-
-    private CollisionFlags m_collisionFlags;
     private Vector3 m_velocity;
+    private Vector3 m_actualVelocity;
     private Vector3 m_frameVelocity = Vector3.zero;
     private Vector3 m_hitPoint = Vector3.zero;
     private Vector3 m_lastHitPoint = new Vector3(Mathf.Infinity, 0, 0);
+    private bool m_grounded = true;
+    private bool m_isJumping = false;
     private bool m_crouching = false;
 
     private void Awake()
@@ -154,17 +140,47 @@ public class CharacterMovement : MonoBehaviour
         GetComponent<TransformInterpolator>().ForgetPreviousValues();
     }
 
+    private void FixedUpdate()
+    {
+        if (!m_controller.enabled)
+        {
+            return;
+        }
+
+        if (m_movingPlatform.enabled)
+        {
+            if (m_movingPlatform.activePlatform != null)
+            {
+                if (!m_movingPlatform.newPlatform)
+                {
+                    m_movingPlatform.platformVelocity = (
+                        m_movingPlatform.activePlatform.localToWorldMatrix.MultiplyPoint3x4(m_movingPlatform.activeLocalPoint)
+                        - m_movingPlatform.lastMatrix.MultiplyPoint3x4(m_movingPlatform.activeLocalPoint)
+                    ) / Time.deltaTime;
+                }
+                m_movingPlatform.lastMatrix = m_movingPlatform.activePlatform.localToWorldMatrix;
+                m_movingPlatform.newPlatform = false;
+            }
+            else
+            {
+                m_movingPlatform.platformVelocity = Vector3.zero;
+            }
+        }
+
+        UpdateFunction();
+    }
+
     private void UpdateFunction()
     {
         Vector3 velocity = m_velocity;
-        
+
         velocity = ApplyInputVelocityChange(velocity);
         velocity = ApplyGravityAndJumping(velocity);
-        
+
         m_crouching = inputCrouch && !inputRunning;
 
         float lastHeight = m_controller.height;
-        m_controller.height = Mathf.Lerp(m_controller.height, m_crouching ? m_movement.crouchHeight : m_movement.standHeight, Time.deltaTime * m_movement.crouchSpeed);
+        m_controller.height = Mathf.Lerp(m_controller.height, m_crouching ? m_movement.crouchHeight : m_movement.standHeight, Time.deltaTime * m_movement.heightChangeRate);
         if (!m_crouching)
         {
             transform.Translate(0, (m_controller.height - lastHeight) / 2, 0);
@@ -177,7 +193,9 @@ public class CharacterMovement : MonoBehaviour
             Vector3 newGlobalPoint = m_movingPlatform.activePlatform.TransformPoint(m_movingPlatform.activeLocalPoint);
             moveDistance = (newGlobalPoint - m_movingPlatform.activeGlobalPoint);
             if (moveDistance != Vector3.zero)
+            {
                 m_controller.Move(moveDistance);
+            }
 
             // Support moving platform rotation as well:
             Quaternion newGlobalRotation = m_movingPlatform.activePlatform.rotation * m_movingPlatform.activeLocalRotation;
@@ -201,7 +219,9 @@ public class CharacterMovement : MonoBehaviour
         // when walking down a step or over a sharp change in slope.
         float pushDownOffset = Mathf.Max(m_controller.stepOffset, new Vector3(currentMovementOffset.x, 0, currentMovementOffset.z).magnitude);
         if (m_grounded)
+        {
             currentMovementOffset -= pushDownOffset * Vector3.up;
+        }
 
         // Reset variables that will be set by collision function
         m_movingPlatform.hitPlatform = null;
@@ -226,7 +246,8 @@ public class CharacterMovement : MonoBehaviour
         // Calculate the velocity based on the current and previous position.  
         // This means our velocity will only be the amount the character actually moved as a result of collisions.
         Vector3 oldHVelocity = new Vector3(velocity.x, 0, velocity.z);
-        m_velocity = (transform.position - lastPosition) / Time.deltaTime;
+        m_actualVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        m_velocity = m_actualVelocity;
         Vector3 newHVelocity = new Vector3(m_velocity.x, 0, m_velocity.z);
 
         // The CharacterController can be moved in unwanted directions when colliding with things.
@@ -241,7 +262,7 @@ public class CharacterMovement : MonoBehaviour
             m_velocity = oldHVelocity * Mathf.Clamp01(projectedNewVelocity) + m_velocity.y * Vector3.up;
         }
 
-        if (m_velocity.y < velocity.y - 0.001)
+        if (m_velocity.y < velocity.y - 0.001f)
         {
             if (m_velocity.y < 0)
             {
@@ -271,8 +292,7 @@ public class CharacterMovement : MonoBehaviour
                 m_frameVelocity = m_movingPlatform.platformVelocity;
                 m_velocity += m_movingPlatform.platformVelocity;
             }
-
-            SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+            
             // We pushed the character down to ensure it would stay on the ground ifthere was any.
             // But there wasn't so now we cancel the downwards offset to make the fall smoother.
             transform.position += pushDownOffset * Vector3.up;
@@ -283,8 +303,6 @@ public class CharacterMovement : MonoBehaviour
             m_grounded = true;
             m_isJumping = false;
             SubtractNewPlatformVelocity();
-
-            SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
         }
 
         // Moving platforms support
@@ -301,33 +319,6 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (m_movingPlatform.enabled)
-        {
-            if (m_movingPlatform.activePlatform != null)
-            {
-                if (!m_movingPlatform.newPlatform)
-                {
-                    // unused: Vector3 lastVelocity = movingPlatform.platformVelocity;
-
-                    m_movingPlatform.platformVelocity = (
-                        m_movingPlatform.activePlatform.localToWorldMatrix.MultiplyPoint3x4(m_movingPlatform.activeLocalPoint)
-                        - m_movingPlatform.lastMatrix.MultiplyPoint3x4(m_movingPlatform.activeLocalPoint)
-                    ) / Time.deltaTime;
-                }
-                m_movingPlatform.lastMatrix = m_movingPlatform.activePlatform.localToWorldMatrix;
-                m_movingPlatform.newPlatform = false;
-            }
-            else
-            {
-                m_movingPlatform.platformVelocity = Vector3.zero;
-            }
-        }
-        
-        UpdateFunction();
-    }
-
     private Vector3 ApplyInputVelocityChange(Vector3 velocity)
     {
         // Find desired velocity
@@ -337,7 +328,7 @@ public class CharacterMovement : MonoBehaviour
             // The direction we're sliding in
             desiredVelocity = new Vector3(m_groundNormal.x, 0, m_groundNormal.z).normalized;
             // Find the input movement direction projected onto the sliding direction
-            var projectedMoveDir = Vector3.Project(inputMoveDirection, desiredVelocity);
+            Vector3 projectedMoveDir = Vector3.Project(inputMoveDirection, desiredVelocity);
             // Add the sliding direction, the spped control, and the sideways control vectors
             desiredVelocity = desiredVelocity + projectedMoveDir * m_sliding.speedControl + (inputMoveDirection - projectedMoveDir) * m_sliding.sidewaysControl;
             // Multiply with the sliding speed
@@ -363,14 +354,8 @@ public class CharacterMovement : MonoBehaviour
             velocity.y = 0;
         }
 
-        // Enforce max velocity change
         float maxVelocityChange = GetMaxAcceleration(m_grounded) * Time.deltaTime;
-        Vector3 velocityChangeVector = (desiredVelocity - velocity);
-        if (velocityChangeVector.sqrMagnitude > maxVelocityChange * maxVelocityChange)
-        {
-            velocityChangeVector = velocityChangeVector.normalized * maxVelocityChange;
-        }
-        velocity += velocityChangeVector;
+        velocity += Vector3.ClampMagnitude(desiredVelocity - velocity, maxVelocityChange);
 
         if (m_grounded)
         {
@@ -392,10 +377,14 @@ public class CharacterMovement : MonoBehaviour
         }
 
         if (inputJump && m_jumping.lastButtonDownTime < 0)
+        {
             m_jumping.lastButtonDownTime = Time.time;
+        }
 
         if (m_grounded)
+        {
             velocity.y = Mathf.Min(0, velocity.y) - m_movement.gravity * Time.deltaTime;
+        }
         else
         {
             velocity.y = m_velocity.y - m_movement.gravity * Time.deltaTime;
@@ -419,10 +408,10 @@ public class CharacterMovement : MonoBehaviour
 
         if (m_grounded)
         {
-            // Jump only ifthe jump button was pressed down in the last 0.2 seconds.
-            // We use this check instead of checking ifit's pressed down right now
+            // Jump only if the jump button was pressed down in the last 0.2 seconds.
+            // We use this check instead of checking if it's pressed down right now
             // because players will often try to jump in the exact moment when hitting the ground after a jump
-            // and ifthey hit the button a fraction of a second too soon and no new jump happens as a consequence,
+            // and if they hit the button a fraction of a second too soon and no new jump happens as a consequence,
             // it's confusing and it feels like the game is buggy.
             if (m_jumping.enabled & !inputBurdened && (Time.time - m_jumping.lastButtonDownTime < 0.2))
             {
@@ -433,10 +422,7 @@ public class CharacterMovement : MonoBehaviour
                 m_jumping.holdingJumpButton = true;
 
                 // Calculate the jumping direction
-                if (TooSteep())
-                    m_jumping.jumpDir = Vector3.Slerp(Vector3.up, m_groundNormal, m_jumping.steepPerpAmount);
-                else
-                    m_jumping.jumpDir = Vector3.Slerp(Vector3.up, m_groundNormal, m_jumping.perpAmount);
+                m_jumping.jumpDir = Vector3.Slerp(Vector3.up, m_groundNormal, TooSteep() ? m_jumping.steepPerpAmount : m_jumping.perpAmount);
 
                 // Apply the jumping force to the velocity. Cancel any vertical velocity first.
                 velocity.y = 0;
@@ -451,8 +437,6 @@ public class CharacterMovement : MonoBehaviour
                     m_frameVelocity = m_movingPlatform.platformVelocity;
                     velocity += m_movingPlatform.platformVelocity;
                 }
-
-                SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
             }
             else
             {
@@ -588,7 +572,7 @@ public class CharacterMovement : MonoBehaviour
 
     public Vector3 GetVelocity()
     {
-        return m_velocity;
+        return m_actualVelocity;
     }
 
     public bool IsSliding()

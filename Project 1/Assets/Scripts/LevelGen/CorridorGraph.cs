@@ -398,6 +398,21 @@ public class CorridorGraph : MonoBehaviour
             return "WARNING";
         }
     }
+
+    public Vector3 ClosestTilePos(Vector3 position)
+    {
+        GraphNode<Node, Edge> closestNode = null;
+        float closestNodeDistance = Mathf.Infinity;
+        root.traverse(null, ((currentNode) => {
+            float currentNodeDistance = Vector3.Distance(currentNode.data.position, position);
+            if (currentNodeDistance < closestNodeDistance)
+            {
+                closestNodeDistance = currentNodeDistance;
+                closestNode = currentNode;
+            }
+        }));
+        return closestNode.data.position;
+    }
 }
 
 public class Node

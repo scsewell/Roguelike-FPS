@@ -8,19 +8,21 @@ public class ExoEnemy : MonoBehaviour
     [SerializeField]
     private bool m_useExo = true;
 
+    private ExoEnemyAI m_ai;
     private ExoEnemyAnimation m_anim;
     private Health m_health;
     private Interactable m_interact;
-    private CapsuleCollider m_collider;
+    private CharacterController m_collider;
 
     private Action<Interactable> m_endInteract;
 
     private void Start()
     {
+        m_ai = GetComponent<ExoEnemyAI>();
         m_anim = GetComponent<ExoEnemyAnimation>();
         m_health = GetComponent<Health>();
         m_interact = GetComponent<Interactable>();
-        m_collider = GetComponent<CapsuleCollider>();
+        m_collider = GetComponent<CharacterController>();
 
         if (!m_useExo)
         {
@@ -44,6 +46,7 @@ public class ExoEnemy : MonoBehaviour
     private void OnDie()
     {
         m_collider.enabled = false;
+        m_ai.enabled = false;
         foreach (HitboxCollider hitbox in GetComponentsInChildren<HitboxCollider>())
         {
             hitbox.enabled = false;
@@ -66,7 +69,15 @@ public class ExoEnemy : MonoBehaviour
     private void Update()
     {
         m_anim.Animate();
-	}
+    }
+
+    private void FixedUpdate()
+    {
+        if (m_health.IsAlive)
+        {
+            m_ai.DecideActions();
+        }
+    }
 
     public void EndInteract()
     {

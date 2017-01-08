@@ -1,7 +1,8 @@
 --- Short Term ---
 
+Flashlight
 Pathfinding
-Interact / body drag sounds
+Interact / body drag sounds 
 
 --- Long Term ---
 

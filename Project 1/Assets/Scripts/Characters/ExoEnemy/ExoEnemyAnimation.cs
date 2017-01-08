@@ -4,11 +4,13 @@ using System.Linq;
 
 public class ExoEnemyAnimation : MonoBehaviour
 {
+    [SerializeField] private float m_moveChangeRate = 4f;
     [SerializeField] TransformPair[] m_toParent;
     [SerializeField] DragCollider[] m_dragLimbs;
-    [SerializeField] private float m_ragdollCenterSpeed = 2.0f;
+    [SerializeField] private float m_ragdollCenterSpeed = 2f;
 
     private ExoEnemy m_exoEnemy;
+    private CharacterMovement m_movement;
     private Animator m_anim;
 
     private Rigidbody[] m_ragdollBodies;
@@ -20,6 +22,7 @@ public class ExoEnemyAnimation : MonoBehaviour
     private void Start()
     {
         m_exoEnemy = GetComponent<ExoEnemy>();
+        m_movement = GetComponent<CharacterMovement>();
         m_anim = GetComponent<Animator>();
         m_ragdollBodies = GetComponentsInChildren<Rigidbody>();
         m_ragdollColliders = GetComponentsInChildren<RagdollCollider>();
@@ -67,7 +70,8 @@ public class ExoEnemyAnimation : MonoBehaviour
     {
         if (!m_ragdollActive)
         {
-            m_anim.SetFloat("forwardSpeed", 1);
+            float targetSpeed = m_movement.inputMoveDirection.magnitude > 0 ? (m_movement.IsRunning() ? 2 : 1) : 0;
+            m_anim.SetFloat("forwardSpeed", Mathf.MoveTowards(m_anim.GetFloat("forwardSpeed"), targetSpeed, Time.deltaTime * m_moveChangeRate));
             m_anim.SetFloat("sidewaysSpeed", 0);
         }
         else if (m_grabJoint != null)
@@ -97,7 +101,7 @@ public class ExoEnemyAnimation : MonoBehaviour
             if (activated)
             {
                 rigidbody.drag = 1f;
-                //rigidbody.velocity = m_movement.ActualVelocity;
+                rigidbody.velocity = m_movement.GetVelocity();
                 if (!rigidbody.GetComponent<TransformInterpolator>())
                 {
                     TransformInterpolator interpolator = rigidbody.gameObject.AddComponent<TransformInterpolator>();

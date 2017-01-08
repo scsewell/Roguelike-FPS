@@ -212,7 +212,7 @@ public class EnemyAi : MonoBehaviour {
 		return sweepPositions;
 	}
 
-	GraphNode<Node, Edge> closestGraphNode (Vector3 enemyPosition, GraphNode<Node, Edge> rootNode)
+	public static GraphNode<Node, Edge> closestGraphNode (Vector3 enemyPosition, GraphNode<Node, Edge> rootNode)
 	{
 		GraphNode<Node, Edge> closestNode = null;
 		float closestNodeDistance = Mathf.Infinity;
