@@ -64,7 +64,6 @@ public class ExoEnemyAI : MonoBehaviour
             {
                 // remove waypoints that have been reached
                 Vector3 waypointDisp = Vector3.ProjectOnPlane(m_waypoints.First() - transform.position, Vector3.up);
-                Debug.Log(m_waypoints.Count + " : " + waypointDisp);
                 while (m_waypoints.Count > 1 && waypointDisp.magnitude < m_waypointTolerance)
                 {
                     m_waypoints.RemoveFirst();

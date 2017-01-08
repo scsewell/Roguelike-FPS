@@ -1,8 +1,9 @@
 --- Short Term ---
 
 Flashlight
-Pathfinding
-Interact / body drag sounds 
+Shooting out lights
+Interact / body drag sounds
+draw weapon sounds.
 
 --- Long Term ---
 

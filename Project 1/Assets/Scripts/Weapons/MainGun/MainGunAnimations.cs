@@ -38,7 +38,7 @@ public class MainGunAnimations : MonoBehaviour
 		m_fireResetPosition = transform.localPosition;
 	}
 
-    private void Update()
+    public void AnimUpdate()
     {
         bool recoiling = (m_recoilTimeLeft > 0);
         

@@ -63,8 +63,9 @@ public class MainGun : MonoBehaviour, IWeapon
         m_weapons.Recoil = m_recoilIncrease;
     }
 
-    private void LateUpdate()
+    public void StateUpdate()
     {
+        m_anim.AnimUpdate();
         m_bulletGUI.text = m_bulletsLeft.ToString();
         m_clipsGUI.text = m_clips.ToString();
     }

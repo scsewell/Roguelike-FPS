@@ -2,6 +2,7 @@
 
 public interface IWeapon
 {
+    void StateUpdate();
     void SetHolster(bool holster);
     void Fire();
     void Reload();
