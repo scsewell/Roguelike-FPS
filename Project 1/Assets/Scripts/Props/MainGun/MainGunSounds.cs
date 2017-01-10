@@ -11,13 +11,6 @@ public class MainGunSounds : MonoBehaviour
     [SerializeField] private AudioClip m_reloadEnd;
     [SerializeField] private AudioClip[] m_bulletSounds;
 	
-    private FootstepSounds m_footsteps;
-	
-	private void Start()
-    {
-        m_footsteps = transform.root.GetComponent<FootstepSounds>();
-    }
-
     public void PlayReloadStart()
     {
         m_audioSource.clip = m_reloadStart;
@@ -36,19 +29,9 @@ public class MainGunSounds : MonoBehaviour
 
     public void PlayFireSound()
     {
-		m_audioSource.clip = m_bulletSounds[Random.Range(0, m_bulletSounds.Length)];
+		m_audioSource.clip = Utils.PickRandom(m_bulletSounds);
 		m_audioSource.pitch = m_bulletFirePitch;
 		m_audioSource.volume = m_bulletFireVolume;
 		m_audioSource.Play();
-    }
-
-    public void FootstepL()
-    {
-        m_footsteps.FootstepL();
-    }
-
-    public void FootstepR()
-    {
-        m_footsteps.FootstepR();
     }
 }

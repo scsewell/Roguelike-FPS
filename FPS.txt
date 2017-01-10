@@ -1,11 +1,8 @@
 --- Short Term ---
 
-flashlight sounds/animations
-no footstep sounds when weapon holstered!
-Shooting out lights
-Interact / body drag sounds
-draw weapon sounds
+body drag sounds
 better gun fire sound / fix cutoff
+Shooting out lights
 
 --- Long Term ---
 

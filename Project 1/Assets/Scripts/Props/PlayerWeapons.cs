@@ -175,4 +175,9 @@ public class PlayerWeapons : MonoBehaviour
             m_holsterAudio.Play();
         }
     }
+
+    public bool IsPropActive()
+    {
+        return m_activeProp != null;
+    }
 }

@@ -17,6 +17,8 @@ public class CharacterMovement : MonoBehaviour
     [NonSerialized]
     public bool inputBurdened = false;
 
+    public event Action Land;
+
     [Serializable]
     public class CharacterMotorMovement
     {
@@ -303,6 +305,10 @@ public class CharacterMovement : MonoBehaviour
             m_grounded = true;
             m_isJumping = false;
             SubtractNewPlatformVelocity();
+            if (Land != null)
+            {
+                Land();
+            }
         }
 
         // Moving platforms support
