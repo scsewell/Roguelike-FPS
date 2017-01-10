@@ -1,10 +1,11 @@
 --- Short Term ---
 
-fix crouch bullet offset
-Flashlight
+flashlight sounds/animations
+no footstep sounds when weapon holstered!
 Shooting out lights
 Interact / body drag sounds
-draw weapon sounds.
+draw weapon sounds
+better gun fire sound / fix cutoff
 
 --- Long Term ---
 

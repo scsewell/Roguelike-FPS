@@ -44,6 +44,7 @@ public class MainGun : MonoBehaviour, IProp
     public bool Holster
     {
         get { return m_holster; }
+        set { m_holster = value; }
     }
 
     private void Start()
@@ -58,23 +59,21 @@ public class MainGun : MonoBehaviour, IProp
         m_muzzleFlashLight.enabled = false;
     }
 
-    private void FixedUpdate()
+    public void MainUpdate()
     {
         m_recoilIncrease /= m_recoilStabilizeSpeed;
         m_weapons.Recoil = m_recoilIncrease;
+        m_anim.RecoilUpdate();
     }
 
-    public void StateUpdate()
+    public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
     {
-        m_anim.AnimUpdate();
+        m_anim.AnimUpdate(move, look, jumping, running, interact);
         m_bulletGUI.text = m_bulletsLeft.ToString();
         m_clipsGUI.text = m_clips.ToString();
     }
 
-    public void SetHolster(bool holster)
-    {
-        m_holster = holster;
-    }
+    public void FireStart() {}
 
     public void Fire()
     {
@@ -111,7 +110,7 @@ public class MainGun : MonoBehaviour, IProp
         }
     }
 
-    public void CancelReload()
+    public void CancelActions()
     {
         if (m_reload != null)
         {
@@ -154,9 +153,8 @@ public class MainGun : MonoBehaviour, IProp
 			inaccuracy *= m_crouchInaccuracyMultiplier;
 		}
 
-		Vector3 direction = m_bulletEmitter.TransformDirection(new Vector3(Random.value * inaccuracy - (inaccuracy / 2), Random.value * inaccuracy - (inaccuracy / 2), 1));
+		Vector3 direction = m_bulletEmitter.rotation * new Vector3(Random.value * inaccuracy - (inaccuracy / 2), Random.value * inaccuracy - (inaccuracy / 2), 1);
 		RaycastHit hit;
-		
 		if (Physics.Raycast(m_bulletEmitter.position, direction, out hit, m_range, m_hitLayers))
         {
             HitboxCollider hitbox = hit.transform.GetComponentInParent<HitboxCollider>();

@@ -57,6 +57,11 @@ ModelImporter:
     100098: flashlight
     100100: flashlight 1
     100102: root
+    100104: flashlight.001
+    100106: flashlight_switch
+    100108: Player
+    100110: Flashlight_Rig
+    100112: flashlightSwitch
     400000: CON_Root
     400002: DEF_Clavicle.L
     400004: DEF_Clavicle.R
@@ -109,9 +114,22 @@ ModelImporter:
     400098: flashlight
     400100: flashlight 1
     400102: root
+    400104: flashlight.001
+    400106: flashlight_switch
+    400108: Player
+    400110: Flashlight_Rig
+    400112: flashlightSwitch
     2300000: flashlight 1
+    2300002: flashlight_switch
+    2300004: flashlight
+    2300006: Player
     3300000: flashlight 1
+    3300002: flashlight_switch
+    3300004: flashlight
+    3300006: Player
     4300000: flashlight
+    4300002: flashlight_switch
+    4300004: Player
     7400000: Flashlight_Rig|Draw
     7400002: Flashlight_Rig|Flashlight_Holster
     7400004: Flashlight_Rig|Flashlight_Holstered
@@ -119,15 +137,26 @@ ModelImporter:
     7400008: Flashlight_Rig|Holster
     7400010: Flashlight_Rig|Holstered
     7400012: Flashlight_Rig|Idle
+    7400014: Flashlight_Rig|Walk
+    7400016: Flashlight_Rig|Run
+    7400018: Flashlight_Rig|TurnLeft
+    7400020: Flashlight_Rig|TurnRight
+    7400022: Flashlight_Rig|TurnUp
+    7400024: Flashlight_Rig|TurnDown
+    7400026: Flashlight_Rig|On
+    7400028: Flashlight_Rig|Off
+    7400030: Flashlight_Rig|TurnOn
+    7400032: Flashlight_Rig|TurnOff
+    7400034: Flashlight_Rig|Jump
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleCurves: 1
+    resampleCurves: 0
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
@@ -137,11 +166,12 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 1
-    animationRotationError: 0.5
-    animationPositionError: 0.5
-    animationScaleError: 0.5
+    animationRotationError: 0.01
+    animationPositionError: 0.01
+    animationScaleError: 0.01
     animationWrapMode: 0
-    extraExposedTransformPaths: []
+    extraExposedTransformPaths:
+    - root/flashlight
     clipAnimations:
     - serializedVersion: 16
       name: Flashlight_Rig|Draw
@@ -667,6 +697,1232 @@ ModelImporter:
       - path: root/flashlight
         weight: 1
       - path: root/flashlight/flashlight 1
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|Walk
+      takeName: Flashlight_Rig|Flashlight_Walk
+      firstFrame: 0
+      lastFrame: 34
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|Run
+      takeName: Flashlight_Rig|Flashlight_Run
+      firstFrame: 0
+      lastFrame: 26
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnLeft
+      takeName: Flashlight_Rig|Flashlight_TurnLeft
+      firstFrame: 0
+      lastFrame: 4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnRight
+      takeName: Flashlight_Rig|Flashlight_TurnRight
+      firstFrame: 0
+      lastFrame: 4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnUp
+      takeName: Flashlight_Rig|Flashlight_TurnUp
+      firstFrame: 0
+      lastFrame: 4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnDown
+      takeName: Flashlight_Rig|Flashlight_TurnDown
+      firstFrame: 0
+      lastFrame: 4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnOn
+      takeName: Flashlight_Rig|Flashlight_TurnOn
+      firstFrame: 0
+      lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|TurnOff
+      takeName: Flashlight_Rig|Flashlight_TurnOff
+      firstFrame: 0
+      lastFrame: 9
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
+        weight: 1
+      - path: root/flashlight/flashlight.001/flashlight_switch
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Flashlight_Rig|Jump
+      takeName: Flashlight_Rig|Flashlight_Jump
+      firstFrame: 0
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/CON_Root
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerIndex1.L/DEF_FingerIndex2.L/DEF_FingerIndex3.L/DEF_FingerIndex4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerMiddle1.L/DEF_FingerMiddle2.L/DEF_FingerMiddle3.L/DEF_FingerMiddle4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerPinkie1.L/DEF_FingerPinkie2.L/DEF_FingerPinkie3.L/DEF_FingerPinkie4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerRing1.L/DEF_FingerRing2.L/DEF_FingerRing3.L/DEF_FingerRing4.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.L/DEF_UpperArm.L/DEF_LowerArm.L/DEF_Hand.L/DEF_FingerThumb1.L/DEF_FingerThumb2.L/DEF_FingerThumb3.L
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerIndex1.R/DEF_FingerIndex2.R/DEF_FingerIndex3.R/DEF_FingerIndex4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerMiddle1.R/DEF_FingerMiddle2.R/DEF_FingerMiddle3.R/DEF_FingerMiddle4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerPinkie1.R/DEF_FingerPinkie2.R/DEF_FingerPinkie3.R/DEF_FingerPinkie4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerRing1.R/DEF_FingerRing2.R/DEF_FingerRing3.R/DEF_FingerRing4.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/DEF_FingerThumb1.R/DEF_FingerThumb2.R/DEF_FingerThumb3.R
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/flashlightSwitch
+        weight: 1
+      - path: root/CON_Root/DEF_Spine4/DEF_Clavicle.R/DEF_UpperArm.R/DEF_LowerArm.R/DEF_Hand.R/flashlightSwitch/flashlight_switch
+        weight: 1
+      - path: root/flashlight
+        weight: 1
+      - path: root/flashlight/flashlight 1
+        weight: 1
+      - path: root/flashlight/flashlight.001
         weight: 1
       maskType: 3
       maskSource: {instanceID: 0}

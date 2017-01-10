@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class PlayerInteract : MonoBehaviour
@@ -16,11 +17,9 @@ public class PlayerInteract : MonoBehaviour
         get { return m_grabPos.GetComponent<Rigidbody>(); }
     }
 
-    private bool m_interact = false;
-    public bool Interacted
-    {
-        get { return m_interact; }
-    }
+    public event Action InteractOnce;
+    public event Action InteractStart;
+    public event Action InteractEnd;
 
     private Interactable m_currentInteraction;
     public bool IsInteracting
@@ -41,7 +40,7 @@ public class PlayerInteract : MonoBehaviour
         Rigidbody body = grabPos.AddComponent<Rigidbody>();
         body.isKinematic = true;
         grabPos.AddComponent<TransformInterpolator>();
-        m_grabPos = grabPos.GetComponent<Transform>();
+        m_grabPos = grabPos.transform;
     }
 
     private void FixedUpdate()
@@ -61,42 +60,41 @@ public class PlayerInteract : MonoBehaviour
             hasInteracted = false;
         }
 
-        if (m_currentInteraction == null)
+        RaycastHit hit;
+        if (m_currentInteraction == null && Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_interactLayers))
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, m_interactDistance, m_interactLayers))
+            Interactable interactable = hit.transform.GetComponentInParent<Interactable>();
+
+            if (m_lastHovered != null && interactable != m_lastHovered)
             {
-                Interactable interactable = hit.transform.GetComponentInParent<Interactable>();
+                m_lastHovered.SetOutline(false);
+            }
 
-                if (m_lastHovered != null && interactable != m_lastHovered)
+            if (interactable != null && interactable.enabled)
+            {
+                interactable.SetOutline(true);
+                m_lastHovered = interactable;
+
+                if (hasInteracted)
                 {
-                    m_lastHovered.SetOutline(false);
-                }
-
-                if (interactable != null && interactable.enabled)
-                {
-                    interactable.SetOutline(true);
-                    m_lastHovered = interactable;
-
-                    if (hasInteracted)
+                    if (interactable.FireOnce)
                     {
-                        if (interactable.FireOnce)
+                        interactable.InteractOnce(hit.transform, hit.point);
+                        if (InteractOnce != null)
                         {
-                            interactable.InteractOnce(hit.transform, hit.point);
-                            StartCoroutine(ResetInteracting());
+                            InteractOnce();
                         }
-                        else
+                    }
+                    else
+                    {
+                        m_currentInteraction = interactable;
+                        interactable.StartInteract(hit.transform, hit.point, EndInteract);
+                        if (InteractStart != null)
                         {
-                            m_currentInteraction = interactable;
-                            interactable.StartInteract(hit.transform, hit.point, EndInteract);
+                            InteractStart();
                         }
                     }
                 }
-            }
-            else if (m_lastHovered != null)
-            {
-                m_lastHovered.SetOutline(false);
-                m_lastHovered = null;
             }
         }
         else if (m_lastHovered != null)
@@ -112,13 +110,10 @@ public class PlayerInteract : MonoBehaviour
         {
             m_currentInteraction.EndInteract();
             m_currentInteraction = null;
+            if (InteractEnd != null)
+            {
+                InteractEnd();
+            }
         }
-    }
-
-    private IEnumerator ResetInteracting()
-    {
-        m_interact = true;
-        yield return null;
-        m_interact = false;
     }
 }

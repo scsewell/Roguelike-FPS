@@ -57,8 +57,8 @@ public class CharacterInput : MonoBehaviour
         m_character.inputCrouch = m_crouching;
     }
 
-    public Vector3 GetMoveInput()
+    public Vector2 GetMoveInput()
     {
-        return m_moveInput;
+        return new Vector2(m_moveInput.x, m_moveInput.z);
     }
 }

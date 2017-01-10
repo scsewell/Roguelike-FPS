@@ -20,9 +20,12 @@ public class CameraFOV : MonoBehaviour
         m_cam.fieldOfView = Settings.Instance.GetFieldOfView();
         m_cam.nearClipPlane = m_nearClip;
         m_cam.farClipPlane = m_farClip;
+
+        InterpolatedFloat fov = new InterpolatedFloat(() => (m_cam.fieldOfView), val => { m_cam.fieldOfView = val; });
+        gameObject.AddComponent<FloatInterpolator>().Initialize(fov);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3 controllerTop = m_controller.transform.TransformPoint(m_controller.center + ((m_controller.height / 2)) * Vector3.up);
         transform.position = controllerTop + 0.05f * Vector3.down;

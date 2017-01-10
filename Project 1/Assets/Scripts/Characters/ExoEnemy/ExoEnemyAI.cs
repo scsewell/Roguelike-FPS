@@ -14,7 +14,6 @@ public class ExoEnemyAI : MonoBehaviour
 
     private CharacterController m_controller;
     private CharacterMovement m_movement;
-    private NavMeshAgent m_agent;
 
     private Transform m_player;
     private Transform m_target;
@@ -25,7 +24,6 @@ public class ExoEnemyAI : MonoBehaviour
     {
         m_controller = GetComponent<CharacterController>();
         m_movement = GetComponent<CharacterMovement>();
-        m_agent = GetComponent<NavMeshAgent>();
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -34,12 +32,14 @@ public class ExoEnemyAI : MonoBehaviour
         }
 
         m_path = new NavMeshPath();
-        m_agent.enabled = false;
     }
 
     public void DecideActions()
     {
-        m_target = SetTarget(m_player);
+        if (m_target == null)
+        {
+            m_target = SetTarget(m_player);
+        }
 
         if (Random.value * 5 < Time.deltaTime)
         {
@@ -56,7 +56,8 @@ public class ExoEnemyAI : MonoBehaviour
             // calculate a new path when the target has moved too far from where a path was last caculated to
             if (m_waypoints == null || m_waypoints.Count == 0 || Vector3.Distance(m_target.position, m_waypoints.Last()) > targetDisplacement.magnitude * m_repathFactor)
             {
-                CalculatePath(m_target.position);
+                NavMesh.CalculatePath(transform.position, m_target.position, int.MaxValue, m_path);
+                m_waypoints = new LinkedList<Vector3>(m_path.corners);
             }
 
             // if there is a path to follow set the movment
@@ -83,20 +84,8 @@ public class ExoEnemyAI : MonoBehaviour
             }
         }
 
-        // prevent the agent from doing anything
-        m_agent.velocity = Vector3.zero;
-        m_agent.updateRotation = false;
-
         // debug output
         DrawPath();
-    }
-
-    private void CalculatePath(Vector3 targetPos)
-    {
-        m_agent.enabled = true;
-        m_agent.CalculatePath(targetPos, m_path);
-        m_waypoints = new LinkedList<Vector3>(m_path.corners);
-        m_agent.enabled = false;
     }
 
     private Transform SetTarget(Vector3 targetPos)

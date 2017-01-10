@@ -34,13 +34,8 @@ public class CharacterLook : MonoBehaviour
         m_cam.transform.localEulerAngles = new Vector3(-m_rotationY, 0, 0);
 	}
 
-    public float GetDeltaX()
+    public Vector2 GetLookDelta()
     {
-        return m_deltaX;
-    }
-
-    public float GetDeltaY()
-    {
-        return m_deltaY;
+        return new Vector2(m_deltaX, m_deltaY);
     }
 }
