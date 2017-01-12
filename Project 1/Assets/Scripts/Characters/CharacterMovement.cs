@@ -185,7 +185,7 @@ public class CharacterMovement : MonoBehaviour
         m_controller.height = Mathf.Lerp(m_controller.height, m_crouching ? m_movement.crouchHeight : m_movement.standHeight, Time.deltaTime * m_movement.heightChangeRate);
         if (!m_crouching)
         {
-            transform.Translate(0, (m_controller.height - lastHeight) / 2, 0);
+            transform.Translate(0, (m_controller.height - lastHeight) / 4, 0);
         }
 
         // Moving platform support

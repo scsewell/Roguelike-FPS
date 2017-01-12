@@ -8,7 +8,7 @@ public class ImpuseSound : MonoBehaviour
 
     private AudioSource m_audio;
     
-	private void Start()
+	private void Awake()
     {
         m_audio = gameObject.AddComponent<AudioSource>();
         m_audio.spatialBlend = 1;

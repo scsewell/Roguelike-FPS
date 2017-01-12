@@ -53,6 +53,8 @@ public class ExoEnemy : MonoBehaviour
         }
         m_interact.enabled = true;
         m_anim.OnDie();
+
+        EnemyManager.RemoveExoEnemy(transform);
     }
 
     private void OnInteractStart(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteract)

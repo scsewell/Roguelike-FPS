@@ -85,7 +85,10 @@ public class ExoEnemyAI : MonoBehaviour
         }
 
         // debug output
-        DrawPath();
+        if (Application.isEditor)
+        {
+            DrawPath();
+        }
     }
 
     private Transform SetTarget(Vector3 targetPos)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public class ExoEnemyAnimation : MonoBehaviour
@@ -15,6 +16,7 @@ public class ExoEnemyAnimation : MonoBehaviour
 
     private Rigidbody[] m_ragdollBodies;
     private RagdollCollider[] m_ragdollColliders;
+    private List<TransformInterpolator> m_interpolators; 
     private bool m_ragdollActive = false;
     private CharacterJoint m_grabJoint;
     private DragCollider m_grabbedColllider;
@@ -26,6 +28,15 @@ public class ExoEnemyAnimation : MonoBehaviour
         m_anim = GetComponent<Animator>();
         m_ragdollBodies = GetComponentsInChildren<Rigidbody>();
         m_ragdollColliders = GetComponentsInChildren<RagdollCollider>();
+
+        m_interpolators = new List<TransformInterpolator>();
+        foreach (Rigidbody rigidbody in m_ragdollBodies)
+        {
+            TransformInterpolator interpolator = rigidbody.gameObject.AddComponent<TransformInterpolator>();
+            interpolator.SetThresholds(true, 0.005f, 0.5f, 0.01f);
+            m_interpolators.Add(interpolator);
+        }
+        m_interpolators.ForEach(i => i.enabled = false);
 
         SetRagdoll(false);
     }
@@ -55,6 +66,8 @@ public class ExoEnemyAnimation : MonoBehaviour
             m_grabJoint.swing1Limit = swing;
             m_grabJoint.swing2Limit = swing;
             m_grabJoint.breakForce = 15000;
+
+            m_interpolators.ForEach(i => i.enabled = true);
         }
     }
 
@@ -63,6 +76,7 @@ public class ExoEnemyAnimation : MonoBehaviour
         if (m_ragdollActive)
         {
             Destroy(m_grabJoint);
+            m_interpolators.ForEach(i => i.enabled = false);
         }
     }
 
@@ -102,11 +116,6 @@ public class ExoEnemyAnimation : MonoBehaviour
             {
                 rigidbody.drag = 1f;
                 rigidbody.velocity = m_movement.GetVelocity();
-                if (!rigidbody.GetComponent<TransformInterpolator>())
-                {
-                    TransformInterpolator interpolator = rigidbody.gameObject.AddComponent<TransformInterpolator>();
-                    interpolator.SetThresholds(true, 0.005f, 0.5f, 0.01f);
-                }
             }
         }
         foreach (RagdollCollider collider in m_ragdollColliders)

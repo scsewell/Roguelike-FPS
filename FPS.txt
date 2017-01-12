@@ -1,6 +1,5 @@
 --- Short Term ---
 
-body drag sounds
 better gun fire sound / fix cutoff
 Shooting out lights
 

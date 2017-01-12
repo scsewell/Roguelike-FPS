@@ -24,6 +24,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(Camera))]
 public class OutlineEffect : MonoBehaviour
@@ -61,8 +62,7 @@ public class OutlineEffect : MonoBehaviour
     private Material m_outlineShaderMaterial;
     private RenderTexture m_renderTexture;
     private RenderTexture m_extraRenderTexture;
-
-
+    
     private void Start()
     {
         CreateMaterialsIfNeeded();
@@ -88,6 +88,11 @@ public class OutlineEffect : MonoBehaviour
 
     private void OnPreCull()
     {
+        if (!m_outlines.Any(o => o.isActiveAndEnabled && !o.blockOutlines))
+        {
+            return;
+        }
+
 		if (m_renderTexture.width != m_mainCam.pixelWidth || m_renderTexture.height != m_mainCam.pixelHeight)
 		{
 			m_renderTexture = new RenderTexture(m_mainCam.pixelWidth, m_mainCam.pixelHeight, 16, RenderTextureFormat.Default);
@@ -149,16 +154,23 @@ public class OutlineEffect : MonoBehaviour
             }
         }
     }
-
+    
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        m_outlineShaderMaterial.SetTexture("_OutlineSource", m_renderTexture);
-        if (addLinesBetweenColors)
+        if (!m_outlines.Any(o => o.isActiveAndEnabled && !o.blockOutlines))
         {
-            Graphics.Blit(source, m_extraRenderTexture, m_outlineShaderMaterial, 0);
-            m_outlineShaderMaterial.SetTexture("_OutlineSource", m_extraRenderTexture);
+            Graphics.Blit(source, destination);
         }
-        Graphics.Blit(source, destination, m_outlineShaderMaterial, 1);
+        else
+        {
+            m_outlineShaderMaterial.SetTexture("_OutlineSource", m_renderTexture);
+            if (addLinesBetweenColors)
+            {
+                Graphics.Blit(source, m_extraRenderTexture, m_outlineShaderMaterial, 0);
+                m_outlineShaderMaterial.SetTexture("_OutlineSource", m_extraRenderTexture);
+            }
+            Graphics.Blit(source, destination, m_outlineShaderMaterial, 1);
+        }
     }
 
     private void CreateMaterialsIfNeeded()
