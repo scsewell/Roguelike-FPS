@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
+using Framework.Interpolation;
 
 public class PlayerInteract : MonoBehaviour
 {

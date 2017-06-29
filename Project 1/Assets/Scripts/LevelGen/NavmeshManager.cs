@@ -13,6 +13,6 @@ public class NavMeshManager : MonoBehaviour
 
     public void BuildNavMesh()
     {
-        m_surface.Bake();
+        m_surface.BuildNavMesh();
     }
 }

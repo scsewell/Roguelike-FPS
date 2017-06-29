@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Framework.Interpolation;
 
 public class ExoEnemyAnimation : MonoBehaviour
 {
@@ -33,7 +34,8 @@ public class ExoEnemyAnimation : MonoBehaviour
         foreach (Rigidbody rigidbody in m_ragdollBodies)
         {
             TransformInterpolator interpolator = rigidbody.gameObject.AddComponent<TransformInterpolator>();
-            interpolator.SetThresholds(true, 0.005f, 0.5f, 0.01f);
+            interpolator.useThresholds = true;
+            interpolator.SetThresholds(0.005f, 0.5f, 0.01f);
             m_interpolators.Add(interpolator);
         }
         m_interpolators.ForEach(i => i.enabled = false);

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Framework;
 
 public class GeneratedLight : MonoBehaviour
 {

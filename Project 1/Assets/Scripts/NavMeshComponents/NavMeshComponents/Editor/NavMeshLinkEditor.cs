@@ -9,6 +9,7 @@ namespace UnityEditor.AI
     {
         SerializedProperty m_AgentTypeID;
         SerializedProperty m_Area;
+        SerializedProperty m_CostModifier;
         SerializedProperty m_AutoUpdatePosition;
         SerializedProperty m_Bidirectional;
         SerializedProperty m_EndPoint;
@@ -25,6 +26,7 @@ namespace UnityEditor.AI
         {
             m_AgentTypeID = serializedObject.FindProperty("m_AgentTypeID");
             m_Area = serializedObject.FindProperty("m_Area");
+            m_CostModifier = serializedObject.FindProperty("m_CostModifier");
             m_AutoUpdatePosition = serializedObject.FindProperty("m_AutoUpdatePosition");
             m_Bidirectional = serializedObject.FindProperty("m_Bidirectional");
             m_EndPoint = serializedObject.FindProperty("m_EndPoint");
@@ -105,6 +107,7 @@ namespace UnityEditor.AI
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(m_Width);
+            EditorGUILayout.PropertyField(m_CostModifier);
             EditorGUILayout.PropertyField(m_AutoUpdatePosition);
             EditorGUILayout.PropertyField(m_Bidirectional);
 
@@ -206,7 +209,7 @@ namespace UnityEditor.AI
             if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 0)
             {
                 EditorGUI.BeginChangeCheck();
-                Handles.CubeCap(0, startPt, zup, 0.1f * startSize);
+                Handles.CubeHandleCap(0, startPt, zup, 0.1f * startSize, Event.current.type);
                 pos = Handles.PositionHandle(startPt, navLink.transform.rotation);
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -216,7 +219,7 @@ namespace UnityEditor.AI
             }
             else
             {
-                if (Handles.Button(startPt, zup, 0.1f * startSize, 0.1f * startSize, Handles.CubeCap))
+                if (Handles.Button(startPt, zup, 0.1f * startSize, 0.1f * startSize, Handles.CubeHandleCap))
                 {
                     s_SelectedPoint = 0;
                     s_SelectedID = navLink.GetInstanceID();
@@ -226,7 +229,7 @@ namespace UnityEditor.AI
             if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 1)
             {
                 EditorGUI.BeginChangeCheck();
-                Handles.CubeCap(0, endPt, zup, 0.1f * startSize);
+                Handles.CubeHandleCap(0, endPt, zup, 0.1f * startSize, Event.current.type);
                 pos = Handles.PositionHandle(endPt, navLink.transform.rotation);
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -236,7 +239,7 @@ namespace UnityEditor.AI
             }
             else
             {
-                if (Handles.Button(endPt, zup, 0.1f * endSize, 0.1f * endSize, Handles.CubeCap))
+                if (Handles.Button(endPt, zup, 0.1f * endSize, 0.1f * endSize, Handles.CubeHandleCap))
                 {
                     s_SelectedPoint = 1;
                     s_SelectedID = navLink.GetInstanceID();
@@ -244,7 +247,7 @@ namespace UnityEditor.AI
             }
 
             EditorGUI.BeginChangeCheck();
-            pos = Handles.Slider(midPt + right * navLink.width * 0.5f, right, midSize * 0.03f, Handles.DotCap, 0);
+            pos = Handles.Slider(midPt + right * navLink.width * 0.5f, right, midSize * 0.03f, Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(navLink, "Adjust link width");
@@ -252,7 +255,7 @@ namespace UnityEditor.AI
             }
 
             EditorGUI.BeginChangeCheck();
-            pos = Handles.Slider(midPt - right * navLink.width * 0.5f, -right, midSize * 0.03f, Handles.DotCap, 0);
+            pos = Handles.Slider(midPt - right * navLink.width * 0.5f, -right, midSize * 0.03f, Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(navLink, "Adjust link width");

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using Framework.Interpolation;
 
 [RequireComponent(typeof(TransformInterpolator))]
 [RequireComponent(typeof(CharacterController))]

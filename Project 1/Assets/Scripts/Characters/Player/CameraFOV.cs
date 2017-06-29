@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Framework.Interpolation;
 
 public class CameraFOV : MonoBehaviour
 {
