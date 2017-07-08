@@ -24,7 +24,10 @@ namespace Framework.Interpolation
             InterpolationController.Instance.AddInterpolator(this);
         }
 
-        private void Start() { }
+        private void OnEnable()
+        {
+            ForgetPreviousValues();
+        }
 
         private void OnDestroy()
         {

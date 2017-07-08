@@ -53,21 +53,35 @@ public class ExoEnemyAnimation : MonoBehaviour
     {
         if (m_ragdollActive)
         {
-            m_grabbedColllider = m_dragLimbs.ToList().OrderBy(c => Vector3.Distance(c.collider.bounds.center, interactPoint)).First();
+            m_grabbedColllider = m_dragLimbs.OrderBy(c => Vector3.Distance(c.collider.bounds.center, interactPoint)).First();
+
+            Transform grabTarget = Camera.main.GetComponent<PlayerInteract>().GrabTarget;
+
             m_grabJoint = m_grabbedColllider.collider.GetComponentInParent<Rigidbody>().gameObject.AddComponent<CharacterJoint>();
-            Rigidbody grabTarget = Camera.main.GetComponent<PlayerInteract>().GrabTarget;
-            m_grabJoint.connectedBody = grabTarget;
+            m_grabJoint.connectedBody = grabTarget.GetComponent<Rigidbody>();
             m_grabJoint.autoConfigureConnectedAnchor = false;
-            m_grabJoint.connectedAnchor = grabTarget.GetComponent<Transform>().InverseTransformPoint(interactPoint);
-            m_grabJoint.anchor = m_grabbedColllider.collider.transform.InverseTransformPoint(interactPoint);
+            m_grabJoint.connectedAnchor = Vector3.zero;
+            m_grabJoint.anchor = m_grabbedColllider.pivot;
+
+            SoftJointLimitSpring spring = new SoftJointLimitSpring();
+            spring.spring = 0.01f;
+            m_grabJoint.twistLimitSpring = spring;
+            m_grabJoint.swingLimitSpring = spring;
+            
             SoftJointLimit swing = new SoftJointLimit();
             swing.limit = -180;
             m_grabJoint.lowTwistLimit = swing;
+
             swing.limit = 180;
             m_grabJoint.highTwistLimit = swing;
             m_grabJoint.swing1Limit = swing;
             m_grabJoint.swing2Limit = swing;
-            m_grabJoint.breakForce = 15000;
+
+            m_grabJoint.breakForce = 5000;
+
+            grabTarget.position = m_grabbedColllider.collider.transform.TransformPoint(m_grabbedColllider.pivot);
+            grabTarget.rotation = m_grabbedColllider.collider.transform.rotation;
+            grabTarget.GetComponent<TransformInterpolator>().ForgetPreviousValues();
 
             m_interpolators.ForEach(i => i.enabled = true);
         }
@@ -82,11 +96,11 @@ public class ExoEnemyAnimation : MonoBehaviour
         }
     }
 
-    public void Animate()
+    public void Animate(MoveInputs input)
     {
         if (!m_ragdollActive)
         {
-            float targetSpeed = m_movement.inputMoveDirection.magnitude > 0 ? (m_movement.IsRunning() ? 2 : 1) : 0;
+            float targetSpeed = m_movement.Velocity.magnitude > 0 ? (m_movement.IsRunning ? 2 : 1) : 0;
             m_anim.SetFloat("forwardSpeed", Mathf.MoveTowards(m_anim.GetFloat("forwardSpeed"), targetSpeed, Time.deltaTime * m_moveChangeRate));
             m_anim.SetFloat("sidewaysSpeed", 0);
         }
@@ -117,7 +131,7 @@ public class ExoEnemyAnimation : MonoBehaviour
             if (activated)
             {
                 rigidbody.drag = 1f;
-                rigidbody.velocity = m_movement.GetVelocity();
+                rigidbody.velocity = m_movement.Velocity;
             }
         }
         foreach (RagdollCollider collider in m_ragdollColliders)
@@ -129,18 +143,18 @@ public class ExoEnemyAnimation : MonoBehaviour
             renderer.updateWhenOffscreen = activated;
         }
     }
-}
 
-[Serializable]
-public struct TransformPair
-{
-    public Transform toChild;
-    public Transform parent;
-}
+    [Serializable]
+    private struct TransformPair
+    {
+        public Transform toChild;
+        public Transform parent;
+    }
 
-[Serializable]
-public struct DragCollider
-{
-    public Collider collider;
-    public Vector3 pivot;
+    [Serializable]
+    private struct DragCollider
+    {
+        public Collider collider;
+        public Vector3 pivot;
+    }
 }

@@ -26,6 +26,14 @@ namespace Framework.Interpolation
             InterpolationController.Instance.AddInterpolator(this);
         }
 
+        private void OnEnable()
+        {
+            if (m_initialized)
+            {
+                ForgetPreviousValues();
+            }
+        }
+
         private void OnDestroy()
         {
             if (InterpolationController.Instance)

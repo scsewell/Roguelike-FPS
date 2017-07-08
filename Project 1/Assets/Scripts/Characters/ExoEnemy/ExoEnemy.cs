@@ -10,16 +10,19 @@ public class ExoEnemy : MonoBehaviour
 
     private ExoEnemyAI m_ai;
     private ExoEnemyAnimation m_anim;
+    private CharacterMovement m_movement;
     private Health m_health;
     private Interactable m_interact;
     private CharacterController m_collider;
 
     private Action<Interactable> m_endInteract;
+    private MoveInputs m_lastInputs;
 
     private void Start()
     {
         m_ai = GetComponent<ExoEnemyAI>();
         m_anim = GetComponent<ExoEnemyAnimation>();
+        m_movement = GetComponent<CharacterMovement>();
         m_health = GetComponent<Health>();
         m_interact = GetComponent<Interactable>();
         m_collider = GetComponent<CharacterController>();
@@ -70,14 +73,15 @@ public class ExoEnemy : MonoBehaviour
 
     private void Update()
     {
-        m_anim.Animate();
+        m_anim.Animate(m_lastInputs);
     }
 
     private void FixedUpdate()
     {
         if (m_health.IsAlive)
         {
-            m_ai.DecideActions();
+            m_lastInputs = m_ai.DecideActions();
+            m_movement.UpdateMovement(m_lastInputs);
         }
     }
 

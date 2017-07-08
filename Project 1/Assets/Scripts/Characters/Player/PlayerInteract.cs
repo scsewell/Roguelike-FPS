@@ -4,22 +4,27 @@ using Framework.Interpolation;
 
 public class PlayerInteract : MonoBehaviour
 {
-    [SerializeField] private LayerMask m_interactLayers;
-	[SerializeField] private float m_interactDistance = 0.65f;
-    [SerializeField] private LayerMask m_grabBlockLayers;
+    [SerializeField]
+    private LayerMask m_interactLayers;
+	[SerializeField] [Range(0,2)]
+    private float m_interactDistance = 0.6f;
+    [SerializeField]
+    private LayerMask m_grabBlockLayers;
 
     private CharacterController m_collider;
     private Interactable m_lastHovered;
-
-    private Transform m_grabPos;
-    public Rigidbody GrabTarget
-    {
-        get { return m_grabPos.GetComponent<Rigidbody>(); }
-    }
+    private float m_grabTransition = 0;
 
     public event Action InteractOnce;
     public event Action InteractStart;
     public event Action InteractEnd;
+
+    private Transform m_grabTarget;
+    public Transform GrabTarget
+    {
+        get { return m_grabTarget; }
+    }
+
 
     private Interactable m_currentInteraction;
     public bool IsInteracting
@@ -36,21 +41,25 @@ public class PlayerInteract : MonoBehaviour
     {
         m_collider = GetComponentInParent<CharacterController>();
 
-        GameObject grabPos = new GameObject("GrabPos");
-        Rigidbody body = grabPos.AddComponent<Rigidbody>();
+        GameObject grabTarget = new GameObject("GrabPos");
+        Rigidbody body = grabTarget.AddComponent<Rigidbody>();
         body.isKinematic = true;
-        grabPos.AddComponent<TransformInterpolator>();
-        m_grabPos = grabPos.transform;
+        grabTarget.AddComponent<TransformInterpolator>();
+        m_grabTarget = grabTarget.transform;
     }
 
-    private void FixedUpdate()
+    public void MoveGrapTarget(CharacterMovement movement)
     {
-        Vector3 goalPos = transform.position + 0.3f * Vector3.down;
-        goalPos.y = Mathf.Min(goalPos.y, m_collider.transform.TransformPoint(m_collider.center + ((m_collider.height / 2) * Vector3.down)).y + 0.35f);
-        m_grabPos.position = Vector3.Lerp(m_grabPos.position, goalPos, Time.deltaTime * 12f);
+        m_grabTransition = Mathf.Clamp01(m_grabTransition + Time.deltaTime);
+        float lerpFac = 0.5f - (0.5f * Mathf.Cos(m_grabTransition * Mathf.PI));
+
+        Vector3 goalPos = transform.position + 0.3f * transform.forward;
+        goalPos.y = Mathf.Min(goalPos.y, movement.Controller.bounds.center.y + 0.35f);
+        
+        GrabTarget.position = Vector3.Lerp(GrabTarget.position, goalPos, lerpFac);
     }
 
-    private void Update()
+    public void ProcessInteractions()
     {
         bool hasInteracted = ControlsManager.Instance.JustDown(GameButton.Interact);
 
@@ -87,6 +96,7 @@ public class PlayerInteract : MonoBehaviour
                     }
                     else
                     {
+                        m_grabTransition = 0;
                         m_currentInteraction = interactable;
                         interactable.StartInteract(hit.transform, hit.point, EndInteract);
                         if (InteractStart != null)

@@ -19,6 +19,7 @@ public class ExoEnemyAI : MonoBehaviour
     private Transform m_target;
     private NavMeshPath m_path;
     private LinkedList<Vector3> m_waypoints;
+    private bool m_run = false;
 
     public void Start()
     {
@@ -34,8 +35,10 @@ public class ExoEnemyAI : MonoBehaviour
         m_path = new NavMeshPath();
     }
 
-    public void DecideActions()
+    public MoveInputs DecideActions()
     {
+        MoveInputs input = new MoveInputs();
+
         if (m_target == null)
         {
             m_target = SetTarget(m_player);
@@ -43,11 +46,9 @@ public class ExoEnemyAI : MonoBehaviour
 
         if (Random.value * 5 < Time.deltaTime)
         {
-            m_movement.inputRunning = !m_movement.inputRunning;
+            m_run = !m_run;
         }
-
-        // clear previous move actions
-        m_movement.inputMoveDirection = Vector3.zero;
+        input.Run = m_run;
 
         if (m_target != null)
         {
@@ -79,16 +80,17 @@ public class ExoEnemyAI : MonoBehaviour
                     Quaternion targetDir = Quaternion.LookRotation(moveDir, Vector3.up);
 
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetDir, Time.deltaTime * 8);
-                    m_movement.inputMoveDirection = transform.forward;
+                    input.MoveDirection = transform.forward;
                 }
             }
         }
-
-        // debug output
+        
         if (Application.isEditor)
         {
             DrawPath();
         }
+
+        return input;
     }
 
     private Transform SetTarget(Vector3 targetPos)

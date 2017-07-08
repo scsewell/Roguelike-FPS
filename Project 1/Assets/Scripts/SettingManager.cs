@@ -102,7 +102,6 @@ public class SettingManager : Singleton<SettingManager>
             );
 
         m_settings.Add(Categories.Screen, "VSync", true, (v) => QualitySettings.vSyncCount = (v ? 1 : 0));
-        m_fov = m_settings.Add(Categories.Screen, "Field Of View", 65, 40, 80, true);
         m_brightness = m_settings.Add(Categories.Screen, "Brightness", 1, 0, 2, false);
 
         m_settings.Add(Categories.Quality, "Shadow Quality", ShadowQualityLevels.Medium,
@@ -126,6 +125,7 @@ public class SettingManager : Singleton<SettingManager>
 
         m_settings.Add(Categories.Audio, "Volume", 1, 0, 1, false, (v) => AudioListener.volume = v);
 
+        m_fov = m_settings.Add(Categories.Other, "Field Of View", 65, 40, 80, true);
         m_showFPS = m_settings.Add(Categories.Other, "Show FPS", false);
     }
     

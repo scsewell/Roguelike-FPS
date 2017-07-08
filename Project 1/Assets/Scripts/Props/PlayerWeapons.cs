@@ -8,10 +8,6 @@ public class PlayerWeapons : MonoBehaviour
     [SerializeField]
     private SkinnedMeshRenderer m_arms;
     [SerializeField]
-    private Transform m_weapon1;
-    [SerializeField]
-    private Transform m_flashlight;
-    [SerializeField]
     private AudioSource m_holsterAudio;
     [SerializeField]
     private AudioClip[] m_holsterSounds;
@@ -20,15 +16,19 @@ public class PlayerWeapons : MonoBehaviour
     [SerializeField]
     private AudioClip[] m_drawSounds;
 
-    private CharacterInput m_input;
-    private CharacterMovement m_character;
-    private CharacterLook m_look;
+    private MainGun m_weapon1;
+    private Flashlight m_flashlight;
     private PlayerInteract m_interact;
     private Dictionary<string, int> m_boneNamesToIndex;
     private Dictionary<IProp, List<Renderer>> m_propToRenderers;
     private List<IProp> m_props;
     private IProp m_targetProp;
+
     private IProp m_activeProp;
+    public bool IsPropActive
+    {
+        get { return m_activeProp != null; }
+    }
 
     private float m_recoil = 0;
     public float Recoil
@@ -39,17 +39,17 @@ public class PlayerWeapons : MonoBehaviour
 
     private void Awake()
     {
-        m_input = transform.root.GetComponent<CharacterInput>();
-        m_character = transform.root.GetComponent<CharacterMovement>();
-        m_look = transform.root.GetComponent<CharacterLook>();
         m_interact = GetComponentInParent<PlayerInteract>();
 
         m_interact.InteractOnce += OnInteractOnce;
         m_interact.InteractStart += OnInteractStart;
 
+        m_weapon1 = GetComponentInChildren<MainGun>();
+        m_flashlight = GetComponentInChildren<Flashlight>();
+
         m_props = new List<IProp>();
-        m_props.Add(m_weapon1.GetComponent<IProp>());
-        m_props.Add(m_flashlight.GetComponent<IProp>());
+        m_props.Add(m_weapon1);
+        m_props.Add(m_flashlight);
 
         m_targetProp = m_props.First();
     }
@@ -81,27 +81,31 @@ public class PlayerWeapons : MonoBehaviour
         m_propToRenderers = new Dictionary<IProp, List<Renderer>>();
         foreach (IProp prop in m_props)
         {
-            List<Renderer> rendrers = prop.GetGameObject().GetComponentsInChildren<Renderer>().ToList();
+            prop.Holster = true;
+            List<Renderer> rendrers = prop.GameObject.GetComponentsInChildren<Renderer>().ToList();
             m_propToRenderers.Add(prop, rendrers);
             rendrers.ForEach(r => r.enabled = false);
         }
+
+        m_targetProp = m_props.First();
+        m_targetProp.Holster = false;
     }
 
-    private void FixedUpdate()
+    public void UpdateWeapons()
     {
         // draw or holster specific items
-        DrawProp(GameButton.Weapon1, m_weapon1.GetComponent<IProp>());
-        DrawProp(GameButton.Flashlight, m_flashlight.GetComponent<IProp>());
+        DrawProp(GameButton.Weapon1, m_weapon1);
+        DrawProp(GameButton.Flashlight, m_flashlight);
         
-        if (m_props.Any(p => !p.IsHolstered()))
+        if (m_props.Any(p => !p.IsHolstered))
         {
-            IProp currentlyActive = m_props.First(p => !p.IsHolstered());
+            IProp currentlyActive = m_props.First(p => !p.IsHolstered);
             if (currentlyActive != m_activeProp)
             {
                 m_activeProp = currentlyActive;
                 // make the arms follow the active prop rig
                 m_arms.bones = m_arms.bones.Where(b => b == null).Concat(
-                    m_activeProp.GetArmsRoot().GetComponentsInChildren<Transform>()
+                    m_activeProp.ArmsRoot.GetComponentsInChildren<Transform>()
                     .Where(t => m_boneNamesToIndex.ContainsKey(t.name))
                     .OrderBy(t => m_boneNamesToIndex[t.name])
                     ).ToArray();
@@ -113,7 +117,7 @@ public class PlayerWeapons : MonoBehaviour
         }
         else
         {
-            if (m_activeProp != null)
+            if (IsPropActive)
             {
                 m_propToRenderers[m_activeProp].ForEach(r => r.enabled = false);
                 m_activeProp = null;
@@ -141,20 +145,23 @@ public class PlayerWeapons : MonoBehaviour
         }
 
         // only render the arms if they are raised
-        m_arms.enabled = (m_activeProp != null);
+        m_arms.enabled = IsPropActive;
 
         m_props.ForEach(w => w.MainUpdate());
     }
 
-    private void Update()
+    public void UpdateVisuals(PlayerInput input, PlayerLook look, CharacterMovement movement)
     {
-        m_props.ForEach(w => w.VisualUpdate(
-            m_input.GetMoveInput(),
-            m_look.GetLookDelta(),
-            m_character.IsJumping(),
-            m_character.IsRunning(),
-            false
-            ));
+        foreach (IProp prop in m_props)
+        {
+            prop.VisualUpdate(
+               input.DesiredMove,
+               look.GetLookDelta(),
+               movement.IsJumping,
+               movement.IsRunning,
+               false
+               );
+        }
     }
 
     private void DrawProp(GameButton propButton, IProp prop)
@@ -175,10 +182,5 @@ public class PlayerWeapons : MonoBehaviour
             m_holsterAudio.clip = Utils.PickRandom(m_holsterSounds);
             m_holsterAudio.Play();
         }
-    }
-
-    public bool IsPropActive()
-    {
-        return m_activeProp != null;
     }
 }

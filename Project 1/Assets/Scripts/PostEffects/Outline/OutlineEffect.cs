@@ -48,12 +48,6 @@ public class OutlineEffect : MonoBehaviour
     [SerializeField]
     private Color m_lineColor2 = Color.blue;
 
-    [SerializeField] [Range(0, 1)]
-    private float m_alphaCutoff = 0.5f;
-
-    [SerializeField]
-    private bool m_additiveRendering = true;
-    
     [SerializeField]
     private bool m_cornerOutlines = false;
     [SerializeField]
@@ -76,7 +70,6 @@ public class OutlineEffect : MonoBehaviour
     private CommandBuffer m_outlineCommands;
 
     private List<Outline> m_outlines = new List<Outline>();
-    private bool m_neetToUpdateCommands = false;
 
     private bool m_renderOutlines = false;
     private bool RenderOutlines
@@ -163,7 +156,6 @@ public class OutlineEffect : MonoBehaviour
         }
 
         RenderOutlines = renderOutlines;
-        m_neetToUpdateCommands = false;
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)

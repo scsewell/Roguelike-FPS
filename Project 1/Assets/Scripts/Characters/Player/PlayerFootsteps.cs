@@ -1,50 +1,48 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(FootstepSounds))]
 public class PlayerFootsteps : MonoBehaviour
 {
-    [SerializeField] private float m_crouchDistance = 0.75f;
-    [SerializeField] private float m_walkDistance = 1.5f;
-    [SerializeField] private float m_runDistance = 1.75f;
-
-    private PlayerWeapons m_weapons;
-    private CharacterMovement m_movement;
+    [SerializeField] [Range(0,3)]
+    private float m_crouchDistance = 0.75f;
+    [SerializeField] [Range(0,3)]
+    private float m_walkDistance = 1.5f;
+    [SerializeField] [Range(0,3)]
+    private float m_runDistance = 1.75f;
+    
     private FootstepSounds m_footsteps;
     private bool m_footToggle = false;
     private float m_distance = 0;
     private Vector3 m_lastPos;
 
-    private void Start()
+    private void Awake()
     {
-        m_weapons = GetComponentInChildren<PlayerWeapons>();
-        m_movement = GetComponent<CharacterMovement>();
         m_footsteps = GetComponent<FootstepSounds>();
-
-        m_movement.Land += OnLand;
     }
 
-    private void OnLand()
+    public void Init(CharacterMovement movement)
     {
-        Step();
+        movement.OnLand += Step;
     }
-
-    private void FixedUpdate()
+    
+    public void UpdateSounds(PlayerWeapons weapons, CharacterMovement movement)
     {
-        if (!m_weapons.IsPropActive())
+        if (!weapons.IsPropActive)
         {
             m_distance += Vector3.Distance(transform.position, m_lastPos);
             m_lastPos = transform.position;
 
             float stepDistance = m_walkDistance;
-            if (m_movement.IsCrouching())
+            if (movement.IsCrouching)
             {
                 stepDistance = m_crouchDistance;
             }
-            else if (m_movement.IsRunning())
+            else if (movement.IsRunning)
             {
                 stepDistance = m_runDistance;
             }
 
-            if (m_movement.IsGrounded() && m_distance > stepDistance)
+            if (movement.IsGrounded && m_distance > stepDistance)
             {
                 Step();
             }

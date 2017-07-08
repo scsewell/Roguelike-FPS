@@ -16,4 +16,5 @@ minimap
 --- Looking Out For ---
 
 Door can close on an object
-Outline is broken
+Mid air run start/stop
+exploding grab

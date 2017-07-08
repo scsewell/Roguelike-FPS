@@ -3,17 +3,26 @@ using Framework.Interpolation;
 
 public class MainGunAnimations : MonoBehaviour
 {
-	[SerializeField] private float m_recoilTime = 0.065f;
-	[SerializeField] private Vector3 m_recoilPosition;
-	[SerializeField] private float m_recoilSpeed = 10f;
-	[SerializeField] private float m_recoilResetSpeed = 6f;
-    [SerializeField] private float m_movementAdjustRate = 3.0f;
-    [SerializeField] private float m_movementSmoothing = 3.5f;
-    [SerializeField] private float m_rotateSmoothing = 9.0f;
-    [SerializeField] private bool m_useBlocking = false;
-    [SerializeField] private GunBlocking m_gunBlocking;
+	[SerializeField] [Range(0, 0.5f)]
+    private float m_recoilTime = 0.025f;
+	[SerializeField]
+    private Vector3 m_recoilPosition;
+	[SerializeField] [Range(1, 20)]
+    private float m_recoilSpeed = 10f;
+	[SerializeField][Range(1, 20)]
+    private float m_recoilResetSpeed = 6f;
+    [SerializeField][Range(0, 10)]
+    private float m_movementAdjustRate = 3.0f;
+    [SerializeField][Range(0, 16)]
+    private float m_movementSmoothing = 3.5f;
+    [SerializeField][Range(0, 16)]
+    private float m_rotateSmoothing = 9.0f;
+
+    [SerializeField]
+    private GunBlocking m_gunBlocking;
+    [SerializeField]
+    private bool m_useBlocking = false;
     
-    private MainGun m_gun;
     private Animator m_anim;
 
     private Vector3 m_fireResetPosition;
@@ -25,7 +34,6 @@ public class MainGunAnimations : MonoBehaviour
 
     private void Start() 
     {
-        m_gun = GetComponent<MainGun>();
 		m_anim = GetComponent<Animator>();
 
         gameObject.AddComponent<TransformInterpolator>();
@@ -42,7 +50,7 @@ public class MainGunAnimations : MonoBehaviour
         m_recoilTimeLeft -= Time.deltaTime;
     }
 
-    public void AnimUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
+    public void AnimUpdate(MainGun gun, Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
     {
         m_h = Mathf.MoveTowards(m_h, move.x, Time.deltaTime * m_movementAdjustRate);
         m_v = Mathf.MoveTowards(m_v, move.y, Time.deltaTime * m_movementAdjustRate);
@@ -59,12 +67,12 @@ public class MainGunAnimations : MonoBehaviour
 		m_anim.SetBool("Running", running);
 		m_anim.SetBool("Jump", jumping);
         m_anim.SetBool("Interact", interact);
-		m_anim.SetBool("Reloading", m_gun.IsReloading());
-        m_anim.SetFloat("ReloadSpeed", 2.0f / m_gun.GetReloadSpeed());
+		m_anim.SetBool("Reloading", gun.IsReloading);
+        m_anim.SetFloat("ReloadSpeed", 2.0f / gun.ReloadTime);
         m_anim.SetBool("Aiming Change", ControlsManager.Instance.JustUp(GameButton.Aim) || ControlsManager.Instance.JustDown(GameButton.Aim));
 		m_anim.SetBool("Aiming", ControlsManager.Instance.IsDown(GameButton.Aim));
         m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
-        m_anim.SetBool("Lowered", m_gun.Holster);
+        m_anim.SetBool("Lowered", gun.Holster);
     }
 
 	public void Recoil()

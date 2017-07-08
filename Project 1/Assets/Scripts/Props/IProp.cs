@@ -3,6 +3,10 @@
 public interface IProp
 {
     bool Holster { get; set; }
+    bool IsHolstered { get; }
+    bool IsReloading { get; }
+    GameObject GameObject { get; }
+    Transform ArmsRoot { get; }
 
     void MainUpdate();
     void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact);
@@ -10,8 +14,4 @@ public interface IProp
     void FireStart();
     void Reload();
     void CancelActions();
-    bool IsHolstered();
-    bool IsReloading();
-    GameObject GetGameObject();
-    Transform GetArmsRoot();
 }

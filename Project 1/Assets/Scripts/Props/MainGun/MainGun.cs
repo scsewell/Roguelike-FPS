@@ -3,14 +3,21 @@ using System.Collections;
 
 public class MainGun : MonoBehaviour, IProp
 {
-    [SerializeField] private Transform m_armsRoot;
+    [SerializeField]
+    private Transform m_armsRoot;
+    public Transform ArmsRoot { get { return m_armsRoot; } }
+
 	[SerializeField] private float m_range = 100.0f;
 	[SerializeField] private float m_fireRate = 0.05f;
 	[SerializeField] private float m_force = 10.0f;
 	[SerializeField] private float m_damage = 5.0f;
 	[SerializeField] private int m_bulletsPerClip = 32;
 	[SerializeField] private int m_clips = 20;
-	[SerializeField] private float m_reloadTime = 2f;
+
+	[SerializeField]
+    private float m_reloadTime = 2f;
+    public float ReloadTime { get { return m_reloadTime; } }
+
 	[SerializeField] private float m_baseInaccuracy = 0.0135f;
 	[SerializeField] private float m_movementInaccuracyMultiplier = 1.5f;
 	[SerializeField] private float m_crouchInaccuracyMultiplier = 0.5f;
@@ -39,12 +46,22 @@ public class MainGun : MonoBehaviour, IProp
 	private int m_bulletsLeft = 0;
 	private float m_recoilIncrease = 0;
 	private float m_nextFireTime = 0;
+    
+    public bool Holster { get; set; }
 
-    private bool m_holster = true;
-    public bool Holster
+    public bool IsHolstered
     {
-        get { return m_holster; }
-        set { m_holster = value; }
+        get { return m_anim.IsHostered(); }
+    }
+    
+    public bool IsReloading
+    {
+        get { return m_reload != null; }
+    }
+
+    public GameObject GameObject
+    {
+        get { return gameObject; }
     }
 
     private void Start()
@@ -68,7 +85,7 @@ public class MainGun : MonoBehaviour, IProp
 
     public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
     {
-        m_anim.AnimUpdate(move, look, jumping, running, interact);
+        m_anim.AnimUpdate(this, move, look, jumping, running, interact);
         m_bulletGUI.text = m_bulletsLeft.ToString();
         m_clipsGUI.text = m_clips.ToString();
     }
@@ -82,7 +99,7 @@ public class MainGun : MonoBehaviour, IProp
             Reload();
         }
 
-        if (!IsReloading() && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
+        if (!IsReloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
         {
 			if (Time.time > m_nextFireTime + m_fireRate)
             {
@@ -102,7 +119,7 @@ public class MainGun : MonoBehaviour, IProp
 
     public void Reload()
     {
-        if (!IsReloading() && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
+        if (!IsReloading && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
         {
             m_sound.PlayReloadStart();
             m_reload = FinishReload();
@@ -119,36 +136,11 @@ public class MainGun : MonoBehaviour, IProp
         }
     }
 
-    public bool IsReloading()
-    {
-        return m_reload != null;
-    }
-
-    public bool IsHolstered()
-    {
-        return m_anim.IsHostered();
-    }
-
-    public float GetReloadSpeed()
-    {
-        return m_reloadTime;
-    }
-
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
-    public Transform GetArmsRoot()
-    {
-        return m_armsRoot;
-    }
-
     private void FireOneShot()
     {
-		float inaccuracy = (m_baseInaccuracy * m_movementInaccuracyMultiplier * m_character.GetVelocity().magnitude) + m_baseInaccuracy;	
+		float inaccuracy = (m_baseInaccuracy * m_movementInaccuracyMultiplier * m_character.Velocity.magnitude) + m_baseInaccuracy;	
 
-		if (m_character.IsCrouching())
+		if (m_character.IsCrouching)
         {
 			inaccuracy *= m_crouchInaccuracyMultiplier;
 		}
@@ -209,10 +201,10 @@ public class MainGun : MonoBehaviour, IProp
     private IEnumerator FinishReload()
     {
         yield return new WaitForSeconds(m_reloadTime - 0.2f);
+        m_bulletsLeft = m_bulletsPerClip;
+        m_clips--;
         m_sound.PlayReloadEnd();
         yield return new WaitForSeconds(0.2f);
         m_reload = null;
-		m_bulletsLeft = m_bulletsPerClip;
-		m_clips--;
 	}
 }
