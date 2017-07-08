@@ -1,5 +1,8 @@
 --- Short Term ---
 
+bullets should really move through the scene
+Decal performance
+Context help (reload, interact, etc)
 better gun fire sound / fix cutoff
 Shooting out lights
 
@@ -13,3 +16,4 @@ minimap
 --- Looking Out For ---
 
 Door can close on an object
+Outline is broken
