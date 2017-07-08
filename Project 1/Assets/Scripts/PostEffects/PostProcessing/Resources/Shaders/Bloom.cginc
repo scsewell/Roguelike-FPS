@@ -1,6 +1,6 @@
 #ifndef __BLOOM__
 #define __BLOOM__
-//
+
 #include "Common.cginc"
 
 // Brightness function

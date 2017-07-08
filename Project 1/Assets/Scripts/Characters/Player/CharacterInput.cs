@@ -17,8 +17,8 @@ public class CharacterInput : MonoBehaviour
 
     private void Update()
     {
-        float x = Controls.Instance.AverageValue(GameAxis.MoveX);
-        float z = Controls.Instance.AverageValue(GameAxis.MoveY);
+        float x = ControlsManager.Instance.AverageValue(GameAxis.MoveX);
+        float z = ControlsManager.Instance.AverageValue(GameAxis.MoveY);
 
         m_moveInput = Vector3.ClampMagnitude(new Vector3(x, 0, z), 1f);
         m_moveInput *= m_moveInput.magnitude;
@@ -27,26 +27,26 @@ public class CharacterInput : MonoBehaviour
     private void FixedUpdate()
     {
         m_character.inputMoveDirection = transform.rotation * m_moveInput;
-        m_character.inputJump = Controls.Instance.IsDown(GameButton.Jump);
+        m_character.inputJump = ControlsManager.Instance.IsDown(GameButton.Jump);
         m_character.inputBurdened = m_interact.IsCarryingHeavy;
 
         bool run;
-        if (Controls.Instance.IsDown(GameButton.Fire) || m_moveInput.magnitude < 0.3f)
+        if (ControlsManager.Instance.IsDown(GameButton.Fire) || m_moveInput.magnitude < 0.3f)
         {
             run = false;
             m_running = false;
         }
         else
         {
-            if (Controls.Instance.JustDown(GameButton.RunTap))
+            if (ControlsManager.Instance.JustDown(GameButton.RunTap))
             {
                 m_running = !m_running;
             }
-            run = Controls.Instance.IsDown(GameButton.RunHold) ? !m_running : m_running;
+            run = ControlsManager.Instance.IsDown(GameButton.RunHold) ? !m_running : m_running;
         }
         m_character.inputRunning = run;
 
-        if (Controls.Instance.JustDown(GameButton.Crouch))
+        if (ControlsManager.Instance.JustDown(GameButton.Crouch))
         {
             m_crouching = !m_crouching;
         }

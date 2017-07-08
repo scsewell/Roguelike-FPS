@@ -3,20 +3,16 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using InputController;
+using Framework.InputManagement;
 
 public class PanelControlBinding : MonoBehaviour, ISettingPanel
 {
     private Button m_button;
     private Text[] m_bindingText;
     private Text m_controlText;
-
-    private KeyValuePair<GameButton, BufferedButton> m_buttonSource;
-    private KeyValuePair<GameAxis, BufferedAxis> m_axisSource;
     
-    private Func<List<SourceInfo>> m_getSourceInfo;
-    private Action<KeyValuePair<GameButton, BufferedButton>> m_onEditButton;
-    private Action<KeyValuePair<GameAxis, BufferedAxis>> m_onEditAxis;
+    private Func<IInputSource> m_getSource;
+    private Action<IInputSource> m_onEdit;
 
     private void Awake()
     {
@@ -25,35 +21,24 @@ public class PanelControlBinding : MonoBehaviour, ISettingPanel
         m_bindingText = m_button.GetComponentsInChildren<Text>();
     }
 
-    public RectTransform Init(KeyValuePair<GameButton, BufferedButton> buttonSource, Action<KeyValuePair<GameButton, BufferedButton>> onEdit)
+    public PanelControlBinding Init(Func<IInputSource> getSource, Action<IInputSource> onEdit)
     {
-        m_buttonSource = buttonSource;
-        m_controlText.text = ControlNames.GetName(buttonSource.Key);
-        m_getSourceInfo = buttonSource.Value.GetSourceInfos;
-        m_onEditButton = onEdit;
-
-        Load();
-        return GetComponent<RectTransform>();
-    }
-
-    public RectTransform Init(KeyValuePair<GameAxis, BufferedAxis> axisSource, Action<KeyValuePair<GameAxis, BufferedAxis>> onEdit)
-    {
-        m_axisSource = axisSource;
-        m_controlText.text = ControlNames.GetName(axisSource.Key);
-        m_getSourceInfo = axisSource.Value.GetSourceInfos;
-        m_onEditAxis = onEdit;
-
-        Load();
-        return GetComponent<RectTransform>();
+        m_getSource = getSource;
+        m_onEdit = onEdit;
+        return this;
     }
 
     public void Apply() {}
 
-    public void Load()
+    public void GetValue()
     {
+        IInputSource source = m_getSource();
+
+        m_controlText.text = source.DisplayName;
+
         foreach (SourceType sourceType in Enum.GetValues(typeof(SourceType)))
         {
-            List<SourceInfo> sourceInfo = m_getSourceInfo().Where(info => info.Type == sourceType).ToList();
+            List<SourceInfo> sourceInfo = source.SourceInfos.Where(info => info.SourceType == sourceType).ToList();
             string str = "";
             foreach (SourceInfo info in sourceInfo)
             {
@@ -69,13 +54,6 @@ public class PanelControlBinding : MonoBehaviour, ISettingPanel
 
     public void OnButtonPressed()
     {
-        if (m_onEditButton != null)
-        {
-            m_onEditButton(m_buttonSource);
-        }
-        if (m_onEditAxis != null)
-        {
-            m_onEditAxis(m_axisSource);
-        }
+        m_onEdit(m_getSource());
     }
 }

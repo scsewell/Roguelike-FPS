@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Framework.Interpolation
 {
+    /// <summary>
+    /// Controls the updating of all interpolated values. Must execute before any interpolated
+    /// values are changed each frame.
+    /// </summary>
+    [DefaultExecutionOrder(-100)]
     public class InterpolationController : ComponentSingleton<InterpolationController>
     {
         private List<IInterpolator> m_interpolators = new List<IInterpolator>();

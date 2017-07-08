@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-/*
+﻿/*
 //  Copyright (c) 2015 José Guerreiro. All rights reserved.
 //
 //  MIT license, see http://www.opensource.org/licenses/mit-license.php
@@ -66,22 +64,19 @@ Shader "Hidden/OutlineEffect"
 				return o;
 			}
 
-			float _LineThicknessX;
-			float _LineThicknessY;
+			float _LineThickness;
 			uniform float4 _MainTex_TexelSize;
 
-			half4 frag(v2f input) : COLOR
+			half4 frag(v2f i) : COLOR
 			{
-				float2 uv = input.uv;
+				half4 outlineSource = tex2D(_OutlineSource, i.uv);
 
-				half4 outlineSource = tex2D(_OutlineSource, uv);
+				float2 texelSize = _MainTex_TexelSize * 1000;
 
-				float2 texelSize = _MainTex_TexelSize * 1000.0f;
-
-				half4 sample1 = tex2D(_OutlineSource, uv + float2(_LineThicknessX,0.0) * texelSize);
-				half4 sample2 = tex2D(_OutlineSource, uv + float2(-_LineThicknessX,0.0) * texelSize);
-				half4 sample3 = tex2D(_OutlineSource, uv + float2(0.0,_LineThicknessY) * texelSize);
-				half4 sample4 = tex2D(_OutlineSource, uv + float2(0.0,-_LineThicknessY) * texelSize);
+				half4 sample1 = tex2D(_OutlineSource, i.uv + float2(_LineThickness, 0) * texelSize);
+				half4 sample2 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness, 0) * texelSize);
+				half4 sample3 = tex2D(_OutlineSource, i.uv + float2(0, _LineThickness) * texelSize);
+				half4 sample4 = tex2D(_OutlineSource, i.uv + float2(0, -_LineThickness) * texelSize);
 
 				const float h = 0.95f;
 				bool red = sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h;
@@ -89,11 +84,14 @@ Shader "Hidden/OutlineEffect"
 				bool blue = sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h;
 				 
 				if ((red && blue) || (green && blue) || (red && green))
+				{
 					return float4(0,0,0,0);
+				}
 				else
+				{
 					return outlineSource;
+				}
 			}
-
 			ENDCG
 		}
 
@@ -109,6 +107,9 @@ Shader "Hidden/OutlineEffect"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 3.0
+
+			#pragma multi_compile __ CORNER_OUTLINES
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -129,8 +130,7 @@ Shader "Hidden/OutlineEffect"
 			   	return o;
 			}
 
-			float _LineThicknessX;
-			float _LineThicknessY;
+			float _LineThickness;
 			float _LineIntensity;
 			half4 _LineColor1;
 			half4 _LineColor2;
@@ -139,77 +139,79 @@ Shader "Hidden/OutlineEffect"
 			int _CornerOutlines;
 			uniform float4 _MainTex_TexelSize;
 
-			half4 frag (v2f input) : COLOR
+			half4 frag (v2f i) : COLOR
 			{	
-				float2 uv = input.uv;
-
-				half4 originalPixel = tex2D(_MainTex,input.uv);
-				half4 outlineSource = tex2D(_OutlineSource, uv);
+				half4 originalPixel = tex2D(_MainTex, i.uv);
+				half4 outlineSource = tex2D(_OutlineSource, i.uv);
 								
 				half4 outline = 0;
 				bool hasOutline = false;
 				float2 texelSize = _MainTex_TexelSize * 1000.0f;
 
-				half4 sample1 = tex2D(_OutlineSource, uv + float2(_LineThicknessX,0.0) * texelSize);
-				half4 sample2 = tex2D(_OutlineSource, uv + float2(-_LineThicknessX,0.0) * texelSize);
-				half4 sample3 = tex2D(_OutlineSource, uv + float2(0.0,_LineThicknessY) * texelSize);
-				half4 sample4 = tex2D(_OutlineSource, uv + float2(0.0,-_LineThicknessY) * texelSize);
+				half4 sample1 = tex2D(_OutlineSource, i.uv + float2(_LineThickness,0.0) * texelSize);
+				half4 sample2 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness,0.0) * texelSize);
+				half4 sample3 = tex2D(_OutlineSource, i.uv + float2(0.0, _LineThickness) * texelSize);
+				half4 sample4 = tex2D(_OutlineSource, i.uv + float2(0.0,-_LineThickness) * texelSize);
 
 				const float h = 0.95f;
 
-				if (_CornerOutlines)
-				{
-					// TODO: Conditional compile
-					half4 sample5 = tex2D(_OutlineSource, uv + float2(_LineThicknessX, _LineThicknessY) * texelSize);
-					half4 sample6 = tex2D(_OutlineSource, uv + float2(-_LineThicknessX, -_LineThicknessY) * texelSize);
-					half4 sample7 = tex2D(_OutlineSource, uv + float2(_LineThicknessX, -_LineThicknessY) * texelSize);
-					half4 sample8 = tex2D(_OutlineSource, uv + float2(-_LineThicknessX, _LineThicknessY) * texelSize);
+#if CORNER_OUTLINES
+				half4 sample5 = tex2D(_OutlineSource, i.uv + float2(_LineThickness, _LineThickness) * texelSize);
+				half4 sample6 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness, -_LineThickness) * texelSize);
+				half4 sample7 = tex2D(_OutlineSource, i.uv + float2(_LineThickness, -_LineThickness) * texelSize);
+				half4 sample8 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness, _LineThickness) * texelSize);
 
-					if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h ||
-						sample5.r > h || sample6.r > h || sample7.r > h || sample8.r > h)
-					{
-						outline = _LineColor1 * _LineIntensity * _LineColor1.a;
-						hasOutline = true;
-					}
-					else if (sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h ||
-						sample5.g > h || sample6.g > h || sample7.g > h || sample8.g > h)
-					{
-						outline = _LineColor2 * _LineIntensity * _LineColor2.a;
-						hasOutline = true;
-					}
-					else if (sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h ||
-						sample5.b > h || sample6.b > h || sample7.b > h || sample8.b > h)
-					{
-						outline = _LineColor3 * _LineIntensity * _LineColor3.a;
-						hasOutline = true;
-					}
-				}
-				else
+				if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h ||
+					sample5.r > h || sample6.r > h || sample7.r > h || sample8.r > h)
 				{
-					if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h)
-					{
-						outline = _LineColor1 * _LineIntensity * _LineColor1.a;
-						hasOutline = true;
-					}
-					else if (sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h)
-					{
-						outline = _LineColor2 * _LineIntensity * _LineColor2.a;
-						hasOutline = true;
-					}
-					else if (sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h)
-					{
-						outline = _LineColor3 * _LineIntensity * _LineColor3.a;
-						hasOutline = true;
-					}
+					outline = _LineColor1 * _LineIntensity * _LineColor1.a;
+					hasOutline = true;
 				}
+				else if (
+					sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h ||
+					sample5.g > h || sample6.g > h || sample7.g > h || sample8.g > h)
+				{
+					outline = _LineColor2 * _LineIntensity * _LineColor2.a;
+					hasOutline = true;
+				}
+				else if (
+					sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h ||
+					sample5.b > h || sample6.b > h || sample7.b > h || sample8.b > h)
+				{
+					outline = _LineColor3 * _LineIntensity * _LineColor3.a;
+					hasOutline = true;
+				}
+#else
+				if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h)
+				{
+					outline = _LineColor1 * _LineIntensity * _LineColor1.a;
+					hasOutline = true;
+				}
+				else if (sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h)
+				{
+					outline = _LineColor2 * _LineIntensity * _LineColor2.a;
+					hasOutline = true;
+				}
+				else if (sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h)
+				{
+					outline = _LineColor3 * _LineIntensity * _LineColor3.a;
+					hasOutline = true;
+				}
+#endif
 
 				if (outlineSource.a > h)
-					outline *= _FillAmount;
+				{
+					outline *= max(max(outlineSource.r, outlineSource.g), outlineSource.b) * _FillAmount * outlineSource.a;
+				}
 				
 				if (hasOutline)
+				{
 					return lerp(originalPixel + outline, outline, _FillAmount);
+				}
 				else
+				{
 					return originalPixel;
+				}
 			}
 			
 			ENDCG

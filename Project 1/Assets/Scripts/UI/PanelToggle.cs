@@ -1,25 +1,36 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-using System;
+using Framework.SettingManagement;
 
 public class PanelToggle : MonoBehaviour, ISettingPanel
 {
-    public Text label;
-    public Toggle toggle;
-    
-    private Action<bool> m_set;
+    [SerializeField]
+    private Text m_label;
+    [SerializeField]
+    private Toggle m_toggle;
 
-    public RectTransform Init(string name, Func<bool> get, Action<bool> set)
+    private Func<ISetting> m_getSetting;
+
+    public ISettingPanel Init(Func<ISetting> getSetting)
     {
-        m_set = set;
-        toggle.isOn = get();
-        label.text = name;
+        m_getSetting = getSetting;
+        ISetting setting = getSetting();
 
-        return GetComponent<RectTransform>();
+        m_label.text = setting.Name;
+
+        GetValue();
+
+        return this;
+    }
+
+    public void GetValue()
+    {
+        m_toggle.isOn = bool.Parse(m_getSetting().Serialize());
     }
 
     public void Apply()
     {
-        m_set(toggle.isOn);
+        m_getSetting().Deserialize(m_toggle.isOn.ToString());
     }
 }

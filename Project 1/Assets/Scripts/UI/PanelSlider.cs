@@ -1,36 +1,45 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-using System;
+using Framework.SettingManagement;
 
 public class PanelSlider : MonoBehaviour, ISettingPanel
 {
-    public Text label;
-    public Text valueText;
-    public Slider slider;
-    
-    private bool m_intOnly;
-    private Action<float> m_set;
+    [SerializeField]
+    private Text m_label;
+    [SerializeField]
+    private Text m_valueText;
+    [SerializeField]
+    private Slider m_slider;
 
-    public RectTransform Init(string name, Func<float> get, Action<float> set, float min, float max, bool intOnly)
+    private Func<ISetting> m_getSetting;
+
+    public ISettingPanel Init(Func<ISetting> getSetting)
     {
-        m_set = set;
-        m_intOnly = intOnly;
+        m_getSetting = getSetting;
+        ISetting setting = getSetting();
+        
+        m_label.text = setting.Name;
+        m_slider.minValue = setting.DisplayOptions.MinValue;
+        m_slider.maxValue = setting.DisplayOptions.MaxValue;
+        m_slider.wholeNumbers = setting.DisplayOptions.IntegerOnly;
 
-        label.text = name;
-        slider.minValue = min;
-        slider.maxValue = max;
-        slider.wholeNumbers = m_intOnly;
-        slider.value = get();
+        GetValue();
+
+        return this;
+    }
+
+    public void GetValue()
+    {
+        m_slider.value = float.Parse(m_getSetting().Serialize());
         UpdateText();
-
-        return GetComponent<RectTransform>();
     }
 
     public void Apply()
     {
-        m_set(slider.value);
+        m_getSetting().Deserialize(m_slider.value.ToString());
     }
-
+    
     public void OnValueChanged()
     {
         UpdateText();
@@ -38,6 +47,6 @@ public class PanelSlider : MonoBehaviour, ISettingPanel
 
     private void UpdateText()
     {
-        valueText.text = m_intOnly ? slider.value.ToString() : (Mathf.Round(slider.value * 100) / 100.0f).ToString();
+        m_valueText.text = m_getSetting().DisplayOptions.IntegerOnly ? m_slider.value.ToString() : (Mathf.Round(m_slider.value * 100) / 100.0f).ToString();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using InputController;
+using Framework.InputManagement;
 
 public class PanelRebind : MonoBehaviour
 {
@@ -43,7 +43,7 @@ public class PanelRebind : MonoBehaviour
         m_bindingText.text = sourceInfo.Name;
 
         string typeText = "";
-        switch (sourceInfo.Type)
+        switch (sourceInfo.SourceType)
         {
             case SourceType.MouseKeyboard:  typeText = "M/Kb"; break;
             case SourceType.Joystick:       typeText = "J"; break;

@@ -1,6 +1,6 @@
-﻿/*
- * Game actions needing a key binding.
- */
+﻿/// <summary>
+/// Game actions needing a key binding.
+/// </summary>
 public enum GameButton
 {
     Menu,

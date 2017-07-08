@@ -52,7 +52,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
-        bool hasInteracted = Controls.Instance.JustDown(GameButton.Interact);
+        bool hasInteracted = ControlsManager.Instance.JustDown(GameButton.Interact);
 
         if (hasInteracted && m_currentInteraction != null)
         {

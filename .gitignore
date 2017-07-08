@@ -1,5 +1,4 @@
 Project\ 1/[Ll]ibrary/
-"Project 1"/Library/
 Project\ 1/[Tt]emp/
 Project\ 1/[Oo]bj/
 /[Bb]uild/
@@ -18,7 +17,7 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
-
+*VC.opendb
 
 # Unity3D generated meta files
 *.pidb.meta

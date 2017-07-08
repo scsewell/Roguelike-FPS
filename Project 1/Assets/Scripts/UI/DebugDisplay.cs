@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class DebugDisplay : MonoBehaviour
@@ -25,8 +24,6 @@ public class DebugDisplay : MonoBehaviour
 
     private void LateUpdate()
     {
-        m_text.text = "";
-
         // update fps
         m_fpsOverInterval += Time.timeScale / Time.deltaTime;
         m_framesOverInterval++;
@@ -40,10 +37,16 @@ public class DebugDisplay : MonoBehaviour
             m_framesOverInterval = 0;
         }
 
+        m_text.enabled = SettingManager.Instance.ShowFPS;
+
         // set display information
-        if (Settings.Instance.GetShowFPS())
+        if (m_text.enabled)
         {
-            m_text.text += "fps: " + m_fps + "\n";
+            string text = "";
+
+            text += "fps: " + m_fps + "\n";
+
+            m_text.text = text;
         }
     }
 }

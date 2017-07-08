@@ -28,7 +28,10 @@ namespace Framework.Interpolation
 
         private void OnDestroy()
         {
-            InterpolationController.Instance.RemoveInterpolator(this);
+            if (InterpolationController.Instance)
+            {
+                InterpolationController.Instance.RemoveInterpolator(this);
+            }
         }
 
         private void Start()

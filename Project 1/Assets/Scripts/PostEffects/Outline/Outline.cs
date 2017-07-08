@@ -3,16 +3,25 @@
 [RequireComponent(typeof(Renderer))]
 public class Outline : MonoBehaviour
 {
-	[Range(0,2)]
-    public int color;
-	public bool blockOutlines;
+    [SerializeField]
+    private OutlineEffect.OutlineType m_outlineType = OutlineEffect.OutlineType.Color1;
+    public OutlineEffect.OutlineType OutlineType
+    {
+        get { return m_outlineType; }
+    }
 
-	[HideInInspector]
-	public int originalLayer;
-	[HideInInspector]
-	public Material originalMaterial;
+    private Renderer m_renderer;
+    public Renderer Renderer
+    {
+        get { return m_renderer; }
+    }
 
     private OutlineEffect m_outlineEffect;
+
+    private void Awake()
+    {
+        m_renderer = GetComponent<Renderer>();
+    }
 
     private void OnEnable()
     {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Framework.SettingManagement;
 
 public class CharacterLook : MonoBehaviour
 {
@@ -10,21 +11,22 @@ public class CharacterLook : MonoBehaviour
     private PlayerWeapons m_weapons;
     private Camera m_cam;
 
+    private Setting<float> m_lookSensitivity;
     private float m_deltaX = 0;
     private float m_deltaY = 0;
     private float m_rotationY = 0;
 
     private void Start() 
     {
-        m_weapons = transform.GetComponentInChildren<PlayerWeapons>();
-        m_cam = transform.GetComponentInChildren<Camera>();
+        m_weapons = GetComponentInChildren<PlayerWeapons>();
+        m_cam = GetComponentInChildren<Camera>();
     }
 
 	private void FixedUpdate()
     {
-        float sensitivity = 60 * Mathf.Pow((Controls.Instance.GetLookSensitivity() / 2) + 0.5f, 3) * (m_cam.fieldOfView / Settings.Instance.GetFieldOfView());
-        m_deltaX = Controls.Instance.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
-        m_deltaY = Controls.Instance.AverageValue(GameAxis.LookY) * m_sensitivityY * sensitivity * Time.fixedDeltaTime;
+        float sensitivity = 60 * Mathf.Pow((ControlsManager.Instance.LookSensitivity / 2) + 0.5f, 3) * (m_cam.fieldOfView / 60);
+        m_deltaX = ControlsManager.Instance.AverageValue(GameAxis.LookX) * m_sensitivityX * sensitivity * Time.fixedDeltaTime;
+        m_deltaY = ControlsManager.Instance.AverageValue(GameAxis.LookY) * m_sensitivityY * sensitivity * Time.fixedDeltaTime;
 
         transform.Rotate(0, m_deltaX, 0);
 

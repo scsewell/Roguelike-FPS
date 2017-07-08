@@ -1,6 +1,6 @@
-﻿/*
- * Game actions needing an axis binding.
- */
+﻿/// <summary>
+/// Game actions needing an axis binding.
+/// </summary>
 public enum GameAxis
 {
     LookX,

@@ -126,15 +126,15 @@ public class PlayerWeapons : MonoBehaviour
 
         if (m_activeProp != null && !m_activeProp.Holster && !m_interact.IsInteracting)
         {
-            if (Controls.Instance.JustDown(GameButton.Fire))
+            if (ControlsManager.Instance.JustDown(GameButton.Fire))
             {
                 m_activeProp.FireStart();
             }
-            if (Controls.Instance.IsDown(GameButton.Fire))
+            if (ControlsManager.Instance.IsDown(GameButton.Fire))
             {
                 m_activeProp.Fire();
             }
-            if (Controls.Instance.JustDown(GameButton.Reload))
+            if (ControlsManager.Instance.JustDown(GameButton.Reload))
             {
                 m_activeProp.Reload();
             }
@@ -159,7 +159,7 @@ public class PlayerWeapons : MonoBehaviour
 
     private void DrawProp(GameButton propButton, IProp prop)
     {
-        if (Controls.Instance.JustDown(propButton))
+        if (ControlsManager.Instance.JustDown(propButton))
         {
             m_targetProp = (m_targetProp == prop) ? null : prop;
             HolsterActive();

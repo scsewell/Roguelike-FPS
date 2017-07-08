@@ -25,7 +25,7 @@ namespace Framework
                             m_instance = FindObjectOfType<T>();
                         }
 
-                        if (m_instance == null && m_isQuitting)
+                        if (m_instance == null && !m_isQuitting)
                         {
                             m_instance = new GameObject(typeof(T).Name + " (Generated)").AddComponent<T>();
                         }
@@ -35,7 +35,7 @@ namespace Framework
             }
         }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             if (m_instance != null)
             {
@@ -48,7 +48,7 @@ namespace Framework
             }
         }
 
-        protected void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (m_instance == this)
             {
@@ -56,7 +56,7 @@ namespace Framework
             }
         }
 
-        protected void OnApplicationQuit()
+        protected virtual void OnApplicationQuit()
         {
             m_isQuitting = true;
         }
