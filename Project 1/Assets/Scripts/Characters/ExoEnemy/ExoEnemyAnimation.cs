@@ -49,14 +49,12 @@ public class ExoEnemyAnimation : MonoBehaviour
         SetRagdoll(true);
     }
 
-    public void GrabBody(Transform interacted, Vector3 interactPoint)
+    public void GrabBody(Transform grabTarget, Transform interacted, Vector3 interactPoint)
     {
         if (m_ragdollActive)
         {
             m_grabbedColllider = m_dragLimbs.OrderBy(c => Vector3.Distance(c.collider.bounds.center, interactPoint)).First();
-
-            Transform grabTarget = Camera.main.GetComponent<PlayerInteract>().GrabTarget;
-
+            
             m_grabJoint = m_grabbedColllider.collider.GetComponentInParent<Rigidbody>().gameObject.AddComponent<CharacterJoint>();
             m_grabJoint.connectedBody = grabTarget.GetComponent<Rigidbody>();
             m_grabJoint.autoConfigureConnectedAnchor = false;
@@ -140,7 +138,7 @@ public class ExoEnemyAnimation : MonoBehaviour
         }
         foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
-            renderer.updateWhenOffscreen = activated;
+            renderer.updateWhenOffscreen = false;
         }
     }
 

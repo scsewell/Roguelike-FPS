@@ -179,7 +179,7 @@ public class GameMenu : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(1);
+        Main.Instance.LoadMainScene();
     }
 
     public void OpenSettings()

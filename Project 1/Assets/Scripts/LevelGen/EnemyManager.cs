@@ -1,22 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Framework;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : ComponentSingleton<EnemyManager>
 {
-    [SerializeField] private Transform m_exoEnemyPrefab;
+    [SerializeField]
+    private ExoEnemy m_exoEnemyPrefab;
+    [SerializeField]
+    private int m_enemyCount = 0;
 
-    private static List<Transform> m_exoEnemies;
-
-    private CorridorGraph m_level;
+    private List<ExoEnemy> m_exoEnemies = new List<ExoEnemy>();
     private Transform m_player;
-    
-	private void Start()
-    {
-        m_level = GetComponent<CorridorGraph>();
 
-        m_exoEnemies = new List<Transform>();
-    }
-	
 	private void FixedUpdate()
     {
         if (m_player == null)
@@ -28,21 +23,17 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
-		if (m_exoEnemies.Count < 1)
+		if (m_exoEnemies.Count < m_enemyCount)
         {
             Vector3 randomPos = m_player.position + Quaternion.Euler(0, Random.value * 360, 0) * (Random.Range(20, 50) * Vector3.forward);
-            Vector3 spawnPos = m_level.ClosestTilePos(randomPos);
+            Vector3 spawnPos = CorridorGraph.Instance.ClosestTilePos(randomPos);
             Quaternion spawnRot = Quaternion.Euler(0, Random.value * 360, 0);
-            Transform enemy = Instantiate(m_exoEnemyPrefab, spawnPos, spawnRot) as Transform;
-            m_exoEnemies.Add(enemy);
+            m_exoEnemies.Add(Instantiate(m_exoEnemyPrefab, spawnPos, spawnRot));
         }
 	}
 
-    public static void RemoveExoEnemy(Transform t)
+    public void RemoveExoEnemy(ExoEnemy enemy)
     {
-        if (m_exoEnemies != null && m_exoEnemies.Contains(t))
-        {
-            m_exoEnemies.Remove(t);
-        }
+        m_exoEnemies.Remove(enemy);
     }
 }

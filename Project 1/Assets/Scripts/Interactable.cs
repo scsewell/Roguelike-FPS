@@ -18,13 +18,14 @@ public class Interactable : MonoBehaviour
     }
 
     public delegate void InteractHandler(Transform interacted, Vector3 interactPoint);
-    public delegate void StartInteractHandler(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteraction);
+    public delegate void StartInteractHandler(Transform grabTarget, Transform interacted, Vector3 interactPoint);
 
     public event InteractHandler Interacted;
     public event StartInteractHandler InteractStart;
     public event Action InteractEnd;
 
     private Outline[] m_outlines;
+    private Action m_endInteraction;
 
     private void Awake()
     {
@@ -40,7 +41,15 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    public void InteractOnce(Transform interacted, Vector3 interactPoint)
+    public void EndInteraction()
+    {
+        if (m_endInteraction != null)
+        {
+            m_endInteraction();
+        }
+    }
+
+    public void OnInteractOnce(Transform interacted, Vector3 interactPoint)
     {
         if (Interacted != null)
         {
@@ -48,19 +57,21 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    public void StartInteract(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteraction)
+    public void OnStartInteract(Transform grabTarget, Transform interacted, Vector3 interactPoint, Action endInteraction)
     {
         if (InteractStart != null)
         {
-            InteractStart(interacted, interactPoint, endInteraction);
+            InteractStart(grabTarget, interacted, interactPoint);
+            m_endInteraction = endInteraction;
         }
     }
 
-    public void EndInteract()
+    public void OnEndInteract()
     {
         if (InteractEnd != null)
         {
             InteractEnd();
+            m_endInteraction = null;
         }
     }
 }

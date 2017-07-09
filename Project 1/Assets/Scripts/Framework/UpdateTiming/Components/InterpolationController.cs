@@ -7,13 +7,12 @@ namespace Framework.Interpolation
     /// Controls the updating of all interpolated values. Must execute before any interpolated
     /// values are changed each frame.
     /// </summary>
-    [DefaultExecutionOrder(-100)]
-    public class InterpolationController : ComponentSingleton<InterpolationController>
+    public class InterpolationController : Singleton<InterpolationController>
     {
         private List<IInterpolator> m_interpolators = new List<IInterpolator>();
         private float m_lastFixedTime;
-        
-        private void FixedUpdate()
+
+        public void MainUpdate()
         {
             m_lastFixedTime = Time.time;
 
@@ -23,7 +22,7 @@ namespace Framework.Interpolation
             }
         }
 
-        private void Update()
+        public void VisualUpdate()
         {
             float factor = (Time.time - m_lastFixedTime) / Time.fixedDeltaTime;
 

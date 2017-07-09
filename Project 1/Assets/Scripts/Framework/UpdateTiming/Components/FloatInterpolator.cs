@@ -36,10 +36,7 @@ namespace Framework.Interpolation
 
         private void OnDestroy()
         {
-            if (InterpolationController.Instance)
-            {
-                InterpolationController.Instance.RemoveInterpolator(this);
-            }
+            InterpolationController.Instance.RemoveInterpolator(this);
         }
 
         private void Start()
@@ -57,7 +54,10 @@ namespace Framework.Interpolation
 
         public void ForgetPreviousValues()
         {
-            m_interpolator.ForgetPreviousValues();
+            if (m_interpolator != null)
+            {
+                m_interpolator.ForgetPreviousValues();
+            }
         }
 
         public void FixedFrame()

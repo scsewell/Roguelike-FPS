@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Framework;
 
-public class CorridorGraph : MonoBehaviour
+public class CorridorGraph : ComponentSingleton<CorridorGraph>
 {
     [SerializeField]
     private bool m_autoCreate = true;

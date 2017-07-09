@@ -12,12 +12,12 @@ public class Door : MonoBehaviour
         m_interact = GetComponent<Interactable>();
         m_anim = GetComponent<Animator>();
 
-        m_interact.Interacted += Interact;
+        m_interact.Interacted += Interacted;
     }
 
     private void OnDestroy()
     {
-        m_interact.Interacted -= Interact;
+        m_interact.Interacted -= Interacted;
     }
 
     private void Update()
@@ -25,7 +25,7 @@ public class Door : MonoBehaviour
         m_anim.SetBool("Open", m_doorUp);
     }
 
-    private void Interact(Transform interacted, Vector3 interactPoint)
+    private void Interacted(Transform interacted, Vector3 interactPoint)
     {
         m_doorUp = !m_doorUp;
     }

@@ -12,9 +12,6 @@ public class ExoEnemyAI : MonoBehaviour
     [SerializeField]
     private float m_targetTolerance = 0.6f;
 
-    private CharacterController m_controller;
-    private CharacterMovement m_movement;
-
     private Transform m_player;
     private Transform m_target;
     private NavMeshPath m_path;
@@ -23,9 +20,6 @@ public class ExoEnemyAI : MonoBehaviour
 
     public void Start()
     {
-        m_controller = GetComponent<CharacterController>();
-        m_movement = GetComponent<CharacterMovement>();
-
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {

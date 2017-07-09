@@ -7,34 +7,36 @@ public class MainGun : MonoBehaviour, IProp
     private Transform m_armsRoot;
     public Transform ArmsRoot { get { return m_armsRoot; } }
 
-	[SerializeField] private float m_range = 100.0f;
-	[SerializeField] private float m_fireRate = 0.05f;
-	[SerializeField] private float m_force = 10.0f;
-	[SerializeField] private float m_damage = 5.0f;
-	[SerializeField] private int m_bulletsPerClip = 32;
-	[SerializeField] private int m_clips = 20;
-
-	[SerializeField]
-    private float m_reloadTime = 2f;
-    public float ReloadTime { get { return m_reloadTime; } }
-
-	[SerializeField] private float m_baseInaccuracy = 0.0135f;
-	[SerializeField] private float m_movementInaccuracyMultiplier = 1.5f;
-	[SerializeField] private float m_crouchInaccuracyMultiplier = 0.5f;
-	[SerializeField] private float m_shotRecoilAmount = 20f;
-	[SerializeField] private float m_recoilStabilizeSpeed =1.25f;
-    [SerializeField] private LayerMask m_hitLayers;
-    [SerializeField] private string m_bleedObjects;
-    
     [SerializeField] private TextMesh m_bulletGUI;
     [SerializeField] private TextMesh m_clipsGUI;
     [SerializeField] private Transform m_bulletEmitter;
-	[SerializeField] private GameObject m_muzzleFlashPosition;
-	[SerializeField] private Light m_muzzleFlashLight;
-	[SerializeField] private Decal m_bulletHoles;
-	[SerializeField] private ParticleSystem m_muzzleFlash;
-	[SerializeField] private ParticleSystem m_sparksParticles;
-    [SerializeField] private ParticleSystem m_bloodParticles;
+    [SerializeField] private GameObject m_muzzleFlashPosition;
+    [SerializeField] private Light m_muzzleFlashLight;
+    [SerializeField] private ParticleSystem m_muzzleFlash;
+
+    [SerializeField]
+    private BulletSettings m_bulletSettings;
+    
+	[SerializeField] [Range(0.1f, 100)]
+    private float m_fireRate = 8.0f;
+	[SerializeField] [Range(0, 100)]
+    private float m_shotRecoilAmount = 20f;
+	[SerializeField] [Range(1, 1.5f)]
+    private float m_recoilStabilizeSpeed = 1.1f;
+
+	[SerializeField]
+    private int m_bulletsPerClip = 32;
+	[SerializeField]
+    private int m_clips = 20;
+
+	[SerializeField] [Range(0, 6)]
+    private float m_reloadTime = 2f;
+    public float ReloadTime { get { return m_reloadTime; } }
+    
+	[SerializeField] [Range(0, 0.1f)]
+    private float m_movementInaccuracy = 0.015f;
+	[SerializeField] [Range(0, 1)]
+    private float m_crouchInaccuracyMultiplier = 0.5f;
 
 	private CharacterMovement m_character;
     private PlayerWeapons m_weapons;
@@ -45,7 +47,7 @@ public class MainGun : MonoBehaviour, IProp
     private IEnumerator m_reload;
 	private int m_bulletsLeft = 0;
 	private float m_recoilIncrease = 0;
-	private float m_nextFireTime = 0;
+	private float m_lastFireTime = 0;
     
     public bool Holster { get; set; }
 
@@ -90,7 +92,10 @@ public class MainGun : MonoBehaviour, IProp
         m_clipsGUI.text = m_clips.ToString();
     }
 
-    public void FireStart() {}
+    public void FireStart()
+    {
+        m_lastFireTime = Time.time;
+    }
 
     public void Fire()
     {
@@ -98,22 +103,18 @@ public class MainGun : MonoBehaviour, IProp
         {
             Reload();
         }
-
-        if (!IsReloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
+        else if (!IsReloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
         {
-			if (Time.time > m_nextFireTime + m_fireRate)
+            float firePeriod = (1 / m_fireRate);
+            
+            while (m_lastFireTime < Time.time && m_bulletsLeft > 0)
             {
-				m_nextFireTime = Time.time - Time.deltaTime;
-			}
-		
-			while (Time.time > m_nextFireTime && m_bulletsLeft > 0)
-            {
-				FireOneShot();
+                FireOneShot(0);
                 m_recoilIncrease += m_shotRecoilAmount;
-				m_nextFireTime += m_fireRate;
+                m_lastFireTime += firePeriod;
                 m_muzzleFlashLight.enabled = true;
                 StartCoroutine(FinishFire());
-			}
+            }
         }
     }
 
@@ -136,53 +137,24 @@ public class MainGun : MonoBehaviour, IProp
         }
     }
 
-    private void FireOneShot()
+    private void FireOneShot(float timeUntilNextUpdate)
     {
-		float inaccuracy = (m_baseInaccuracy * m_movementInaccuracyMultiplier * m_character.Velocity.magnitude) + m_baseInaccuracy;	
+        float additionalInaccuracy = (m_movementInaccuracy * m_character.Velocity.magnitude);
+        float inaccuracyMultiplier = 1;
 
-		if (m_character.IsCrouching)
+        if (m_character.IsCrouching)
         {
-			inaccuracy *= m_crouchInaccuracyMultiplier;
-		}
-
-		Vector3 direction = m_bulletEmitter.rotation * new Vector3(Random.value * inaccuracy - (inaccuracy / 2), Random.value * inaccuracy - (inaccuracy / 2), 1);
-		RaycastHit hit;
-		if (Physics.Raycast(m_bulletEmitter.position, direction, out hit, m_range, m_hitLayers))
-        {
-            HitboxCollider hitbox = hit.transform.GetComponentInParent<HitboxCollider>();
-            if (hitbox != null)
-            {
-                hitbox.Damage(m_damage);
-            }
-
-            if (hit.rigidbody)
-            {
-                hit.rigidbody.AddForceAtPosition(m_force * direction, hit.point);
-            }
-
-			if (hit.transform.root.tag == m_bleedObjects)
-            {	
-				if (m_bloodParticles)
-                {
-					ParticleSystem blood = Instantiate(m_bloodParticles, hit.point, Quaternion.LookRotation(hit.normal)) as ParticleSystem;
-					blood.transform.parent = hit.collider.transform;
-				}
-			}
-            else
-            {
-				if (m_sparksParticles)
-                {
-					Instantiate(m_sparksParticles, hit.point, Quaternion.LookRotation(hit.normal));
-				}
-				if (m_bulletHoles)
-                {
-                    Quaternion rotation = Quaternion.FromToRotation(Vector3.back, hit.normal) * Quaternion.AngleAxis(Random.value * 360, Vector3.forward);
-                    Decal hole = Instantiate(m_bulletHoles, hit.point, rotation).GetComponent<Decal>();
-                    hole.GetComponent<BulletHoles>().SetParent(hit.collider.transform);
-                    hole.BuildDecal(hit.transform.gameObject);
-				}
-			}
+            inaccuracyMultiplier *= m_crouchInaccuracyMultiplier;
         }
+
+        BulletManager.Instance.FireBullet(
+            m_bulletEmitter.position,
+            m_bulletEmitter.rotation,
+            m_bulletSettings,
+            timeUntilNextUpdate,
+            additionalInaccuracy,
+            inaccuracyMultiplier);
+
         m_bulletsLeft--;
 
         ParticleSystem flash = Instantiate(m_muzzleFlash, m_muzzleFlashPosition.transform.position, transform.rotation);

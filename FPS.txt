@@ -1,6 +1,5 @@
 --- Short Term ---
 
-bullets should really move through the scene
 Decal performance
 Context help (reload, interact, etc)
 better gun fire sound / fix cutoff
@@ -17,4 +16,3 @@ minimap
 
 Door can close on an object
 Mid air run start/stop
-exploding grab

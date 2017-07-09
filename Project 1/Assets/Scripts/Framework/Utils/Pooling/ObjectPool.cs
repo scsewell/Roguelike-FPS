@@ -1,11 +1,13 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Framework
 {
     public class ObjectPool
     {
-        private Queue<PooledObject> m_pool = new Queue<PooledObject>();
+        private List<PooledObject> m_held = new List<PooledObject>();
+        private List<PooledObject> m_released = new List<PooledObject>();
         private PooledObject m_prefab;
         private Transform m_poolRoot;
 
@@ -13,7 +15,8 @@ namespace Framework
         {
             m_prefab = prefab;
             m_poolRoot = new GameObject(m_prefab.name + " Pool").transform;
-            
+            Object.DontDestroyOnLoad(m_poolRoot.gameObject);
+
             for (int i = 0; i < startSize; i++)
             {
                 Deactivate(CreateInstance(Vector3.zero, Quaternion.identity, m_poolRoot));
@@ -23,18 +26,22 @@ namespace Framework
         public PooledObject GetInstance(Vector3 position, Quaternion rotation, Transform parent)
         {
             PooledObject obj;
-            if (m_pool.Count > 0)
+            if (m_held.Count > 0)
             {
-                obj = m_pool.Dequeue();
+                obj = m_held.First();
+                m_held.RemoveAt(0);
+
                 obj.transform.SetParent(parent);
                 obj.transform.position = position;
                 obj.transform.rotation = rotation;
-                obj.gameObject.SetActive(true);
             }
             else
             {
                 obj = CreateInstance(position, rotation, parent);
             }
+            m_released.Add(obj);
+            obj.gameObject.SetActive(true);
+            obj.IsReleased = true;
             return obj;
         }
 
@@ -47,16 +54,30 @@ namespace Framework
 
         public void Deactivate(PooledObject pooledObject)
         {
-            pooledObject.gameObject.SetActive(false);
-            pooledObject.transform.SetParent(m_poolRoot);
-            m_pool.Enqueue(pooledObject);
+            if (pooledObject.IsReleased)
+            {
+                pooledObject.gameObject.SetActive(false);
+                pooledObject.transform.SetParent(m_poolRoot);
+                m_held.Add(pooledObject);
+                m_released.Remove(pooledObject);
+            }
         }
 
         public void ClearPool()
         {
-            while (m_pool.Count > 0)
+            while (m_held.Count > 0)
             {
-                Object.Destroy(m_pool.Dequeue().gameObject);
+                PooledObject obj = m_held.First();
+                m_held.RemoveAt(0);
+                Object.Destroy(obj.gameObject);
+            }
+        }
+
+        public void DeactivateAll()
+        {
+            foreach(PooledObject pooledObject in new List<PooledObject>(m_released))
+            {
+                Deactivate(pooledObject);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 
 public class ExoEnemy : MonoBehaviour
 {
@@ -14,8 +13,7 @@ public class ExoEnemy : MonoBehaviour
     private Health m_health;
     private Interactable m_interact;
     private CharacterController m_collider;
-
-    private Action<Interactable> m_endInteract;
+    
     private MoveInputs m_lastInputs;
 
     private void Start()
@@ -33,8 +31,8 @@ public class ExoEnemy : MonoBehaviour
         }
 
         m_health.OnDie += OnDie;
-        m_interact.InteractStart += OnInteractStart;
-        m_interact.InteractEnd += OnInteractEnd;
+        m_interact.InteractStart += m_anim.GrabBody;
+        m_interact.InteractEnd += m_anim.ReleaseBody;
 
         m_interact.enabled = false;
     }
@@ -42,8 +40,8 @@ public class ExoEnemy : MonoBehaviour
     private void OnDestroy()
     {
         m_health.OnDie -= OnDie;
-        m_interact.InteractStart -= OnInteractStart;
-        m_interact.InteractEnd -= OnInteractEnd;
+        m_interact.InteractStart -= m_anim.GrabBody;
+        m_interact.InteractEnd -= m_anim.ReleaseBody;
     }
 
     private void OnDie()
@@ -57,18 +55,7 @@ public class ExoEnemy : MonoBehaviour
         m_interact.enabled = true;
         m_anim.OnDie();
 
-        EnemyManager.RemoveExoEnemy(transform);
-    }
-
-    private void OnInteractStart(Transform interacted, Vector3 interactPoint, Action<Interactable> endInteract)
-    {
-        m_endInteract = endInteract;
-        m_anim.GrabBody(interacted, interactPoint);
-    }
-
-    private void OnInteractEnd()
-    {
-        m_anim.ReleaseBody();
+        EnemyManager.Instance.RemoveExoEnemy(this);
     }
 
     private void Update()
@@ -87,10 +74,6 @@ public class ExoEnemy : MonoBehaviour
 
     public void EndInteract()
     {
-        if (m_endInteract != null)
-        {
-            m_endInteract(m_interact);
-            m_endInteract = null;
-        }
+        m_interact.EndInteraction();
     }
 }

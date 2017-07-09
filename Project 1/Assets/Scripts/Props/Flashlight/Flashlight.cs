@@ -25,8 +25,9 @@ public class Flashlight : MonoBehaviour, IProp
     [SerializeField]
     private AudioClip m_turnOff;
     
-    private Light m_light;
     private Animator m_anim;
+    private Material m_flashlightMat;
+    private Light m_light;
     private AudioSource m_audio;
     private bool m_on = true;
     private float m_y = 0;
@@ -53,6 +54,7 @@ public class Flashlight : MonoBehaviour, IProp
 
     private void Awake()
     {
+        m_flashlightMat = GetComponentInChildren<MeshRenderer>().material;
         m_light = GetComponentInChildren<Light>();
         m_anim = GetComponentInChildren<Animator>();
         m_audio = GetComponent<AudioSource>();
@@ -64,6 +66,7 @@ public class Flashlight : MonoBehaviour, IProp
     {
         AnimatorStateInfo state = m_anim.GetCurrentAnimatorStateInfo(2);
         m_light.enabled = !IsHolstered && state.IsTag("On") && state.normalizedTime >= 0.5f;
+        m_flashlightMat.SetColor("_EmissionColor", m_light.enabled ? m_light.color * 2 : Color.black);
 
         float ySpeed = move.y * (running ? 2 : 1);
         m_x = Mathf.MoveTowards(m_x, move.x, Time.deltaTime * m_movementAdjustRate);

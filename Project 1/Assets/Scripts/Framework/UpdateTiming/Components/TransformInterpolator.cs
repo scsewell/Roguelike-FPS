@@ -31,10 +31,7 @@ namespace Framework.Interpolation
 
         private void OnDestroy()
         {
-            if (InterpolationController.Instance)
-            {
-                InterpolationController.Instance.RemoveInterpolator(this);
-            }
+            InterpolationController.Instance.RemoveInterpolator(this);
         }
 
         public void SetThresholds(float positionThreshold, float rotationThreshold, float scaleThreshold)

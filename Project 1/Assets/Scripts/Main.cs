@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using UnityEngine.SceneManagement;
+using Framework;
 using Framework.Interpolation;
 
-public class Main : MonoBehaviour
+public class Main : ComponentSingleton<Main>
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         DontDestroyOnLoad(gameObject);
 
         SettingManager.Instance.Load();
@@ -12,12 +15,24 @@ public class Main : MonoBehaviour
 
         gameObject.AddComponent<ControlsManager>();
         ControlsManager.Instance.Load();
-
-        gameObject.AddComponent<InterpolationController>();
     }
     
     private void Update()
     {
         ControlsManager.Instance.EarlyUpdate();
+        InterpolationController.Instance.VisualUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        InterpolationController.Instance.MainUpdate();
+        BulletManager.Instance.UpdateBullets();
+    }
+
+    public void LoadMainScene()
+    {
+        BulletManager.Instance.DeactivateAll();
+
+        SceneManager.LoadScene(1);
     }
 }
