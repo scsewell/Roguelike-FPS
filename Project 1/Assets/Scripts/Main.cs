@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using Framework;
 using Framework.Interpolation;
 
@@ -16,7 +17,7 @@ public class Main : ComponentSingleton<Main>
         gameObject.AddComponent<ControlsManager>();
         ControlsManager.Instance.Load();
     }
-    
+
     private void Update()
     {
         ControlsManager.Instance.EarlyUpdate();

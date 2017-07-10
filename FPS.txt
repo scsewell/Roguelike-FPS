@@ -7,10 +7,12 @@ Shooting out lights
 
 --- Long Term ---
 
-AI
-Generate fancier rooms
-Corridor and prop art
+Generate fancier rooms (multi floor, non square shapes, rooms with catwalks, doors)
+thread level generaion, loading screen (giving stage and percent)
+Cull based on level gen
 minimap
+AI
+Corridor and prop art
 
 --- Looking Out For ---
 

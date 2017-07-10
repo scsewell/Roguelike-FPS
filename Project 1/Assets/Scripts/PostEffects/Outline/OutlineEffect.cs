@@ -185,7 +185,7 @@ public class OutlineEffect : MonoBehaviour
 
     private void UpdateOutlineMaterial()
     {
-        m_outlineShaderMaterial.SetFloat("_LineThickness", m_lineThickness / 1000);
+        m_outlineShaderMaterial.SetFloat("_LineThickness", 0.001f * m_lineThickness);
         m_outlineShaderMaterial.SetFloat("_LineIntensity", m_lineIntensity);
         m_outlineShaderMaterial.SetFloat("_FillAmount", m_fillAmount);
         m_outlineShaderMaterial.SetColor("_LineColor1", m_lineColor0);
