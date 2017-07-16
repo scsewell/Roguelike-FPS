@@ -28,19 +28,19 @@ public class GenerationParameters : ScriptableObject
     public int MaxRoomCount { get { return m_maxRoomCount; } }
     
     [SerializeField] [Range(1, 100)]
-    private float m_noiseScale = 10.0f;
+    private float m_noiseScale = 65.0f;
     public float NoiseScale { get { return m_noiseScale; } }
 
     [SerializeField] [Range(0, 1)]
-    private float m_noiseThreshold = 0.5f;
+    private float m_noiseThreshold = 0.625f;
     public float NoiseThreshold { get { return m_noiseThreshold; } }
 
-    [SerializeField] [Range(1, 50)]
+    [SerializeField] [Range(1, 30)]
     private int m_minRoomSize = 3;
     public int MinRoomSize { get { return m_minRoomSize; } }
 
-    [SerializeField] [Range(1, 50)]
-    private int m_maxRoomSize = 30;
+    [SerializeField] [Range(1, 30)]
+    private int m_maxRoomSize = 14;
     public int MaxRoomSize { get { return m_maxRoomSize; } }
 
     [SerializeField]
@@ -50,18 +50,22 @@ public class GenerationParameters : ScriptableObject
     [Header("Corridor")]
     
     [SerializeField] [Range(0, 20)]
-    private float m_closeRoomBias = 5;
+    private float m_closeRoomBias = 2;
     public float CloseRoomBias { get { return m_closeRoomBias; } }
 
-    [SerializeField] [Range(-20, 20)]
-    private float m_wallCarveCost = 5;
+    [SerializeField] [Range(-50, 50)]
+    private float m_wallCarveCost = 10;
     public float WallCarveCost { get { return m_wallCarveCost; } }
 
-    [SerializeField] [Range(0, 6)]
-    private float m_changeDirectionCost = 0.1f;
+    [SerializeField] [Range(-50, 50)]
+    private float m_roomCarveCost = 0;
+    public float RoomCarveCost { get { return m_roomCarveCost; } }
+
+    [SerializeField] [Range(-50, 50)]
+    private float m_changeDirectionCost = 2f;
     public float ChangeDirectionCost { get { return m_changeDirectionCost; } }
 
     [SerializeField] [Range(-10, 10)]
-    private float m_noiseCost = 0;
+    private float m_noiseCost = 3;
     public float NoiseCost { get { return m_noiseCost; } }
 }

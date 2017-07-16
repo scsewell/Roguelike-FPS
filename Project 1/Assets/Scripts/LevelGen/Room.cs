@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Framework;
 
 namespace LevelGen
 {
@@ -58,6 +57,21 @@ namespace LevelGen
                 m_floor + Random.Range(0, m_floorCount),
                 Random.Range(m_minZ, m_maxZ)
                 );
+        }
+
+        public bool IsBeside(Vector3 point)
+        {
+            Bounds expanded = new Bounds(m_bounds.center, m_bounds.size + (2 * Vector3.one));
+            return expanded.Contains(point) && !m_bounds.Contains(point);
+        }
+
+        public bool IsAlongsideFace(Vector3 point)
+        {
+            bool inWidth = (m_bounds.min.x <= point.x && point.x <= m_bounds.max.x);
+            bool inHeight = (m_bounds.min.y <= point.y && point.y <= m_bounds.max.y);
+            bool inLength = (m_bounds.min.z <= point.z && point.z <= m_bounds.max.z);
+
+            return (inWidth && inLength) || (inWidth && inHeight) || (inLength && inHeight);
         }
     }
 }

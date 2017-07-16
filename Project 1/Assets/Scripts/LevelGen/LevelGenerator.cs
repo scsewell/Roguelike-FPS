@@ -174,25 +174,26 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
 
     public float GetCorridorCost(Tile current, Dictionary<Tile, Tile> fromMap, Tile start, Tile goal)
     {
-        Vector3 startDisp = current.Position - start.Position;
-        Vector3 goalDisp = goal.Position - current.Position;
-
-        float g = Mathf.Abs(startDisp.x) + Mathf.Abs(startDisp.y) + Mathf.Abs(startDisp.z);
-        float h = Mathf.Abs(goalDisp.x) + Mathf.Abs(goalDisp.y) + Mathf.Abs(goalDisp.z);
-
         float directionWeight = 0;
-        if (fromMap.ContainsKey(current))
+        if (current != start)
         {
             Tile previous = fromMap[current];
+            
             if (fromMap.ContainsKey(previous))
             {
                 Tile morePrevious = fromMap[previous];
-
+                
                 Vector3 moveDirection = current.Position - previous.Position;
                 Vector3 previousMoveDirection = previous.Position - morePrevious.Position;
                 directionWeight = -Vector3.Dot(moveDirection, previousMoveDirection * m_params.ChangeDirectionCost);
             }
         }
+        
+        Vector3 startDisp = current.Position - start.Position;
+        Vector3 goalDisp = goal.Position - current.Position;
+
+        float g = Mathf.Abs(startDisp.x) + Mathf.Abs(startDisp.y) + Mathf.Abs(startDisp.z);
+        float h = Mathf.Abs(goalDisp.x) + Mathf.Abs(goalDisp.y) + Mathf.Abs(goalDisp.z);
 
         float noiseCost = SampleNoise(current.x, current.z) * m_params.NoiseCost;
 
@@ -200,6 +201,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
         switch (current.Type)
         {
             case TileType.Wall: carveCost = m_params.WallCarveCost; break;
+            case TileType.Room: carveCost = m_params.RoomCarveCost; break;
         }
 
         return g + h + carveCost + directionWeight + noiseCost;
@@ -210,10 +212,12 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
         List<Tile> open = new List<Tile>();
         HashSet<Tile> closed = new HashSet<Tile>();
         Dictionary<Tile, Tile> movedFromTile = new Dictionary<Tile, Tile>();
+        Dictionary<Tile, float> tileCost = new Dictionary<Tile, float>();
         List<Tile> adjacent = new List<Tile>();
 
         open.Add(start);
-        
+        tileCost.Add(start, costFunc(start, movedFromTile));
+
         // While there is a node to explore
         while (open.Count > 0)
         {
@@ -222,7 +226,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
             float minCost = float.MaxValue;
             foreach (Tile tile in open)
             {
-                float cost = costFunc(tile, movedFromTile);
+                float cost = tileCost[tile];
                 if (cost < minCost)
                 {
                     currentTile = tile;
@@ -255,6 +259,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
                 {
                     movedFromTile.Add(tile, currentTile);
                     open.Add(tile);
+                    tileCost.Add(tile, costFunc(tile, movedFromTile));
                 }
             }
 
