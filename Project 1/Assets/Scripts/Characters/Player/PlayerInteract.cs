@@ -70,6 +70,14 @@ public class PlayerInteract : MonoBehaviour
         m_grabTarget = grabTarget.transform;
     }
 
+    private void OnDestroy()
+    {
+        if (m_grabTarget != null)
+        {
+            Destroy(m_grabTarget.gameObject);
+        }
+    }
+
     public void MoveGrapTarget(CharacterMovement movement)
     {
         m_grabTransition = Mathf.Clamp01(m_grabTransition + (Time.deltaTime / m_grabTime));

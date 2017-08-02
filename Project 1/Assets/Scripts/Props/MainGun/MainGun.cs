@@ -48,8 +48,20 @@ public class MainGun : MonoBehaviour, IProp
 	private int m_bulletsLeft = 0;
 	private float m_recoilIncrease = 0;
 	private float m_lastFireTime = 0;
-    
-    public bool Holster { get; set; }
+
+    private bool m_holster;
+    public bool Holster
+    {
+        get { return m_holster; }
+        set
+        {
+            if (value != m_holster)
+            {
+                m_holster = value;
+                m_lastFireTime = Time.time;
+            }
+        }
+    }
 
     public bool IsHolstered
     {
@@ -68,8 +80,8 @@ public class MainGun : MonoBehaviour, IProp
 
     private void Start()
     {
-		m_character = transform.root.GetComponent<CharacterMovement>();
-        m_weapons = transform.GetComponentInParent<PlayerWeapons>();
+		m_character = GetComponentInParent<CharacterMovement>();
+        m_weapons = GetComponentInParent<PlayerWeapons>();
         m_anim = GetComponent<MainGunAnimations>();
         m_sound = GetComponent<MainGunSounds>();
         m_blocking = GetComponentInChildren<GunBlocking>();
@@ -178,5 +190,6 @@ public class MainGun : MonoBehaviour, IProp
         m_sound.PlayReloadEnd();
         yield return new WaitForSeconds(0.2f);
         m_reload = null;
-	}
+        m_lastFireTime = Time.time;
+    }
 }

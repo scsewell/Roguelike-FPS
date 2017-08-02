@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Framework;
 using Framework.Interpolation;
@@ -35,5 +36,13 @@ public class Main : ComponentSingleton<Main>
         BulletManager.Instance.DeactivateAll();
 
         SceneManager.LoadScene(1);
+
+        StartCoroutine(GenerateLevel());
+    }
+
+    private IEnumerator GenerateLevel()
+    {
+        yield return null;
+        GetComponent<LevelGenerator>().GenerateLevel();
     }
 }

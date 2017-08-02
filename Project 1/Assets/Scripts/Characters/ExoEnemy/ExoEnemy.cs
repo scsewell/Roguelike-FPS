@@ -13,6 +13,7 @@ public class ExoEnemy : MonoBehaviour
     private Health m_health;
     private Interactable m_interact;
     private CharacterController m_collider;
+    private ImpulseSound m_bodySounds;
     
     private MoveInputs m_lastInputs;
 
@@ -24,6 +25,7 @@ public class ExoEnemy : MonoBehaviour
         m_health = GetComponent<Health>();
         m_interact = GetComponent<Interactable>();
         m_collider = GetComponent<CharacterController>();
+        m_bodySounds = GetComponentInChildren<ImpulseSound>();
 
         if (!m_useExo)
         {
@@ -35,6 +37,7 @@ public class ExoEnemy : MonoBehaviour
         m_interact.InteractEnd += m_anim.ReleaseBody;
 
         m_interact.enabled = false;
+        m_bodySounds.enabled = false;
     }
 
     private void OnDestroy()
@@ -48,14 +51,15 @@ public class ExoEnemy : MonoBehaviour
     {
         m_collider.enabled = false;
         m_ai.enabled = false;
+
         foreach (HitboxCollider hitbox in GetComponentsInChildren<HitboxCollider>())
         {
             hitbox.enabled = false;
         }
+
         m_interact.enabled = true;
         m_anim.OnDie();
-
-        EnemyManager.Instance.RemoveExoEnemy(this);
+        m_bodySounds.enabled = true;
     }
 
     private void Update()

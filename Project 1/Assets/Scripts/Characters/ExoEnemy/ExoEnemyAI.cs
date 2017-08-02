@@ -18,15 +18,18 @@ public class ExoEnemyAI : MonoBehaviour
     private LinkedList<Vector3> m_waypoints;
     private bool m_run = false;
 
-    public void Start()
+    private void Awake()
+    {
+        m_path = new NavMeshPath();
+    }
+
+    private void Start()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             m_player = player.transform;
         }
-
-        m_path = new NavMeshPath();
     }
 
     public MoveInputs DecideActions()
@@ -114,10 +117,10 @@ public class ExoEnemyAI : MonoBehaviour
     {
         if (m_waypoints != null && m_waypoints.Count > 0)
         {
-            Debug.DrawLine(transform.position, m_waypoints.First(), Color.magenta);
+            Debug.DrawLine(transform.position, m_waypoints.First(), new Color(1, 0, 1, 1));
             for (int i = 0; i < (m_waypoints.Count - 1); i++)
             {
-                Debug.DrawLine(m_waypoints.ElementAt(i), m_waypoints.ElementAt(i + 1), Color.yellow);
+                Debug.DrawLine(m_waypoints.ElementAt(i), m_waypoints.ElementAt(i + 1), new Color(0.6f, 0, 0.7f, 1));
             }
         }
     }

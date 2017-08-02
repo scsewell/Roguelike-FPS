@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LevelGen
 {
@@ -26,8 +25,11 @@ namespace LevelGen
             get { return m_room; }
         }
 
-        public Tile(int x, int y, int z)
+        private Level m_level;
+
+        public Tile(Level level, int x, int y, int z)
         {
+            m_level = level;
             this.x = x;
             this.y = y;
             this.z = z;
@@ -38,12 +40,15 @@ namespace LevelGen
         public void MakeRoom(Room room)
         {
             m_type = TileType.Room;
+            room.Tiles.Add(this);
             m_room = room;
+            m_level.RoomTiles.Add(this);
         }
 
         public void MakeCorridor()
         {
             m_type = TileType.Corridor;
+            m_level.CorridorTiles.Add(this);
         }
 
         public override string ToString()

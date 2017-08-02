@@ -26,6 +26,11 @@ public class Player : MonoBehaviour
         m_footsteps.Init(m_movement);
     }
 
+    public void Spawn(Vector3 spawnPos, Quaternion facing)
+    {
+        m_movement.Teleport(spawnPos, facing);
+    }
+
     private void Update()
     {
         m_interact.ProcessInteractions();

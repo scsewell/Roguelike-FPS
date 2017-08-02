@@ -14,37 +14,58 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
     [SerializeField]
     private GenerationParameters m_params;
 
+    private Transform m_levelRoot;
+    private Transform m_otherParent;
+    private Transform m_navParent;
+    private NavMeshManager m_navMeshManager;
+
     private Level m_level;
-    private List<Room> m_rooms;
-    private float m_noiseOffset;
+    private float m_noiseOffsetX;
+    private float m_noiseOffsetY;
     private float m_noiseScale;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     public void GenerateLevel()
     {
         InitGeneration();
-        GenerateRooms();
-        GenerateCorridors();
-        Skin();
-    }
-
-    public void GenerateRooms()
-    {
-        InitGeneration();
         CreateRooms();
-        m_level = new Level(m_rooms);
-    }
-
-    public void GenerateCorridors()
-    {
         CreateCorridors();
+
+        Skinner.Skin(m_level, m_navParent, m_otherParent, m_params);
+        m_navMeshManager.BuildNavMesh();
+
+        PlacePlayer();
+        PlaceEnemies();
+
+        GC.Collect();
     }
 
     private void InitGeneration()
     {
+        // Clear any level assets in the scene
+        if (m_levelRoot != null)
+        {
+            Destroy(m_levelRoot.gameObject);
+        }
+
+        m_levelRoot = new GameObject("Level").transform;
+        m_navParent = new GameObject("Navmeshed").transform;
+        m_navParent.SetParent(m_levelRoot);
+        m_otherParent = new GameObject("Other").transform;
+        m_otherParent.SetParent(m_levelRoot);
+
+        m_navMeshManager = m_navParent.gameObject.AddComponent<NavMeshManager>();
+
+        // Set the random seed if required
         UnityEngine.Random.InitState(m_useRandomSeed ? m_randomSeed : UnityEngine.Random.Range(0, int.MaxValue));
 
-        m_noiseOffset = UnityEngine.Random.value * 10000;
+        // Generate a new noise profile
+        m_noiseOffsetX = UnityEngine.Random.value * 100000;
+        m_noiseOffsetY = UnityEngine.Random.value * 100000;
         m_noiseScale = Mathf.Pow(1 - (m_params.NoiseScale / 100), 2);
     }
 
@@ -53,7 +74,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
     /// </summary>
     private void CreateRooms()
     {
-        m_rooms = new List<Room>();
+        List<Room> rooms = new List<Room>();
 
         int roomCount = UnityEngine.Random.Range(m_params.MinRoomCount, m_params.MaxRoomCount);
 
@@ -61,11 +82,11 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
         float levelHalfLength = m_params.MaxLevelLength / 2;
 
         int failedTries = 0;
-        while (m_rooms.Count < roomCount)
+        while (rooms.Count < roomCount)
         {
             if (failedTries > 10000)
             {
-                Debug.LogWarning("Failed to generate target number of rooms! (" + m_rooms.Count + " of " + roomCount + ")");
+                Debug.LogWarning("Failed to generate target number of rooms! (" + rooms.Count + " of " + roomCount + ")");
                 break;
             }
             
@@ -101,14 +122,16 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
 
             Room newRoom = new Room(x, z, xSize, zSize, 0, 1);
 
-            if (m_rooms.Any(r => r.Bounds.Intersects(newRoom.Bounds)))
+            if (rooms.Any(r => r.Bounds.Intersects(newRoom.Bounds)))
             {
                 failedTries++;
                 continue;
             }
 
-            m_rooms.Add(newRoom);
+            rooms.Add(newRoom);
         }
+
+        m_level = new Level(rooms);
     }
 
     /// <summary>
@@ -117,30 +140,29 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
     private void CreateCorridors()
     {
         // Sort rooms by floor area
-        m_rooms = m_rooms.OrderByDescending(r => r.Bounds.size.x * r.Bounds.size.z).ToList();
+        List<Room> rooms = m_level.Rooms.OrderByDescending(r => r.Bounds.size.x * r.Bounds.size.z).ToList();
 
         List<Room> connected = new List<Room>();
-        List<Room> unconnected = new List<Room>();
-        unconnected.AddRange(m_rooms);
+        List<Room> unconnected = new List<Room>(rooms);
         
         while (unconnected.Count > 0)
         {
-            Room toConnect = unconnected.First();
+            Room startRoom = unconnected.First();
 
             List<Room> otherRooms = ((connected.Count > 0) ? connected : unconnected).OrderBy(
-                        r => Vector3.Distance(r.Bounds.center, toConnect.Bounds.center)
+                        r => Vector3.Distance(r.Bounds.center, startRoom.Bounds.center)
                         ).ToList();
 
-            Room other = otherRooms[(int)(Mathf.Pow(UnityEngine.Random.value, 1 + m_params.CloseRoomBias) * otherRooms.Count)];
+            Room endRoom = otherRooms[(int)(Mathf.Pow(UnityEngine.Random.value, 1 + m_params.CloseRoomBias) * otherRooms.Count)];
             
-            if (CarveCorridor(toConnect, other, connected, unconnected))
+            if (CarveCorridor(startRoom, endRoom, connected, unconnected))
             {
-                unconnected.Remove(toConnect);
-                connected.Add(toConnect);
+                unconnected.Remove(startRoom);
+                connected.Add(startRoom);
 
-                if (!connected.Contains(other))
+                if (!connected.Contains(endRoom))
                 {
-                    connected.Add(other);
+                    connected.Add(endRoom);
                 }
             }
         }
@@ -269,6 +291,56 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
         return null;
     }
 
+    private void PlacePlayer()
+    {
+        Room spawnRoom = null;
+        float bestSuitability = Mathf.NegativeInfinity;
+        foreach (Room room in m_level.Rooms)
+        {
+            float suitability = room.Bounds.center.magnitude - room.GetSize();
+            if (suitability > bestSuitability)
+            {
+                spawnRoom = room;
+                bestSuitability = suitability;
+            }
+        }
+
+        if (spawnRoom != null)
+        {
+            Vector3 spawnPos = spawnRoom.Tiles.First(t => (t.y == spawnRoom.Floor)).Position;
+
+            GameObject existingPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (existingPlayer != null)
+            {
+                Destroy(existingPlayer);
+            }
+
+            Player player = Instantiate(Resources.Load<Player>("Player/Player"));
+            player.transform.SetParent(m_otherParent, true);
+            player.Spawn(Skinner.TransformPoint(spawnPos), Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogError("No room found to spawn Player in!");
+        }
+    }
+
+    private void PlaceEnemies()
+    {
+        foreach (var enemyParams in m_params.EnemyParams)
+        {
+            int count = UnityEngine.Random.Range(enemyParams.MinCount, enemyParams.MaxCount + 1);
+
+            for (int i = 0; i < count; i++)
+            {
+                Room spawnRoom = Utils.PickRandom(m_level.Rooms);
+                Vector3 spawnPos = spawnRoom.Tiles.First(t => (t.y == spawnRoom.Floor)).Position;
+
+                Instantiate(enemyParams.Prefab, Skinner.TransformPoint(spawnPos), Quaternion.identity, m_otherParent);
+            }
+        }
+    }
+
     private float ValueFromDistribution(AnimationCurve distribution, float minValue, float maxValue)
     {
         return distribution.Evaluate(UnityEngine.Random.value) * (maxValue - minValue) + minValue;
@@ -276,22 +348,14 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
 
     private float SampleNoise(float x, float z)
     {
-        return Mathf.PerlinNoise((x * m_noiseScale) + m_noiseOffset, (z * m_noiseScale) + m_noiseOffset);
-    }
-
-    /// <summary>
-    /// Instantiates level assets for the generated level.
-    /// </summary>
-    private void Skin()
-    {
-
+        return Mathf.PerlinNoise((x * m_noiseScale) + m_noiseOffsetX, (z * m_noiseScale) + m_noiseOffsetY);
     }
 
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying && m_level != null)
+        if (Application.isPlaying)
         {
-            m_level.DrawDebug();
+            Skinner.DrawDebug(m_level);
         }
     }
 }

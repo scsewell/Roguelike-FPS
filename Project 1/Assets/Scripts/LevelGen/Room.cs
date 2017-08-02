@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LevelGen
 {
-    public struct Room
+    public class Room
     {
         private Bounds m_bounds;
         public Bounds Bounds { get { return m_bounds; } }
@@ -24,6 +25,9 @@ namespace LevelGen
 
         private int m_floorCount;
         public int FloorCount { get { return m_floorCount; } }
+
+        private List<Tile> m_tiles = new List<Tile>();
+        public List<Tile> Tiles { get { return m_tiles; } }
 
         public Room(int centerX, int centerZ, int width, int length, int floor, int floorCount)
         {
@@ -48,6 +52,11 @@ namespace LevelGen
 
             m_floor = floor;
             m_floorCount = floorCount;
+        }
+
+        public float GetSize()
+        {
+            return (m_maxX - m_minX) * (m_maxZ - m_minZ) * m_floorCount;
         }
 
         public Vector3 GetRandomPointInsideRoom()

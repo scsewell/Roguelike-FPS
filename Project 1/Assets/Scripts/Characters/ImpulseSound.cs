@@ -1,17 +1,18 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 using Framework;
 
 public class ImpulseSound : MonoBehaviour
 {
     [SerializeField] [Range(0, 10)]
     private float m_triggerImpulse = 1.0f;
-    
     [SerializeField] [Range(0, 1)]
     private float m_volume = 1.0f;
-
     [SerializeField]
     private AudioClip[] clips;
+    [SerializeField]
+    private AudioMixerGroup m_mixer;
 
     private AudioSource m_audio;
     
@@ -30,6 +31,7 @@ public class ImpulseSound : MonoBehaviour
         curve.AddKey(new Keyframe(0, 1, -2f, -2f));
         curve.AddKey(new Keyframe(1, 0, 0, 0));
         m_audio.SetCustomCurve(AudioSourceCurveType.CustomRolloff, curve);
+        m_audio.outputAudioMixerGroup = m_mixer;
     }
 
     private void OnDestroy()
@@ -42,12 +44,15 @@ public class ImpulseSound : MonoBehaviour
 
     private void ImpuseSound_OnCollision(Collision collision)
     {
-        if (collision.impulse.magnitude > m_triggerImpulse)
+        if (isActiveAndEnabled)
         {
-            m_audio.transform.position = collision.contacts.First().point;
-            m_audio.volume = m_volume;
-            m_audio.clip = Utils.PickRandom(clips);
-            m_audio.Play();
+            if (collision.impulse.magnitude > m_triggerImpulse)
+            {
+                m_audio.transform.position = collision.contacts.First().point;
+                m_audio.volume = m_volume;
+                m_audio.clip = Utils.PickRandom(clips);
+                m_audio.Play();
+            }
         }
     }
 }

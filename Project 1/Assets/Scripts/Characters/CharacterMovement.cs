@@ -104,6 +104,8 @@ public class CharacterMovement : MonoBehaviour
     private CharacterController m_controller;
     public CharacterController Controller { get { return m_controller; } }
 
+    private TransformInterpolator m_interpolator;
+
     private CollisionFlags m_collisionFlags;
     private Vector3 m_groundNormal = Vector3.zero;
     private Vector3 m_lastGroundNormal = Vector3.zero;
@@ -140,10 +142,8 @@ public class CharacterMovement : MonoBehaviour
     private void Awake()
     {
         m_controller = GetComponent<CharacterController>();
-    }
+        m_interpolator = gameObject.AddComponent<TransformInterpolator>();
 
-    private void Start()
-    {
         float startHeight = m_controller.height;
         m_controller.height = m_movement.standHeight;
         transform.Translate(0, (m_controller.height - startHeight) / 2, 0);
@@ -151,7 +151,14 @@ public class CharacterMovement : MonoBehaviour
         InterpolatedFloat height = new InterpolatedFloat(() => (m_controller.height), val => { m_controller.height = val; });
         gameObject.AddComponent<FloatInterpolator>().Initialize(height);
 
-        gameObject.AddComponent<TransformInterpolator>().ForgetPreviousValues();
+        m_interpolator.ForgetPreviousValues();
+    }
+
+    public void Teleport(Vector3 position, Quaternion rotation)
+    {
+        transform.position = position - (ColliderBottom - transform.position);
+        transform.rotation = rotation;
+        m_interpolator.ForgetPreviousValues();
     }
 
     public void UpdateMovement(MoveInputs input)

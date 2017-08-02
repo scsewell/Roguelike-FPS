@@ -14,9 +14,29 @@ namespace LevelGen
         private int m_floorCount;
 
         private Tile[][][] m_level;
+        
+        private List<Room> m_rooms = new List<Room>();
+        public List<Room> Rooms
+        {
+            get { return m_rooms; }
+        }
+
+        private List<Tile> m_roomTiles = new List<Tile>();
+        public List<Tile> RoomTiles
+        {
+            get { return m_roomTiles; }
+        }
+
+        private List<Tile> m_corridorTiles = new List<Tile>();
+        public List<Tile> CorridorTiles
+        {
+            get { return m_corridorTiles; }
+        }
 
         public Level(List<Room> rooms)
         {
+            m_rooms = new List<Room>(rooms);
+
             m_minX = rooms.Min(r => r.MinX);
             m_minZ = rooms.Min(r => r.MinZ);
 
@@ -36,7 +56,7 @@ namespace LevelGen
                     m_level[x][z] = new Tile[m_floorCount];
                     for (int y = 0; y < m_floorCount; y++)
                     {
-                        m_level[x][z][y] = new Tile(x + m_minX, y, z + m_minZ);
+                        m_level[x][z][y] = new Tile(this, x + m_minX, y, z + m_minZ);
                     }
                 }
             }
@@ -56,34 +76,7 @@ namespace LevelGen
             }
         }
 
-        public Tile this[int x, int y, int z]
-        {
-            get
-            {
-                return GetTile(x, y, z);
-            }
-        }
-
-        public Tile GetTile(Vector3 v)
-        {
-            return GetTile(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
-        }
-
-        public Tile GetTile(int x, int y, int z)
-        {
-            if (InBounds(x, y, z))
-            {
-                return m_level[x - m_minX][z - m_minZ][y];
-            }
-            return null;
-        }
-
-        public bool InBounds(int x, int y, int z)
-        {
-            return m_minX <= x && x < m_maxX && m_minZ <= z && z < m_maxZ && 0 <= y && y < m_floorCount;
-        }
-
-        private static Vector3[] DIRECTIONS = { Vector3.right, Vector3.left, Vector3.up, Vector3.down, Vector3.forward, Vector3.back };
+        private static Vector3[] DIRECTIONS = { Vector3.right, Vector3.left, Vector3.forward, Vector3.back };
 
         public List<Tile> GetAdjacent(Tile tile, List<Tile> resultList)
         {
@@ -99,29 +92,54 @@ namespace LevelGen
             return resultList;
         }
 
-        public void DrawDebug()
+        public void DrawDebug(float scale)
         {
             Gizmos.color = Color.yellow;
+            IterateTiles((t) =>
+            {
+                if (t.Type != TileType.Wall)
+                {
+                    switch (t.Type)
+                    {
+                        case TileType.Room: Gizmos.color = new Color(0, 0.5f, 0); break;
+                        case TileType.Corridor: Gizmos.color = new Color(0.5f, 0.5f, 0); break;
+                    }
+                    Gizmos.DrawWireCube((t.Position + (0.5f * Vector3.up)) * scale, Vector3.one * scale);
+                }
+            });
+        }
+
+        public void IterateTiles(Action<Tile> tileFunc)
+        {
             for (int x = m_minX; x < m_maxX; x++)
             {
                 for (int z = m_minZ; z < m_maxZ; z++)
                 {
                     for (int y = 0; y < m_floorCount; y++)
                     {
-                        Tile tile = GetTile(x, y, z);
-
-                        if (tile.Type != TileType.Wall)
-                        {
-                            switch (tile.Type)
-                            {
-                                case TileType.Room:     Gizmos.color = Color.green; break;
-                                case TileType.Corridor: Gizmos.color = Color.yellow; break;
-                            }
-                            Gizmos.DrawWireCube(new Vector3(x, y, z) + (0.5f * Vector3.one), Vector3.one);
-                        }
+                        tileFunc(GetTile(x, y, z));
                     }
                 }
             }
+        }
+
+        public Tile GetTile(Vector3 pos)
+        {   
+            return GetTile(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y), Mathf.RoundToInt(pos.z));
+        }
+
+        public Tile GetTile(int x, int y, int z)
+        {
+            if (InBounds(x, y, z))
+            {
+                return m_level[x - m_minX][z - m_minZ][y];
+            }
+            return null;
+        }
+
+        private bool InBounds(int x, int y, int z)
+        {
+            return m_minX <= x && x < m_maxX && m_minZ <= z && z < m_maxZ && 0 <= y && y < m_floorCount;
         }
     }
 }

@@ -23,8 +23,8 @@ public class BulletSettings : ScriptableObject
     private float m_range = 100.0f;
     public float Range { get { return m_range; } }
 
-    [SerializeField] [Range(0, 300)]
-    private float m_speed = 100.0f;
+    [SerializeField] [Range(0, 800)]
+    private float m_speed = 400.0f;
     public float Speed { get { return m_speed; } }
 
     [SerializeField] [Range(0, 1000)]

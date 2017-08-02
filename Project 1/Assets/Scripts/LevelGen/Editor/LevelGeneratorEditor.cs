@@ -17,16 +17,6 @@ namespace LevelGen
             {
                 generator.GenerateLevel();
             }
-
-            if (GUILayout.Button("Generate Rooms"))
-            {
-                generator.GenerateRooms();
-            }
-
-            if (GUILayout.Button("Generate Corridors"))
-            {
-                generator.GenerateCorridors();
-            }
         }
     }
 }
