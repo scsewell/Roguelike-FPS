@@ -21,20 +21,16 @@ namespace Framework.Interpolation
             return this;
         }
 
-        private void Awake()
-        {
-            InterpolationController.Instance.AddInterpolator(this);
-        }
-
         private void OnEnable()
         {
             if (m_initialized)
             {
                 ForgetPreviousValues();
             }
+            InterpolationController.Instance.AddInterpolator(this);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             InterpolationController.Instance.RemoveInterpolator(this);
         }

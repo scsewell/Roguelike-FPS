@@ -51,16 +51,21 @@ namespace Framework.InputManagement
 
         private List<List<T>[]> m_buffer;
         private List<List<T>> m_relevantInput;
+        private List<List<T>> m_relevantInputIncPrev;
+        private bool m_relevantInputDirty;
+        private bool m_relevantInputIncPrevDirty;
+        public bool isFirstFixedFrame;
 
         protected BufferedSource(string displayName, bool canRebind, bool canBeMuted, ISource<T>[] defaultSources)
         {
             m_displayName = displayName;
             m_canRebind = canRebind;
             m_canBeMuted = canBeMuted;
-            m_defaultSources = defaultSources != null ? defaultSources : new ISource<T>[0];
+            m_defaultSources = defaultSources ?? new ISource<T>[0];
 
             m_buffer = new List<List<T>[]>();
             m_relevantInput = new List<List<T>>();
+            m_relevantInputIncPrev = new List<List<T>>();
             m_sourceInfos = new List<SourceInfo>();
 
             UseDefaults();
@@ -84,6 +89,7 @@ namespace Framework.InputManagement
 
             m_buffer.Clear();
             m_relevantInput.Clear();
+            m_relevantInputIncPrev.Clear();
             m_sourceInfos.Clear();
 
             foreach (ISource<T> source in m_sources)
@@ -94,9 +100,11 @@ namespace Framework.InputManagement
                 m_buffer.Add(fixedFrames);
 
                 m_relevantInput.Add(new List<T>());
+                m_relevantInputIncPrev.Add(new List<T>());
 
                 m_sourceInfos.Add(source.SourceInfo);
             }
+            MarkDirty();
         }
 
         /*
@@ -109,13 +117,15 @@ namespace Framework.InputManagement
                 m_buffer[i][0].Clear();
                 m_buffer[i][1].Clear();
                 m_relevantInput[i].Clear();
+                m_relevantInputIncPrev[i].Clear();
             }
+            MarkDirty();
         }
 
         /*
          * Run at the end of every input frame to record the input state for that frame.
          */
-        public void RecordUpdateState(bool muting)
+        public void BufferInput(bool muting)
         {
             if (!(muting && m_canBeMuted))
             {
@@ -123,6 +133,7 @@ namespace Framework.InputManagement
                 {
                     m_buffer[i][1].Add(m_sources[i].GetValue());
                 }
+                MarkDirty();
             }
         }
 
@@ -130,7 +141,7 @@ namespace Framework.InputManagement
          * Run at the end of every fixed update cycle to remove old input frames from the buffer.
          * Ensures the last fixed update with input frames is in the buffer along with an empty frame for new inputs.
          */
-        public void RecordFixedUpdateState()
+        public void RemoveOldBuffers()
         {
             foreach (List<T>[] source in m_buffer)
             {
@@ -140,6 +151,7 @@ namespace Framework.InputManagement
                     source[0] = source[1];
                     source[1] = temp;
                     source[1].Clear();
+                    MarkDirty();
                 }
             }
         }
@@ -150,16 +162,31 @@ namespace Framework.InputManagement
          */
         protected List<List<T>> GetRelevantInput(bool includePrevious)
         {
-            for (int i = 0; i < m_sources.Count; i++)
+            if (!includePrevious && m_relevantInputDirty)
             {
-                m_relevantInput[i].Clear();
-                if (includePrevious && m_buffer[i][0].Count > 0)
+                for (int i = 0; i < m_sources.Count; i++)
                 {
-                    m_relevantInput[i].Add(m_buffer[i][0].Last());
+                    m_relevantInput[i].Clear();
+                    m_relevantInput[i].AddRange(m_buffer[i][1]);
                 }
-                m_relevantInput[i].AddRange(m_buffer[i][1]);
+                m_relevantInputDirty = false;
             }
-            return m_relevantInput;
+
+            if (includePrevious && m_relevantInputIncPrevDirty)
+            {
+                for (int i = 0; i < m_sources.Count; i++)
+                {
+                    m_relevantInputIncPrev[i].Clear();
+                    if (m_buffer[i][0].Count > 0)
+                    {
+                        m_relevantInputIncPrev[i].Add(m_buffer[i][0].Last());
+                    }
+                    m_relevantInputIncPrev[i].AddRange(m_buffer[i][1]);
+                }
+                m_relevantInputIncPrevDirty = false;
+            }
+            
+            return includePrevious ? m_relevantInputIncPrev : m_relevantInput;
         }
 
         /*
@@ -192,6 +219,12 @@ namespace Framework.InputManagement
         private bool Contains(ISource<T> source)
         {
             return m_sourceInfos.Any(s => s == source.SourceInfo);
+        }
+
+        private void MarkDirty()
+        {
+            m_relevantInputDirty = true;
+            m_relevantInputIncPrevDirty = true;
         }
     }
 }

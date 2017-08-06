@@ -20,16 +20,15 @@ namespace Framework.Interpolation
         {
             m_interpolated = new InterpolatedTransform(transform);
             m_interpolator = new Interpolator<TransformData>(m_interpolated);
-
-            InterpolationController.Instance.AddInterpolator(this);
         }
 
         private void OnEnable()
         {
             ForgetPreviousValues();
+            InterpolationController.Instance.AddInterpolator(this);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             InterpolationController.Instance.RemoveInterpolator(this);
         }

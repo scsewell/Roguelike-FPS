@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using Framework;
 using Framework.Interpolation;
@@ -27,13 +26,13 @@ public class Main : ComponentSingleton<Main>
 
     private void FixedUpdate()
     {
-        InterpolationController.Instance.MainUpdate();
+        InterpolationController.Instance.EarlyFixedUpdate();
         BulletManager.Instance.UpdateBullets();
     }
 
     public void LoadMainScene()
     {
-        BulletManager.Instance.DeactivateAll();
+        BulletManager.Instance.Clear();
 
         SceneManager.LoadScene(1);
 

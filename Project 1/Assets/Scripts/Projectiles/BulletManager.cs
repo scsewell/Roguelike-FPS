@@ -2,20 +2,19 @@
 using UnityEngine;
 using Framework;
 
-public class BulletManager : ComponentSingleton<BulletManager>
+public class BulletManager : Singleton<BulletManager>
 {
-    [SerializeField]
-    private Bullet m_bulletPrefab;
+    private Dictionary<Bullet, ObjectPool> m_bulletPools = new Dictionary<Bullet, ObjectPool>();
 
-    private ObjectPool m_bulletPool;
     private List<Bullet> m_bullets = new List<Bullet>();
     private List<Bullet> m_bulletsTemp = new List<Bullet>();
-
-    protected override void Awake()
+    
+    public void InitBulletType(BulletSettings settings)
     {
-        base.Awake();
-
-        m_bulletPool = new ObjectPool(m_bulletPrefab, 1);
+        if (!m_bulletPools.ContainsKey(settings.BulletPrefab))
+        {
+            m_bulletPools.Add(settings.BulletPrefab, new ObjectPool(settings.BulletPrefab, 20));
+        }
     }
 
     public void FireBullet(Vector3 position, Quaternion direction, BulletSettings settings, float timeUntilNextUpdate, float additionalInaccuracy, float inaccuracyMultiplier)
@@ -28,7 +27,8 @@ public class BulletManager : ComponentSingleton<BulletManager>
 
         Vector3 newDirection = direction * new Vector3(inaccuracy.x, inaccuracy.y, 1);
 
-        m_bulletPool.GetInstance(position, Quaternion.LookRotation(newDirection), null).GetComponent<Bullet>().Init(settings, timeUntilNextUpdate);
+        ObjectPool pool = m_bulletPools[settings.BulletPrefab];
+        pool.GetInstance(position, Quaternion.LookRotation(newDirection), null).GetComponent<Bullet>().Init(settings, timeUntilNextUpdate);
     }
 
     public void UpdateBullets()
@@ -36,16 +36,20 @@ public class BulletManager : ComponentSingleton<BulletManager>
         m_bulletsTemp.Clear();
         m_bulletsTemp.AddRange(m_bullets);
 
+        float deltaTime = Time.deltaTime;
         foreach (Bullet bullet in m_bulletsTemp)
         {
-            bullet.UpdateBullet(Time.deltaTime);
+            bullet.UpdateBullet(deltaTime);
         }
     }
 
-    public void DeactivateAll()
+    public void Clear()
     {
         m_bullets.Clear();
-        m_bulletPool.DeactivateAll();
+        foreach (KeyValuePair<Bullet, ObjectPool> bulletPool in m_bulletPools)
+        {
+            bulletPool.Value.ClearPool();
+        }
     }
 
     public void AddBullet(Bullet bullet)

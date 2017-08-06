@@ -87,7 +87,7 @@ public class SettingManager : Singleton<SettingManager>
 
         m_settings.Add(Categories.Screen,"Resolution", Screen.currentResolution,
             GetSupportedResolutions(),
-            (v) => v.width + " x " + v.height,
+            (v) => SerializeResolution(v),
             (s) => ParseResolution(s),
             (v) => Screen.SetResolution(v.width, v.height, Screen.fullScreen)
             );
@@ -173,7 +173,7 @@ public class SettingManager : Singleton<SettingManager>
         List<string> resolutions = new List<string>();
         foreach (Resolution res in Screen.resolutions)
         {
-            string resolution = res.width + " x " + res.height;
+            string resolution = SerializeResolution(res);
             if (!resolutions.Contains(resolution))
             {
                 resolutions.Add(resolution);

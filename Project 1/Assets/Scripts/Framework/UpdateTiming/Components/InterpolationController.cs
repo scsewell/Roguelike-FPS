@@ -12,7 +12,7 @@ namespace Framework.Interpolation
         private List<IInterpolator> m_interpolators = new List<IInterpolator>();
         private float m_lastFixedTime;
 
-        public void MainUpdate()
+        public void EarlyFixedUpdate()
         {
             m_lastFixedTime = Time.time;
 

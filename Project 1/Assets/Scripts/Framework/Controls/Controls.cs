@@ -48,7 +48,7 @@ namespace Framework.InputManagement
             set { m_isMuted = value; }
         }
 
-        private bool firstUpdate = false;
+        private bool firstUpdate = true;
 
         public Controls()
         {
@@ -62,6 +62,17 @@ namespace Framework.InputManagement
         
         public void FixedUpdate()
         {
+            if (!firstUpdate)
+            {
+                foreach (BufferedButton button in m_buttons)
+                {
+                    button.isFirstFixedFrame = false;
+                }
+                foreach (BufferedAxis axis in m_axes)
+                {
+                    axis.isFirstFixedFrame = false;
+                }
+            }
             firstUpdate = true;
         }
 
@@ -75,22 +86,24 @@ namespace Framework.InputManagement
                 // Needs to run at the end of every FixedUpdate cycle to handle the input buffers.
                 foreach (BufferedButton button in m_buttons)
                 {
-                    button.RecordFixedUpdateState();
+                    button.isFirstFixedFrame = true;
+                    button.RemoveOldBuffers();
                 }
                 foreach (BufferedAxis axis in m_axes)
                 {
-                    axis.RecordFixedUpdateState();
+                    axis.isFirstFixedFrame = true;
+                    axis.RemoveOldBuffers();
                 }
                 firstUpdate = false;
             }
 
             foreach (BufferedButton button in m_buttons)
             {
-                button.RecordUpdateState(m_isMuted);
+                button.BufferInput(m_isMuted);
             }
             foreach (BufferedAxis axis in m_axes)
             {
-                axis.RecordUpdateState(m_isMuted);
+                axis.BufferInput(m_isMuted);
             }
         }
 

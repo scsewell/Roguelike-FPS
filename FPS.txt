@@ -1,8 +1,8 @@
 --- Short Term ---
 
 Decal performance
+fix gun firing time slicing
 Context help (reload, interact, etc)
-better gun fire sound / fix cutoff
 Shooting out lights
 
 --- Long Term ---

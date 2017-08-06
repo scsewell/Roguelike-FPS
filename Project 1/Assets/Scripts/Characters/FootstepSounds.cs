@@ -24,21 +24,19 @@ public class FootstepSounds : MonoBehaviour
 
     public void FootstepL()
     {
-        if (!m_leftFoot.isPlaying && m_character.IsGrounded)
+        if (m_character.IsGrounded)
         {
-            m_leftFoot.clip = Utils.PickRandom(m_footsteps);
-            m_leftFoot.volume = (m_character.IsCrouching ? m_crouchVolume : m_volume);
-            m_leftFoot.Play();
+            float volume = (m_character.IsCrouching ? m_crouchVolume : m_volume);
+            m_leftFoot.PlayOneShot(Utils.PickRandom(m_footsteps), volume);
         }
     }
 
     public void FootstepR()
     {
-        if (!m_rightFoot.isPlaying && m_character.IsGrounded)
+        if (m_character.IsGrounded)
         {
-            m_rightFoot.clip = Utils.PickRandom(m_footsteps);
-            m_leftFoot.volume = (m_character.IsCrouching ? m_crouchVolume : m_volume);
-            m_rightFoot.Play();
+            float volume = (m_character.IsCrouching ? m_crouchVolume : m_volume);
+            m_rightFoot.PlayOneShot(Utils.PickRandom(m_footsteps), volume);
         }
     }
 }

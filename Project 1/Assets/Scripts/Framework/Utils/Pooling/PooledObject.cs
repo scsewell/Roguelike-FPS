@@ -18,7 +18,11 @@ namespace Framework
         /// </summary>
         protected void Release()
         {
-            m_pool.Deactivate(this);
+            if (IsReleased)
+            {
+                IsReleased = false;
+                m_pool.Deactivate(this);
+            }
         }
     }
 }

@@ -72,12 +72,14 @@ namespace LevelGen
                 {
                     Quaternion dir1 = Quaternion.Euler(0, i * 90, 0);
                     Tile dir1Tile = level.GetTile(tile.Position + (dir1 * Vector3.forward));
+                    TileType dir1Type = Tile.GetNullSafeType(dir1Tile);
 
                     Quaternion dir2 = Quaternion.Euler(0, (i + 1) * 90, 0);
                     Tile dir2Tile = level.GetTile(tile.Position + (dir2 * Vector3.forward));
+                    TileType dir2Type = Tile.GetNullSafeType(dir2Tile);
 
                     Transform roof;
-                    if (dir1Tile != null && dir1Tile.Type == TileType.Corridor)
+                    if (dir1Type == TileType.Corridor)
                     {
                         roof = Utils.PickRandom(corridorTheme.RoofToCorridors);
                     }
@@ -85,7 +87,7 @@ namespace LevelGen
                     {
                         roof = Utils.PickRandom(corridorTheme.RoofToWalls);
 
-                        if (dir1Tile == null || dir1Tile.Type == TileType.Wall)
+                        if (dir1Type == TileType.Wall)
                         {
                             Transform wall = Utils.PickRandom(corridorTheme.Walls);
                             Object.Instantiate(wall, tileCenter, dir1, navParent);
@@ -93,10 +95,7 @@ namespace LevelGen
                     }
                     Object.Instantiate(roof, tileCenter, dir1, otherParent);
 
-                    if ((dir1Tile == null && dir2Tile.Type == TileType.Wall) ||
-                        (dir2Tile == null && dir1Tile.Type == TileType.Wall) ||
-                        (dir1Tile.Type == dir2Tile.Type) ||
-                        (dir1Tile.Type == TileType.Room || dir2Tile.Type == TileType.Room))
+                    if ((dir1Type == dir2Type) || (dir1Type == TileType.Room || dir2Type == TileType.Room))
                     {
                         Transform corner = Utils.PickRandom(corridorTheme.JunctionCorners);
                         Object.Instantiate(corner, tileCenter, dir1, navParent);

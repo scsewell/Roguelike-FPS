@@ -472,9 +472,13 @@ public class CharacterMovement : MonoBehaviour
         if (hit.normal.y > 0 && hit.normal.y > m_groundNormal.y && hit.moveDirection.y < 0)
         {
             if ((hit.point - m_lastHitPoint).sqrMagnitude > 0.001 || m_lastGroundNormal == Vector3.zero)
+            {
                 m_groundNormal = hit.normal;
+            }
             else
+            {
                 m_groundNormal = m_lastGroundNormal;
+            }
 
             m_movingPlatform.hitPlatform = hit.collider.transform;
             m_hitPoint = hit.point;

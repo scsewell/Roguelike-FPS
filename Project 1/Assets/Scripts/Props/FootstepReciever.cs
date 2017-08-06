@@ -6,16 +6,22 @@ public class FootstepReciever : MonoBehaviour
 
     private void Start()
     {
-        m_footsteps = transform.GetComponentInParent<FootstepSounds>();
+        m_footsteps = GetComponentInParent<FootstepSounds>();
     }
 
     public void FootstepL()
     {
-        m_footsteps.FootstepL();
+        if (m_footsteps)
+        {
+            m_footsteps.FootstepL();
+        }
     }
 
     public void FootstepR()
     {
-        m_footsteps.FootstepR();
+        if (m_footsteps)
+        {
+            m_footsteps.FootstepR();
+        }
     }
 }

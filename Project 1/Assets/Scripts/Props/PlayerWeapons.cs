@@ -8,23 +8,17 @@ public class PlayerWeapons : MonoBehaviour
     [SerializeField]
     private SkinnedMeshRenderer m_arms;
     [SerializeField]
-    private AudioSource m_holsterAudio;
-    [SerializeField]
     private AudioClip[] m_holsterSounds;
-    [SerializeField]
-    private AudioSource m_drawAudio;
     [SerializeField]
     private AudioClip[] m_drawSounds;
 
-    private MainGun m_weapon1;
-    private Flashlight m_flashlight;
+    private AudioSource m_audio;
     private PlayerInteract m_interact;
     private Dictionary<string, int> m_boneNamesToIndex;
-    private Dictionary<IProp, List<Renderer>> m_propToRenderers;
-    private List<IProp> m_props;
-    private IProp m_targetProp;
+    private Prop[] m_props;
+    private Prop m_targetProp;
 
-    private IProp m_activeProp;
+    private Prop m_activeProp;
     public bool IsPropActive
     {
         get { return m_activeProp != null; }
@@ -39,18 +33,17 @@ public class PlayerWeapons : MonoBehaviour
 
     private void Awake()
     {
+        m_audio = GetComponent<AudioSource>();
         m_interact = GetComponentInParent<PlayerInteract>();
 
         m_interact.InteractOnce += OnInteractOnce;
         m_interact.InteractStart += OnInteractStart;
-
-        m_weapon1 = GetComponentInChildren<MainGun>();
-        m_flashlight = GetComponentInChildren<Flashlight>();
-
-        m_props = new List<IProp>();
-        m_props.Add(m_weapon1);
-        m_props.Add(m_flashlight);
-
+        
+        m_props = GetComponentsInChildren<Prop>(true);
+        foreach (Prop prop in m_props)
+        {
+            prop.Init();
+        }
         m_targetProp = m_props.First();
     }
 
@@ -78,81 +71,63 @@ public class PlayerWeapons : MonoBehaviour
             }
         }
 
-        m_propToRenderers = new Dictionary<IProp, List<Renderer>>();
-        foreach (IProp prop in m_props)
-        {
-            prop.Holster = true;
-            List<Renderer> rendrers = prop.GameObject.GetComponentsInChildren<Renderer>().ToList();
-            m_propToRenderers.Add(prop, rendrers);
-            rendrers.ForEach(r => r.enabled = false);
-        }
-
-        m_targetProp = m_props.First();
-        m_targetProp.Holster = false;
+        m_targetProp.DrawProp();
     }
 
     public void UpdateWeapons()
     {
-        // draw or holster specific items
-        DrawProp(GameButton.Weapon1, m_weapon1);
-        DrawProp(GameButton.Flashlight, m_flashlight);
-        
-        if (m_props.Any(p => !p.IsHolstered))
+        foreach (Prop prop in m_props)
         {
-            IProp currentlyActive = m_props.First(p => !p.IsHolstered);
-            if (currentlyActive != m_activeProp)
+            if (ControlsManager.Instance.JustDown(prop.HolsterButton))
             {
-                m_activeProp = currentlyActive;
-                // make the arms follow the active prop rig
-                m_arms.bones = m_arms.bones.Where(b => b == null).Concat(
-                    m_activeProp.ArmsRoot.GetComponentsInChildren<Transform>()
-                    .Where(t => m_boneNamesToIndex.ContainsKey(t.name))
-                    .OrderBy(t => m_boneNamesToIndex[t.name])
-                    ).ToArray();
-                
-                m_propToRenderers[m_activeProp].ForEach(r => r.enabled = true);
-                m_drawAudio.clip = Utils.PickRandom(m_drawSounds);
-                m_drawAudio.Play();
-            }
-        }
-        else
-        {
-            if (IsPropActive)
-            {
-                m_propToRenderers[m_activeProp].ForEach(r => r.enabled = false);
-                m_activeProp = null;
-            }
-            if (m_targetProp != null && m_props.All(p => p.Holster) && !m_interact.IsInteracting)
-            {
-                m_targetProp.Holster = false;
+                m_targetProp = (m_targetProp == prop) ? null : prop;
+                HolsterActive();
             }
         }
 
+        foreach (Prop prop in m_props)
+        {
+            prop.MainUpdate();
+        }
+        
+        if (m_activeProp == null && m_targetProp != null && !m_interact.IsInteracting)
+        {
+            m_activeProp = m_targetProp;
+            m_activeProp.DrawProp();
+
+            // make the arms follow the active prop rig
+            m_arms.bones = m_arms.bones.Where(b => b == null).Concat(
+                m_activeProp.ArmsRoot.GetComponentsInChildren<Transform>()
+                .Where(t => m_boneNamesToIndex.ContainsKey(t.name))
+                .OrderBy(t => m_boneNamesToIndex[t.name])
+                ).ToArray();
+
+            m_audio.PlayOneShot(Utils.PickRandom(m_drawSounds));
+        }
+        
         if (m_activeProp != null && !m_activeProp.Holster && !m_interact.IsInteracting)
         {
             if (ControlsManager.Instance.JustDown(GameButton.Fire))
             {
-                m_activeProp.FireStart();
+                m_activeProp.OnFireStart();
             }
             if (ControlsManager.Instance.IsDown(GameButton.Fire))
             {
-                m_activeProp.Fire();
+                m_activeProp.OnFireHeld();
             }
             if (ControlsManager.Instance.JustDown(GameButton.Reload))
             {
-                m_activeProp.Reload();
+                m_activeProp.OnReload();
             }
         }
 
         // only render the arms if they are raised
         m_arms.enabled = IsPropActive;
-
-        m_props.ForEach(w => w.MainUpdate());
     }
 
     public void UpdateVisuals(PlayerInput input, PlayerLook look, CharacterMovement movement)
     {
-        foreach (IProp prop in m_props)
+        foreach (Prop prop in m_props)
         {
             prop.VisualUpdate(
                input.DesiredMove,
@@ -164,23 +139,18 @@ public class PlayerWeapons : MonoBehaviour
         }
     }
 
-    private void DrawProp(GameButton propButton, IProp prop)
+    private void HolsterActive()
     {
-        if (ControlsManager.Instance.JustDown(propButton))
+        if (m_activeProp != null)
         {
-            m_targetProp = (m_targetProp == prop) ? null : prop;
-            HolsterActive();
+            m_activeProp.CancelActions();
+            m_activeProp.HolsterProp(OnHolsterComplete);
+            m_audio.PlayOneShot(Utils.PickRandom(m_holsterSounds));
         }
     }
 
-    private void HolsterActive()
+    private void OnHolsterComplete()
     {
-        if (m_activeProp != null && !m_activeProp.Holster)
-        {
-            m_activeProp.Holster = true;
-            m_activeProp.CancelActions();
-            m_holsterAudio.clip = Utils.PickRandom(m_holsterSounds);
-            m_holsterAudio.Play();
-        }
+        m_activeProp = null;
     }
 }

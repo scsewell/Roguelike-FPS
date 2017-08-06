@@ -51,6 +51,18 @@ namespace LevelGen
             m_level.CorridorTiles.Add(this);
         }
 
+        public static TileType GetNullSafeType(Tile tile)
+        {
+            if (tile == null)
+            {
+                return TileType.Wall;
+            }
+            else
+            {
+                return tile.Type;
+            }
+        }
+
         public override string ToString()
         {
             return Position + " Type: " + m_type;

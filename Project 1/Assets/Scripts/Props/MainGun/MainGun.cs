@@ -1,21 +1,17 @@
-using UnityEngine;
 using System.Collections;
+using System.Text;
+using UnityEngine;
+using Framework;
 
-public class MainGun : MonoBehaviour, IProp
+public class MainGun : Prop
 {
-    [SerializeField]
-    private Transform m_armsRoot;
-    public Transform ArmsRoot { get { return m_armsRoot; } }
-
-    [SerializeField] private TextMesh m_bulletGUI;
-    [SerializeField] private TextMesh m_clipsGUI;
+    [SerializeField] private TextMesh m_bulletsMagText;
+    [SerializeField] private TextMesh m_bulletsHeldText;
     [SerializeField] private Transform m_bulletEmitter;
     [SerializeField] private GameObject m_muzzleFlashPosition;
     [SerializeField] private Light m_muzzleFlashLight;
     [SerializeField] private ParticleSystem m_muzzleFlash;
-
-    [SerializeField]
-    private BulletSettings m_bulletSettings;
+    [SerializeField] private BulletSettings m_bulletSettings;
     
 	[SerializeField] [Range(0.1f, 100)]
     private float m_fireRate = 8.0f;
@@ -26,12 +22,11 @@ public class MainGun : MonoBehaviour, IProp
 
 	[SerializeField]
     private int m_bulletsPerClip = 32;
-	[SerializeField]
-    private int m_clips = 20;
+    [SerializeField]
+    private int m_maxAmmo = 260;
 
 	[SerializeField] [Range(0, 6)]
     private float m_reloadTime = 2f;
-    public float ReloadTime { get { return m_reloadTime; } }
     
 	[SerializeField] [Range(0, 0.1f)]
     private float m_movementInaccuracy = 0.015f;
@@ -44,38 +39,27 @@ public class MainGun : MonoBehaviour, IProp
     private MainGunSounds m_sound;
     private GunBlocking m_blocking;
 
+    private StringBuilder m_bulletsMagSb = new StringBuilder(10, 10);
+    private StringBuilder m_bulletsHeldSb = new StringBuilder(10, 10);
+    private string m_bulletsMagStr;
+    private string m_bulletsHeldStr;
+    private int m_bulletsMag = 0;
+    private int m_bulletsHeld = 0;
+
     private IEnumerator m_reload;
-	private int m_bulletsLeft = 0;
-	private float m_recoilIncrease = 0;
+    private WaitForSeconds m_reloadStartWait;
+    private WaitForSeconds m_reloadEndWait;
+    private float m_recoilIncrease = 0;
 	private float m_lastFireTime = 0;
 
-    private bool m_holster;
-    public bool Holster
-    {
-        get { return m_holster; }
-        set
-        {
-            if (value != m_holster)
-            {
-                m_holster = value;
-                m_lastFireTime = Time.time;
-            }
-        }
-    }
 
-    public bool IsHolstered
-    {
-        get { return m_anim.IsHostered(); }
-    }
+    public override GameButton HolsterButton { get { return GameButton.Weapon1; } }
+    protected override int MainAnimatorState { get { return 1; } }
+
     
-    public bool IsReloading
+    private bool IsReloading
     {
         get { return m_reload != null; }
-    }
-
-    public GameObject GameObject
-    {
-        get { return gameObject; }
     }
 
     private void Start()
@@ -86,42 +70,64 @@ public class MainGun : MonoBehaviour, IProp
         m_sound = GetComponent<MainGunSounds>();
         m_blocking = GetComponentInChildren<GunBlocking>();
 
-        m_bulletsLeft = m_bulletsPerClip;
+        BulletManager.Instance.InitBulletType(m_bulletSettings);
+
+        m_bulletsMagStr = m_bulletsMagSb.GarbageFreeString();
+        m_bulletsHeldStr = m_bulletsHeldSb.GarbageFreeString();
+
+        m_reloadStartWait = new WaitForSeconds(m_reloadTime - 0.2f);
+        m_reloadEndWait = new WaitForSeconds(0.2f);
+
+        m_bulletsHeld = m_maxAmmo;
+        m_bulletsMag = m_bulletsPerClip;
         m_muzzleFlashLight.enabled = false;
     }
 
-    public void MainUpdate()
+    protected override void OnDraw()
+    {
+        ResetFireTime();
+    }
+
+    protected override void OnHolster() {}
+
+    protected override void LogicUpdate()
     {
         m_recoilIncrease /= m_recoilStabilizeSpeed;
         m_weapons.Recoil = m_recoilIncrease;
         m_anim.RecoilUpdate();
     }
 
-    public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
+    protected override void AnimUpdate()
     {
-        m_anim.AnimUpdate(this, move, look, jumping, running, interact);
-        m_bulletGUI.text = m_bulletsLeft.ToString();
-        m_clipsGUI.text = m_clips.ToString();
+        m_anim.AnimUpdate(IsReloading, 2.0f / m_reloadTime);
+
+        m_bulletsMagSb.Clear();
+        m_bulletsMagSb.Concat(m_bulletsMag);
+        m_bulletsMagText.SetGarbateFreeText(m_bulletsMagStr);
+
+        m_bulletsHeldSb.Clear();
+        m_bulletsHeldSb.Concat(m_bulletsHeld);
+        m_bulletsHeldText.SetGarbateFreeText(m_bulletsHeldStr);
     }
 
-    public void FireStart()
+    public override void OnFireStart()
     {
-        m_lastFireTime = Time.time;
+        ResetFireTime();
     }
 
-    public void Fire()
+    public override void OnFireHeld()
     {
-        if (m_bulletsLeft == 0)
+        if (m_bulletsMag == 0)
         {
-            Reload();
+            OnReload();
         }
-        else if (!IsReloading && m_bulletsLeft > 0 && !m_blocking.IsBlocked())
+        else if (!IsReloading && m_bulletsMag > 0 && !m_blocking.IsBlocked())
         {
             float firePeriod = (1 / m_fireRate);
             
-            while (m_lastFireTime < Time.time && m_bulletsLeft > 0)
+            while (m_lastFireTime <= Time.time && m_bulletsMag > 0)
             {
-                FireOneShot(0);
+                FireOneShot(Time.time - m_lastFireTime);
                 m_recoilIncrease += m_shotRecoilAmount;
                 m_lastFireTime += firePeriod;
                 m_muzzleFlashLight.enabled = true;
@@ -130,9 +136,9 @@ public class MainGun : MonoBehaviour, IProp
         }
     }
 
-    public void Reload()
+    public override void OnReload()
     {
-        if (!IsReloading && m_clips > 0 && m_bulletsLeft < m_bulletsPerClip)
+        if (!IsReloading && m_bulletsHeld > 0 && m_bulletsMag < m_bulletsPerClip)
         {
             m_sound.PlayReloadStart();
             m_reload = FinishReload();
@@ -140,7 +146,7 @@ public class MainGun : MonoBehaviour, IProp
         }
     }
 
-    public void CancelActions()
+    public override void CancelActions()
     {
         if (m_reload != null)
         {
@@ -167,29 +173,39 @@ public class MainGun : MonoBehaviour, IProp
             additionalInaccuracy,
             inaccuracyMultiplier);
 
-        m_bulletsLeft--;
-
-        ParticleSystem flash = Instantiate(m_muzzleFlash, m_muzzleFlashPosition.transform.position, transform.rotation);
-        flash.transform.parent = m_muzzleFlashPosition.transform;
-
+        m_bulletsMag--;
+        
+        m_muzzleFlash.Emit(1);
         m_sound.PlayFireSound();
         m_anim.Recoil();
     }
 
     private IEnumerator FinishFire()
     {
-        yield return 0;
+        yield return null;
         m_muzzleFlashLight.enabled = false;
     }
     
     private IEnumerator FinishReload()
     {
-        yield return new WaitForSeconds(m_reloadTime - 0.2f);
-        m_bulletsLeft = m_bulletsPerClip;
-        m_clips--;
+        yield return m_reloadStartWait;
+
+        int requiredBullets = Mathf.Min(m_bulletsHeld, m_bulletsPerClip - m_bulletsMag);
+        m_bulletsMag += requiredBullets;
+        m_bulletsHeld -= requiredBullets;
         m_sound.PlayReloadEnd();
-        yield return new WaitForSeconds(0.2f);
+
+        yield return m_reloadEndWait;
+
         m_reload = null;
-        m_lastFireTime = Time.time;
+        ResetFireTime();
+    }
+
+    private void ResetFireTime()
+    {
+        if (Time.time - m_lastFireTime > (1 / m_fireRate))
+        {
+            m_lastFireTime = Time.time;
+        }
     }
 }

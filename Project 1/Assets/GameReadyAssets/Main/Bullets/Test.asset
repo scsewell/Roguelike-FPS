@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed89d64060b1fc64db3575d954564bd0, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  m_bulletPrefab: {fileID: 114137212146457582, guid: d72f043acbfbb4b409ef082026a289f7,
+    type: 2}
+  m_sparksParticles: {fileID: 0}
+  m_bloodParticles: {fileID: 0}
+  m_bulletHole: {fileID: 0}
+  m_hitLayers:
+    serializedVersion: 2
+    m_Bits: 2049
+  m_range: 200
+  m_speed: 10
+  m_useGravity: 0
+  m_damage: 10
+  m_force: 300
+  m_baseInaccuracy: 0.001
+  m_spread: 1

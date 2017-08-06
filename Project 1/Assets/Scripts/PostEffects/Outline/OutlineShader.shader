@@ -34,7 +34,6 @@ Shader "Hidden/OutlineEffect"
 	{
 		Pass
 		{
-			Tags{ "RenderType" = "Opaque" }
 			ZTest Always
 			ZWrite Off
 			Cull Off
@@ -97,7 +96,6 @@ Shader "Hidden/OutlineEffect"
 
 		Pass
 		{
-			Tags { "RenderType"="Opaque" }
 			ZTest Always
 			ZWrite Off
 			Cull Off
@@ -216,6 +214,5 @@ Shader "Hidden/OutlineEffect"
 			
 			ENDCG
 		}
-	} 
-	FallBack "Diffuse"
+	}
 }

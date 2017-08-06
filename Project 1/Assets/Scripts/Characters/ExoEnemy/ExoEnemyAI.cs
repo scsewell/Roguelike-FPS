@@ -15,12 +15,13 @@ public class ExoEnemyAI : MonoBehaviour
     private Transform m_player;
     private Transform m_target;
     private NavMeshPath m_path;
-    private LinkedList<Vector3> m_waypoints;
+    private List<Vector3> m_waypoints;
     private bool m_run = false;
 
     private void Awake()
     {
         m_path = new NavMeshPath();
+        m_waypoints = new List<Vector3>();
     }
 
     private void Start()
@@ -52,20 +53,21 @@ public class ExoEnemyAI : MonoBehaviour
             Vector3 targetDisplacement = Vector3.ProjectOnPlane(m_target.position - transform.position, Vector3.up);
 
             // calculate a new path when the target has moved too far from where a path was last caculated to
-            if (m_waypoints == null || m_waypoints.Count == 0 || Vector3.Distance(m_target.position, m_waypoints.Last()) > targetDisplacement.magnitude * m_repathFactor)
+            if (m_waypoints.Count == 0 || Vector3.Distance(m_target.position, m_waypoints.Last()) > targetDisplacement.magnitude * m_repathFactor)
             {
                 NavMesh.CalculatePath(transform.position, m_target.position, int.MaxValue, m_path);
-                m_waypoints = new LinkedList<Vector3>(m_path.corners);
+                m_waypoints.Clear();
+                m_waypoints.AddRange(m_path.corners);
             }
 
             // if there is a path to follow set the movment
-            if (m_waypoints != null && m_waypoints.Count > 0)
+            if (m_waypoints.Count > 0)
             {
                 // remove waypoints that have been reached
                 Vector3 waypointDisp = Vector3.ProjectOnPlane(m_waypoints.First() - transform.position, Vector3.up);
                 while (m_waypoints.Count > 1 && waypointDisp.magnitude < m_waypointTolerance)
                 {
-                    m_waypoints.RemoveFirst();
+                    m_waypoints.RemoveAt(0);
                     waypointDisp = Vector3.ProjectOnPlane(m_waypoints.First() - transform.position, Vector3.up);
                 }
 
@@ -115,7 +117,7 @@ public class ExoEnemyAI : MonoBehaviour
 
     private void DrawPath()
     {
-        if (m_waypoints != null && m_waypoints.Count > 0)
+        if (m_waypoints.Count > 0)
         {
             Debug.DrawLine(transform.position, m_waypoints.First(), new Color(1, 0, 1, 1));
             for (int i = 0; i < (m_waypoints.Count - 1); i++)

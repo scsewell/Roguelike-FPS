@@ -9,7 +9,7 @@ namespace Framework.InputManagement
     public class BufferedButton : BufferedSource<bool>
     {
         public BufferedButton(string displayName, bool canRebind, bool canBeMuted, ISource<bool>[] defaultSources) : base(displayName, canRebind, canBeMuted, defaultSources) { }
-
+        
         /*
          * Returns true if any relevant keys are down this frame.
          */
@@ -33,6 +33,10 @@ namespace Framework.InputManagement
          */
         public bool JustDown()
         {
+            if (!isFirstFixedFrame)
+            {
+                return false;
+            }
             foreach (List<bool> source in GetRelevantInput(true))
             {
                 for (int i = 0; i < source.Count - 1; i++)
@@ -51,6 +55,10 @@ namespace Framework.InputManagement
          */
         public bool JustUp()
         {
+            if (!isFirstFixedFrame)
+            {
+                return false;
+            }
             foreach (List<bool> source in GetRelevantInput(true))
             {
                 for (int i = 0; i < source.Count - 1; i++)

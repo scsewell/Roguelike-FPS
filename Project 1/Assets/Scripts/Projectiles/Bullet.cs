@@ -5,7 +5,7 @@ using Framework.Interpolation;
 public class Bullet : PooledObject
 {
     private TransformInterpolator m_interpolator;
-    private TrailRenderer m_line;
+    private LineRenderer m_line;
     private BulletSettings m_settings;
     private Vector3 m_velocity;
     private float m_distanceTravelled;
@@ -13,7 +13,7 @@ public class Bullet : PooledObject
     private void Awake()
     {
         m_interpolator = gameObject.AddComponent<TransformInterpolator>();
-        m_line = GetComponent<TrailRenderer>();
+        m_line = GetComponent<LineRenderer>();
     }
 
     public void Init(BulletSettings settings, float timeUntiNextUpdate)
@@ -21,20 +21,29 @@ public class Bullet : PooledObject
         m_settings = settings;
         m_velocity = transform.forward * m_settings.Speed;
         m_distanceTravelled = 0;
+        
+        UpdateBullet(timeUntiNextUpdate);
 
-        m_line.Clear();
         m_interpolator.enabled = true;
         m_interpolator.ForgetPreviousValues();
+        
+        m_line.SetPosition(0, transform.position);
+        m_line.SetPosition(1, transform.position);
 
         BulletManager.Instance.AddBullet(this);
-
-        UpdateBullet(timeUntiNextUpdate);
     }
 
-    public void UpdateBullet(float timeUntiNextUpdate)
+    private void LateUpdate()
+    {
+        Vector3 tempPos = m_line.GetPosition(0);
+        m_line.SetPosition(1, tempPos);
+        m_line.SetPosition(0, transform.position);
+    }
+
+    public void UpdateBullet(float deltaTime)
     {
         // Verlet method, apply half the acceleration to the velocity before position update to remove dependancy on deltaTime 
-        Vector3 deltaPos = (m_velocity + ((Physics.gravity / 2) * timeUntiNextUpdate)) * timeUntiNextUpdate;
+        Vector3 deltaPos = (m_velocity + ((Physics.gravity / 2) * deltaTime)) * deltaTime;
 
         // raycast to see if anything was hit
         RaycastHit hit;
@@ -91,7 +100,10 @@ public class Bullet : PooledObject
             }
 
             transform.position += deltaPos;
-            m_velocity += Physics.gravity * timeUntiNextUpdate;
+            if (m_settings.UseGravity)
+            {
+                m_velocity += Physics.gravity * deltaTime;
+            }
             transform.rotation = Quaternion.LookRotation(m_velocity);
         }
     }

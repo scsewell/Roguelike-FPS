@@ -4,11 +4,7 @@ using Framework;
 public class MainGunSounds : MonoBehaviour
 {
 	[SerializeField]
-    private float m_reloadPitch = 1f;
-	[SerializeField]
     private float m_reloadVolume = 1f;
-	[SerializeField]
-    private float m_bulletFirePitch = 1f;
 	[SerializeField]
     private float m_bulletFireVolume = 1f;
 
@@ -23,25 +19,16 @@ public class MainGunSounds : MonoBehaviour
 	
     public void PlayReloadStart()
     {
-        m_audioSource.clip = m_reloadStart;
-        m_audioSource.pitch = m_reloadPitch;
-        m_audioSource.volume = m_reloadVolume;
-        m_audioSource.Play();
+        m_audioSource.PlayOneShot(m_reloadStart, m_reloadVolume);
     }
 
     public void PlayReloadEnd()
     {
-        m_audioSource.clip = m_reloadEnd;
-        m_audioSource.pitch = m_reloadPitch;
-        m_audioSource.volume = m_reloadVolume;
-        m_audioSource.Play();
+        m_audioSource.PlayOneShot(m_reloadEnd, m_reloadVolume);
     }
 
     public void PlayFireSound()
     {
-		m_audioSource.clip = Utils.PickRandom(m_bulletSounds);
-		m_audioSource.pitch = m_bulletFirePitch;
-		m_audioSource.volume = m_bulletFireVolume;
-		m_audioSource.Play();
+        m_audioSource.PlayOneShot(Utils.PickRandom(m_bulletSounds), m_bulletFireVolume);
     }
 }

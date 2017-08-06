@@ -9,13 +9,15 @@ public class GunBlocking : MonoBehaviour
     [SerializeField]
     private LayerMask m_blockingLayers;
 
+    private RaycastHit[] m_hits = new RaycastHit[20];
+
     public bool IsBlocked()
     {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, m_sweepRadius, transform.forward, m_sweepDistance, m_blockingLayers);
+        int hitCount = Physics.SphereCastNonAlloc(transform.position, m_sweepRadius, transform.forward, m_hits, m_sweepDistance, m_blockingLayers);
 
-        foreach (RaycastHit hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
-            if (!hit.collider.isTrigger)
+            if (!m_hits[i].collider.isTrigger)
             {
                 return true;
             }

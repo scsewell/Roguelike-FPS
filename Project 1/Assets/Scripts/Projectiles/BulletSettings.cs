@@ -4,6 +4,10 @@
 public class BulletSettings : ScriptableObject
 {
     [SerializeField]
+    private Bullet m_bulletPrefab;
+    public Bullet BulletPrefab { get { return m_bulletPrefab; } }
+    
+    [SerializeField]
     private ParticleSystem m_sparksParticles;
     public ParticleSystem Sparks { get { return m_sparksParticles; } }
 
@@ -27,6 +31,10 @@ public class BulletSettings : ScriptableObject
     private float m_speed = 400.0f;
     public float Speed { get { return m_speed; } }
 
+    [SerializeField]
+    private bool m_useGravity = true;
+    public bool UseGravity { get { return m_useGravity; } }
+
     [SerializeField] [Range(0, 1000)]
     private float m_damage = 10.0f;
     public float Damage { get { return m_damage; } }
@@ -40,6 +48,7 @@ public class BulletSettings : ScriptableObject
     public float BaseInaccuracy { get { return m_baseInaccuracy; } }
 
     [SerializeField] [Range(1, 32f)]
+    [Tooltip("Larger values bias shots to perfect accuracy.")]
     private float m_spread = 3.0f;
     public float Spread { get { return m_spread; } }
 }
