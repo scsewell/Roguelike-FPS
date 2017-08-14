@@ -54,7 +54,6 @@ namespace Framework.InputManagement
         private List<List<T>> m_relevantInputIncPrev;
         private bool m_relevantInputDirty;
         private bool m_relevantInputIncPrevDirty;
-        public bool isFirstFixedFrame;
 
         protected BufferedSource(string displayName, bool canRebind, bool canBeMuted, ISource<T>[] defaultSources)
         {
@@ -167,7 +166,7 @@ namespace Framework.InputManagement
                 for (int i = 0; i < m_sources.Count; i++)
                 {
                     m_relevantInput[i].Clear();
-                    m_relevantInput[i].AddRange(m_buffer[i][1]);
+                    AddInput(m_relevantInput[i], m_buffer[i][1]);
                 }
                 m_relevantInputDirty = false;
             }
@@ -181,12 +180,20 @@ namespace Framework.InputManagement
                     {
                         m_relevantInputIncPrev[i].Add(m_buffer[i][0].Last());
                     }
-                    m_relevantInputIncPrev[i].AddRange(m_buffer[i][1]);
+                    AddInput(m_relevantInputIncPrev[i], m_buffer[i][1]);
                 }
                 m_relevantInputIncPrevDirty = false;
             }
             
             return includePrevious ? m_relevantInputIncPrev : m_relevantInput;
+        }
+
+        private void AddInput(List<T> relevantInput, List<T> updateFrames)
+        {
+            for (int i = 0; i < updateFrames.Count; i++)
+            {
+                relevantInput.Add(updateFrames[i]);
+            }
         }
 
         /*

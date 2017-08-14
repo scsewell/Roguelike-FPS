@@ -34,7 +34,11 @@ public class BulletManager : Singleton<BulletManager>
     public void UpdateBullets()
     {
         m_bulletsTemp.Clear();
-        m_bulletsTemp.AddRange(m_bullets);
+
+        for (int i = 0; i < m_bullets.Count; i++)
+        {
+            m_bulletsTemp.Add(m_bullets[i]);
+        }
 
         float deltaTime = Time.deltaTime;
         foreach (Bullet bullet in m_bulletsTemp)

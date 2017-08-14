@@ -1,57 +1,12 @@
 ﻿using System.Text;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Framework
 {
     public static class TextUtils
     {
-        /// <summary>
-        /// Clears a string builder to that garbage free strings will read an empty string
-        /// </summary>
-        public static StringBuilder Clear(this StringBuilder sb)
-        {
-            sb.Length = 0;
-            return sb.Terminate();
-        }
-
-        /// <summary>
-        /// Terminates based on the string builder length to prevent garbage free string from reading past the length
-        /// </summary>
-        public static StringBuilder Terminate(this StringBuilder sb)
-        {
-            if (sb.Capacity > sb.Length)
-            {
-                sb.Insert(sb.Length, '\0');
-                sb.Length--;
-            }
-            return sb;
-        }
-
-        /// <summary>
-        /// Provies a direct reference to the string contained in a string builder, to avoid the
-        /// garbage created by ToString(). The reference will break in specific multithread situations.
-        /// As well, if the max capacity of the string builder is changed, this will need to be called again.
-        /// </summary>
-        public static string GarbageFreeString(this StringBuilder sb)
-        {
-            string str = (string)sb.GetType().GetField(
-                "_str",
-                BindingFlags.NonPublic |
-                BindingFlags.Instance
-                ).GetValue(sb);
-            return str;
-        }
-
         private static readonly char[] DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
-        public static StringBuilder Concat(this StringBuilder sb, string str)
-        {
-            sb.Append(str);
-            return sb.Terminate();
-        }
-
+        
         public static StringBuilder Concat(this StringBuilder sb, int val, uint padAmount = 0, char padChar = '0', uint numBase = 10)
         {
             if (val < 0)
@@ -95,7 +50,7 @@ namespace Framework
                 val /= numBase;
                 length--;
             }
-            return sb.Terminate();
+            return sb;
         }
 
         public static StringBuilder Concat(this StringBuilder sb, float val, uint decimalPlaces = 5, uint padAmount = 0, char padChar = '0')
@@ -122,22 +77,8 @@ namespace Framework
                 remainder += 0.5f;
                 
                 sb.Concat((uint)remainder, 0, '0', 10);
-                return sb.Terminate();
+                return sb;
             }
-        }
-
-        public static Text SetGarbateFreeText(this Text text, string garbageFreeString)
-        {
-            text.text = "";
-            text.text = garbageFreeString;
-            return text;
-        }
-
-        public static TextMesh SetGarbateFreeText(this TextMesh text, string garbageFreeString)
-        {
-            text.text = "";
-            text.text = garbageFreeString;
-            return text;
         }
     }
 }

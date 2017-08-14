@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Prop : MonoBehaviour
 {
     [SerializeField]
     private Transform m_armsRoot;
-    public Transform ArmsRoot { get { return m_armsRoot; } }
-
     [SerializeField] [Range(0, 10)]
     private float m_movementAdjustRate = 2.0f;
     [SerializeField] [Range(0, 16)]
@@ -18,9 +18,9 @@ public abstract class Prop : MonoBehaviour
 
     private Renderer[] m_renderers;
     private Action m_onHolsterComplete;
-    private bool m_lastIsHolstered = true;
+    private bool m_lastHolstered = true;
 
-    private Animator m_anim;
+    private Animator m_animator;
     private float m_x = 0;
     private float m_y = 0;
     private float m_xLook = 0;
@@ -31,28 +31,38 @@ public abstract class Prop : MonoBehaviour
 
     public bool IsHolstered
     {
-        get { return m_anim.GetCurrentAnimatorStateInfo(MainAnimatorState).IsTag("Holstered"); }
+        get { return !gameObject.activeSelf; }
     }
 
-    public void Init()
+    private Transform[] m_armBones;
+    public Transform[] ArmBones { get { return m_armBones; } }
+
+    public void Init(SkinnedMeshRenderer arms, Dictionary<string, int> boneNamesToIndex)
     {
-        m_anim = GetComponentInChildren<Animator>(true);
+        m_animator = GetComponentInChildren<Animator>(true);
         m_renderers = GetComponentsInChildren<Renderer>(true);
+
+        m_armBones = arms.bones.Where(b => b == null).Concat(
+            m_armsRoot.GetComponentsInChildren<Transform>(true)
+            .Where(t => boneNamesToIndex.ContainsKey(t.name))
+            .OrderBy(t => boneNamesToIndex[t.name])
+            ).ToArray();
         
-        SetRenderersVisible(false);
+        gameObject.SetActive(false);
         OnHolster();
     }
 
     public void MainUpdate()
     {
-        if (IsHolstered != m_lastIsHolstered && IsHolstered)
+        bool holstered = m_animator.GetCurrentAnimatorStateInfo(MainAnimatorState).IsTag("Holstered");
+
+        if (holstered != m_lastHolstered && holstered)
         {
-            SetRenderersVisible(false);
             OnHolster();
             m_onHolsterComplete();
+            gameObject.SetActive(false);
         }
-
-        m_lastIsHolstered = IsHolstered;
+        m_lastHolstered = holstered;
 
         LogicUpdate();
     }
@@ -70,24 +80,16 @@ public abstract class Prop : MonoBehaviour
         m_xLook = Mathf.Lerp(m_xLook, look.x, dt * m_lookSmoothing);
         m_yLook = Mathf.Lerp(m_yLook, look.y, dt * m_lookSmoothing);
 
-        m_anim.SetBool("Holster", m_holster);
-        m_anim.SetFloat("SpeedX", m_x);
-        m_anim.SetFloat("SpeedY", m_y);
-        m_anim.SetFloat("LookX", -m_xLook * m_lookSensitivity);
-        m_anim.SetFloat("LookY", -m_yLook * m_lookSensitivity);
-        m_anim.SetBool("Interact", interact);
-        m_anim.SetBool("Jumping", jumping);
-        m_anim.SetBool("Running", running);
+        m_animator.SetBool("Holster", m_holster);
+        m_animator.SetFloat("SpeedX", m_x);
+        m_animator.SetFloat("SpeedY", m_y);
+        m_animator.SetFloat("LookX", -m_xLook * m_lookSensitivity);
+        m_animator.SetFloat("LookY", -m_yLook * m_lookSensitivity);
+        m_animator.SetBool("Interact", interact);
+        m_animator.SetBool("Jumping", jumping);
+        m_animator.SetBool("Running", running);
 
         AnimUpdate();
-    }
-
-    private void SetRenderersVisible(bool isVisible)
-    {
-        for (int i = 0; i < m_renderers.Length; i++)
-        {
-            m_renderers[i].enabled = isVisible;
-        }
     }
 
     public void DrawProp()
@@ -95,7 +97,7 @@ public abstract class Prop : MonoBehaviour
         if (m_holster)
         {
             m_holster = false;
-            SetRenderersVisible(true);
+            gameObject.SetActive(true);
             OnDraw();
         }
     }

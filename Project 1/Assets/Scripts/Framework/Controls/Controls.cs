@@ -48,7 +48,8 @@ namespace Framework.InputManagement
             set { m_isMuted = value; }
         }
 
-        private bool firstUpdate = true;
+        private bool m_firstUpdate = true;
+        private bool m_firstFixedFrame = true;
 
         public Controls()
         {
@@ -62,18 +63,11 @@ namespace Framework.InputManagement
         
         public void FixedUpdate()
         {
-            if (!firstUpdate)
+            if (!m_firstUpdate)
             {
-                foreach (BufferedButton button in m_buttons)
-                {
-                    button.isFirstFixedFrame = false;
-                }
-                foreach (BufferedAxis axis in m_axes)
-                {
-                    axis.isFirstFixedFrame = false;
-                }
+                m_firstFixedFrame = false;
             }
-            firstUpdate = true;
+            m_firstUpdate = true;
         }
 
         /*
@@ -81,20 +75,19 @@ namespace Framework.InputManagement
          */
         public void EarlyUpdate()
         {
-            if (firstUpdate)
+            if (m_firstUpdate)
             {
+                m_firstFixedFrame = true;
                 // Needs to run at the end of every FixedUpdate cycle to handle the input buffers.
                 foreach (BufferedButton button in m_buttons)
                 {
-                    button.isFirstFixedFrame = true;
                     button.RemoveOldBuffers();
                 }
                 foreach (BufferedAxis axis in m_axes)
                 {
-                    axis.isFirstFixedFrame = true;
                     axis.RemoveOldBuffers();
                 }
-                firstUpdate = false;
+                m_firstUpdate = false;
             }
 
             foreach (BufferedButton button in m_buttons)
@@ -154,7 +147,7 @@ namespace Framework.InputManagement
         {
             BufferedButton bufferedButton = m_nameToButton[button];
             bool isFixed = (Time.deltaTime == Time.fixedDeltaTime);
-            return !(m_isMuted && bufferedButton.CanBeMuted) && (isFixed ? bufferedButton.JustDown() : bufferedButton.VisualJustDown());
+            return !(m_isMuted && bufferedButton.CanBeMuted) && (isFixed ? m_firstFixedFrame && bufferedButton.JustDown() : bufferedButton.VisualJustDown());
         }
 
         /*
@@ -164,7 +157,7 @@ namespace Framework.InputManagement
         {
             BufferedButton bufferedButton = m_nameToButton[button];
             bool isFixed = (Time.deltaTime == Time.fixedDeltaTime);
-            return !(m_isMuted && bufferedButton.CanBeMuted) && (isFixed ? bufferedButton.JustUp() : bufferedButton.VisualJustUp());
+            return !(m_isMuted && bufferedButton.CanBeMuted) && (isFixed ? m_firstFixedFrame && bufferedButton.JustUp() : bufferedButton.VisualJustUp());
         }
 
         /*

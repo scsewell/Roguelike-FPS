@@ -16,8 +16,8 @@ public class BulletSettings : ScriptableObject
     public ParticleSystem Blood { get { return m_bloodParticles; } }
 
     [SerializeField]
-    private Decal m_bulletHole;
-    public Decal BulletHole { get { return m_bulletHole; } }
+    private GameObject m_bulletHole;
+    public GameObject BulletHole { get { return m_bulletHole; } }
 
     [SerializeField]
     private LayerMask m_hitLayers;

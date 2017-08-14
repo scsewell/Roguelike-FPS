@@ -19,7 +19,8 @@ public class PlayerHeadCamera : MonoBehaviour
 	private void Start()
     {
 		m_cam = GetComponent<Camera>();
-        
+
+        m_cam.fieldOfView = SettingManager.Instance.FieldOfView;
         InterpolatedFloat fov = new InterpolatedFloat(() => (m_cam.fieldOfView), val => { m_cam.fieldOfView = val; });
         gameObject.AddComponent<FloatInterpolator>().Initialize(fov);
 

@@ -9,21 +9,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed89d64060b1fc64db3575d954564bd0, type: 3}
-  m_Name: MainGun
+  m_Name: TestBullets
   m_EditorClassIdentifier: 
   m_bulletPrefab: {fileID: 114137212146457582, guid: d72f043acbfbb4b409ef082026a289f7,
     type: 2}
-  m_sparksParticles: {fileID: 19800000, guid: cb3bbdbaad3d6dd47bc35d8c829d0c6a, type: 2}
-  m_bloodParticles: {fileID: 19800000, guid: 80db090fa3d2e4a4381fcc4a29df9a70, type: 2}
-  m_bulletHole: {fileID: 114561758919622544, guid: a37712fe0614ebf45bbf43bb8d086476,
-    type: 2}
+  m_sparksParticles: {fileID: 0}
+  m_bloodParticles: {fileID: 0}
+  m_bulletHole: {fileID: 0}
   m_hitLayers:
     serializedVersion: 2
     m_Bits: 2049
-  m_range: 80
-  m_speed: 325
-  m_useGravity: 1
-  m_damage: 15
-  m_force: 400
-  m_baseInaccuracy: 0.025
-  m_spread: 3
+  m_range: 200
+  m_speed: 10
+  m_useGravity: 0
+  m_damage: 10
+  m_force: 300
+  m_baseInaccuracy: 0.001
+  m_spread: 1

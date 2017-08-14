@@ -21,16 +21,17 @@ public class Bullet : PooledObject
         m_settings = settings;
         m_velocity = transform.forward * m_settings.Speed;
         m_distanceTravelled = 0;
-        
-        UpdateBullet(timeUntiNextUpdate);
 
-        m_interpolator.enabled = true;
-        m_interpolator.ForgetPreviousValues();
-        
-        m_line.SetPosition(0, transform.position);
-        m_line.SetPosition(1, transform.position);
+        if (!UpdateBullet(timeUntiNextUpdate))
+        {
+            m_interpolator.enabled = true;
+            m_interpolator.ForgetPreviousValues();
 
-        BulletManager.Instance.AddBullet(this);
+            m_line.SetPosition(0, transform.position);
+            m_line.SetPosition(1, transform.position);
+
+            BulletManager.Instance.AddBullet(this);
+        }
     }
 
     private void LateUpdate()
@@ -40,14 +41,16 @@ public class Bullet : PooledObject
         m_line.SetPosition(0, transform.position);
     }
 
-    public void UpdateBullet(float deltaTime)
+    public bool UpdateBullet(float deltaTime)
     {
         // Verlet method, apply half the acceleration to the velocity before position update to remove dependancy on deltaTime 
         Vector3 deltaPos = (m_velocity + ((Physics.gravity / 2) * deltaTime)) * deltaTime;
 
         // raycast to see if anything was hit
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, deltaPos, out hit, deltaPos.magnitude, m_settings.HitLayers))
+        bool hitCollider = Physics.Raycast(transform.position, deltaPos, out hit, deltaPos.magnitude, m_settings.HitLayers);
+
+        if (hitCollider)
         {
             DestroyBullet();
 
@@ -78,10 +81,8 @@ public class Bullet : PooledObject
                 }
                 if (m_settings.BulletHole)
                 {
-                    Quaternion rotation = Quaternion.FromToRotation(Vector3.back, hit.normal) * Quaternion.AngleAxis(Random.value * 360, Vector3.forward);
-                    Decal hole = Instantiate(m_settings.BulletHole, hit.point, rotation).GetComponent<Decal>();
-                    hole.GetComponent<BulletHoles>().SetParent(hit.collider.transform);
-                    hole.BuildDecal(hit.transform.gameObject);
+                    Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * Quaternion.AngleAxis(Random.value * 360, Vector3.up);
+                    Instantiate(m_settings.BulletHole, hit.point, rotation).GetComponent<BulletHoles>().SetParent(hit.collider.transform);
                 }
             }
         }
@@ -106,6 +107,8 @@ public class Bullet : PooledObject
             }
             transform.rotation = Quaternion.LookRotation(m_velocity);
         }
+
+        return hitCollider;
     }
 
     private void DestroyBullet()

@@ -39,12 +39,38 @@ public class MainGun : Prop
     private MainGunSounds m_sound;
     private GunBlocking m_blocking;
 
-    private StringBuilder m_bulletsMagSb = new StringBuilder(10, 10);
-    private StringBuilder m_bulletsHeldSb = new StringBuilder(10, 10);
-    private string m_bulletsMagStr;
-    private string m_bulletsHeldStr;
+    private StringBuilder m_bulletsMagSb = new StringBuilder();
+    private StringBuilder m_bulletsHeldSb = new StringBuilder();
     private int m_bulletsMag = 0;
     private int m_bulletsHeld = 0;
+    private bool m_bulletsMagDirty = true;
+    private bool m_bulletsHeldDirty = true;
+
+    private int BulletsMag
+    {
+        get { return m_bulletsMag; }
+        set
+        {
+            if (m_bulletsMag != value)
+            {
+                m_bulletsMag = value;
+                m_bulletsMagDirty = true;
+            }
+        }
+    }
+
+    private int BulletsHeld
+    {
+        get { return m_bulletsHeld; }
+        set
+        {
+            if (m_bulletsHeld != value)
+            {
+                m_bulletsHeld = value;
+                m_bulletsHeldDirty = true;
+            }
+        }
+    }
 
     private IEnumerator m_reload;
     private WaitForSeconds m_reloadStartWait;
@@ -55,31 +81,27 @@ public class MainGun : Prop
 
     public override GameButton HolsterButton { get { return GameButton.Weapon1; } }
     protected override int MainAnimatorState { get { return 1; } }
-
     
     private bool IsReloading
     {
         get { return m_reload != null; }
     }
 
-    private void Start()
+    private void Awake()
     {
-		m_character = GetComponentInParent<CharacterMovement>();
-        m_weapons = GetComponentInParent<PlayerWeapons>();
+		m_character = Utils.GetComponentInAnyParent<CharacterMovement>(gameObject);
+        m_weapons = Utils.GetComponentInAnyParent<PlayerWeapons>(gameObject);
         m_anim = GetComponent<MainGunAnimations>();
         m_sound = GetComponent<MainGunSounds>();
         m_blocking = GetComponentInChildren<GunBlocking>();
 
         BulletManager.Instance.InitBulletType(m_bulletSettings);
-
-        m_bulletsMagStr = m_bulletsMagSb.GarbageFreeString();
-        m_bulletsHeldStr = m_bulletsHeldSb.GarbageFreeString();
-
+        
         m_reloadStartWait = new WaitForSeconds(m_reloadTime - 0.2f);
         m_reloadEndWait = new WaitForSeconds(0.2f);
 
-        m_bulletsHeld = m_maxAmmo;
-        m_bulletsMag = m_bulletsPerClip;
+        BulletsMag = m_bulletsPerClip;
+        BulletsHeld = m_maxAmmo;
         m_muzzleFlashLight.enabled = false;
     }
 
@@ -101,13 +123,21 @@ public class MainGun : Prop
     {
         m_anim.AnimUpdate(IsReloading, 2.0f / m_reloadTime);
 
-        m_bulletsMagSb.Clear();
-        m_bulletsMagSb.Concat(m_bulletsMag);
-        m_bulletsMagText.SetGarbateFreeText(m_bulletsMagStr);
+        if (m_bulletsMagDirty)
+        {
+            m_bulletsMagSb.Clear();
+            m_bulletsMagSb.Append(m_bulletsMag);
+            m_bulletsMagText.text = m_bulletsMagSb.ToString();
+            m_bulletsMagDirty = false;
+        }
 
-        m_bulletsHeldSb.Clear();
-        m_bulletsHeldSb.Concat(m_bulletsHeld);
-        m_bulletsHeldText.SetGarbateFreeText(m_bulletsHeldStr);
+        if (m_bulletsHeldDirty)
+        {
+            m_bulletsHeldSb.Clear();
+            m_bulletsHeldSb.Append(m_bulletsHeld);
+            m_bulletsHeldText.text = m_bulletsHeldSb.ToString();
+            m_bulletsHeldDirty = false;
+        }
     }
 
     public override void OnFireStart()
@@ -117,15 +147,15 @@ public class MainGun : Prop
 
     public override void OnFireHeld()
     {
-        if (m_bulletsMag == 0)
+        if (BulletsMag == 0)
         {
             OnReload();
         }
-        else if (!IsReloading && m_bulletsMag > 0 && !m_blocking.IsBlocked())
+        else if (!IsReloading && BulletsMag > 0 && !m_blocking.IsBlocked())
         {
             float firePeriod = (1 / m_fireRate);
             
-            while (m_lastFireTime <= Time.time && m_bulletsMag > 0)
+            while (m_lastFireTime <= Time.time && BulletsMag > 0)
             {
                 FireOneShot(Time.time - m_lastFireTime);
                 m_recoilIncrease += m_shotRecoilAmount;
@@ -134,11 +164,15 @@ public class MainGun : Prop
                 StartCoroutine(FinishFire());
             }
         }
+        else
+        {
+            ResetFireTime();
+        }
     }
 
     public override void OnReload()
     {
-        if (!IsReloading && m_bulletsHeld > 0 && m_bulletsMag < m_bulletsPerClip)
+        if (!IsReloading && BulletsHeld > 0 && BulletsMag < m_bulletsPerClip)
         {
             m_sound.PlayReloadStart();
             m_reload = FinishReload();
@@ -174,7 +208,8 @@ public class MainGun : Prop
             inaccuracyMultiplier);
 
         m_bulletsMag--;
-        
+        m_bulletsMagDirty = true;
+
         m_muzzleFlash.Emit(1);
         m_sound.PlayFireSound();
         m_anim.Recoil();
@@ -190,9 +225,10 @@ public class MainGun : Prop
     {
         yield return m_reloadStartWait;
 
-        int requiredBullets = Mathf.Min(m_bulletsHeld, m_bulletsPerClip - m_bulletsMag);
-        m_bulletsMag += requiredBullets;
-        m_bulletsHeld -= requiredBullets;
+        int addedBullets = Mathf.Min(m_bulletsHeld, m_bulletsPerClip - m_bulletsMag);
+        BulletsMag += addedBullets;
+        BulletsHeld -= addedBullets;
+        m_bulletsHeldDirty = true;
         m_sound.PlayReloadEnd();
 
         yield return m_reloadEndWait;

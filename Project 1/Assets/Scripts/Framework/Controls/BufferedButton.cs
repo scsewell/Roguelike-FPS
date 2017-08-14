@@ -33,10 +33,6 @@ namespace Framework.InputManagement
          */
         public bool JustDown()
         {
-            if (!isFirstFixedFrame)
-            {
-                return false;
-            }
             foreach (List<bool> source in GetRelevantInput(true))
             {
                 for (int i = 0; i < source.Count - 1; i++)
@@ -55,10 +51,6 @@ namespace Framework.InputManagement
          */
         public bool JustUp()
         {
-            if (!isFirstFixedFrame)
-            {
-                return false;
-            }
             foreach (List<bool> source in GetRelevantInput(true))
             {
                 for (int i = 0; i < source.Count - 1; i++)

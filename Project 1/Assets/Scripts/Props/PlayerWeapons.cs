@@ -14,11 +14,10 @@ public class PlayerWeapons : MonoBehaviour
 
     private AudioSource m_audio;
     private PlayerInteract m_interact;
-    private Dictionary<string, int> m_boneNamesToIndex;
     private Prop[] m_props;
     private Prop m_targetProp;
-
     private Prop m_activeProp;
+
     public bool IsPropActive
     {
         get { return m_activeProp != null; }
@@ -38,18 +37,26 @@ public class PlayerWeapons : MonoBehaviour
 
         m_interact.InteractOnce += OnInteractOnce;
         m_interact.InteractStart += OnInteractStart;
-        
+
+        Dictionary<string, int> boneNamesToIndex = new Dictionary<string, int>();
+        for (int i = 0; i < m_arms.bones.Length; i++)
+        {
+            if (m_arms.bones[i] != null)
+            {
+                boneNamesToIndex.Add(m_arms.bones[i].name, i);
+            }
+        }
+
         m_props = GetComponentsInChildren<Prop>(true);
         foreach (Prop prop in m_props)
         {
-            prop.Init();
+            prop.Init(m_arms, boneNamesToIndex);
         }
-        m_targetProp = m_props.First();
     }
 
     private void OnInteractOnce()
     {
-        if (m_activeProp != null)
+        if (IsPropActive)
         {
             m_activeProp.CancelActions();
         }
@@ -62,15 +69,7 @@ public class PlayerWeapons : MonoBehaviour
 
     private void Start()
     {
-        m_boneNamesToIndex = new Dictionary<string, int>();
-        for (int i = 0; i < m_arms.bones.Length; i++)
-        {
-            if (m_arms.bones[i] != null)
-            {
-                m_boneNamesToIndex.Add(m_arms.bones[i].name, i);
-            }
-        }
-
+        m_targetProp = m_props.First();
         m_targetProp.DrawProp();
     }
 
@@ -84,28 +83,23 @@ public class PlayerWeapons : MonoBehaviour
                 HolsterActive();
             }
         }
-
-        foreach (Prop prop in m_props)
-        {
-            prop.MainUpdate();
-        }
         
-        if (m_activeProp == null && m_targetProp != null && !m_interact.IsInteracting)
+        if (!IsPropActive && m_targetProp != null && !m_interact.IsInteracting)
         {
             m_activeProp = m_targetProp;
             m_activeProp.DrawProp();
-
-            // make the arms follow the active prop rig
-            m_arms.bones = m_arms.bones.Where(b => b == null).Concat(
-                m_activeProp.ArmsRoot.GetComponentsInChildren<Transform>()
-                .Where(t => m_boneNamesToIndex.ContainsKey(t.name))
-                .OrderBy(t => m_boneNamesToIndex[t.name])
-                ).ToArray();
-
+            m_arms.bones = m_activeProp.ArmBones;
             m_audio.PlayOneShot(Utils.PickRandom(m_drawSounds));
         }
+
+        m_arms.enabled = IsPropActive;
+
+        if (IsPropActive)
+        {
+            m_activeProp.MainUpdate();
+        }
         
-        if (m_activeProp != null && !m_activeProp.Holster && !m_interact.IsInteracting)
+        if (IsPropActive && !m_activeProp.Holster && !m_interact.IsInteracting)
         {
             if (ControlsManager.Instance.JustDown(GameButton.Fire))
             {
@@ -120,16 +114,13 @@ public class PlayerWeapons : MonoBehaviour
                 m_activeProp.OnReload();
             }
         }
-
-        // only render the arms if they are raised
-        m_arms.enabled = IsPropActive;
     }
 
     public void UpdateVisuals(PlayerInput input, PlayerLook look, CharacterMovement movement)
     {
-        foreach (Prop prop in m_props)
+        if (IsPropActive)
         {
-            prop.VisualUpdate(
+            m_activeProp.VisualUpdate(
                input.DesiredMove,
                look.GetLookDelta(),
                movement.IsJumping,
@@ -141,7 +132,7 @@ public class PlayerWeapons : MonoBehaviour
 
     private void HolsterActive()
     {
-        if (m_activeProp != null)
+        if (IsPropActive)
         {
             m_activeProp.CancelActions();
             m_activeProp.HolsterProp(OnHolsterComplete);

@@ -20,5 +20,27 @@ namespace Framework
         {
             return enumerable.ElementAtOrDefault(Random.Range(0, enumerable.Count()));
         }
+
+        public static T GetComponentInAnyParent<T>(GameObject go) where T : Component
+        {
+            return GetComponentInAnyParent<T>(go.transform);
+        }
+
+        public static T GetComponentInAnyParent<T>(Component component) where T : Component
+        {
+            T c = component.GetComponent<T>();
+            if (c != null)
+            {
+                return c;
+            }
+            else if (component.transform.parent != null)
+            {
+                return GetComponentInAnyParent<T>(component.transform.parent);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

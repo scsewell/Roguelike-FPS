@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 2000002}
   - component: {fileID: 12400002}
   - component: {fileID: 8100000}
+  - component: {fileID: 114873990838661052}
   - component: {fileID: 11400040}
   - component: {fileID: 11400012}
   - component: {fileID: 11447168}
@@ -2675,7 +2676,7 @@ MonoBehaviour:
   m_shotRecoilAmount: 5
   m_recoilStabilizeSpeed: 1.2
   m_bulletsPerClip: 36
-  m_maxAmmo: 260
+  m_maxAmmo: 360
   m_reloadTime: 2
   m_movementInaccuracy: 0.015
   m_crouchInaccuracyMultiplier: 0.5
@@ -5339,6 +5340,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_outlineType: 0
+--- !u!114 &114873990838661052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4ddc40d14eb93449a7550ca0ac0573, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114974430052157808
 MonoBehaviour:
   m_ObjectHideFlags: 1

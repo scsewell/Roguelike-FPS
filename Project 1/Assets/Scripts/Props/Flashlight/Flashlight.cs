@@ -34,7 +34,7 @@ public class Flashlight : Prop
     protected override void AnimUpdate()
     {
         AnimatorStateInfo state = m_anim.GetCurrentAnimatorStateInfo(2);
-        m_light.enabled = !IsHolstered && state.IsTag("On") && state.normalizedTime >= 0.5f;
+        m_light.enabled = state.IsTag("On") && state.normalizedTime >= 0.5f;
         m_flashlightMat.SetColor("_EmissionColor", m_light.enabled ? m_light.color * 2 : Color.black);
         
         m_anim.SetBool("On", m_on);

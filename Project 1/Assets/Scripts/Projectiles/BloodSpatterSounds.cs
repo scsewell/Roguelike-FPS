@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Framework;
 
 public class BloodSpatterSounds : MonoBehaviour
 {
@@ -8,11 +8,15 @@ public class BloodSpatterSounds : MonoBehaviour
 	[SerializeField] private AudioClip[] m_bulletSounds;
 	
 	private AudioSource m_audioSource;
-	
-	private void Start()
+
+    private void Awake()
     {
-		m_audioSource = transform.GetComponent<AudioSource>();
-		m_audioSource.clip = m_bulletSounds[Random.Range(0, m_bulletSounds.Length)];
+        m_audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+		m_audioSource.clip = Utils.PickRandom(m_bulletSounds);
 		m_audioSource.pitch = m_basePitch + (Random.value - 0.5f) * m_pitchVariation;
 		m_audioSource.Play();
 	}
