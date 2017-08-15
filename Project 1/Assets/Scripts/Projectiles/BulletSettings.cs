@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Framework;
 
 [CreateAssetMenu(fileName = "BulletSetting", menuName = "Bullet Settings", order = 2)]
 public class BulletSettings : ScriptableObject
@@ -8,16 +9,16 @@ public class BulletSettings : ScriptableObject
     public Bullet BulletPrefab { get { return m_bulletPrefab; } }
     
     [SerializeField]
-    private ParticleSystem m_sparksParticles;
-    public ParticleSystem Sparks { get { return m_sparksParticles; } }
+    private PooledObject m_sparks;
+    public PooledObject Sparks { get { return m_sparks; } }
 
     [SerializeField]
-    private ParticleSystem m_bloodParticles;
-    public ParticleSystem Blood { get { return m_bloodParticles; } }
+    private PooledObject m_blood;
+    public PooledObject Blood { get { return m_blood; } }
 
     [SerializeField]
-    private GameObject m_bulletHole;
-    public GameObject BulletHole { get { return m_bulletHole; } }
+    private PooledObject m_bulletHole;
+    public PooledObject BulletHole { get { return m_bulletHole; } }
 
     [SerializeField]
     private LayerMask m_hitLayers;

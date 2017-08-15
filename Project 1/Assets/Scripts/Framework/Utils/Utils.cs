@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -40,6 +41,15 @@ namespace Framework
             else
             {
                 return null;
+            }
+        }
+
+        public static IEnumerator Wait(float delay)
+        {
+            float timer = Time.time + delay;
+            while (Time.time < timer)
+            {
+                yield return null;
             }
         }
     }

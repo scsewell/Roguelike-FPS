@@ -73,10 +73,8 @@ public class MainGun : Prop
     }
 
     private IEnumerator m_reload;
-    private WaitForSeconds m_reloadStartWait;
-    private WaitForSeconds m_reloadEndWait;
     private float m_recoilIncrease = 0;
-	private float m_lastFireTime = 0;
+    private float m_lastFireTime = 0;
 
 
     public override GameButton HolsterButton { get { return GameButton.Weapon1; } }
@@ -87,6 +85,7 @@ public class MainGun : Prop
         get { return m_reload != null; }
     }
 
+
     private void Awake()
     {
 		m_character = Utils.GetComponentInAnyParent<CharacterMovement>(gameObject);
@@ -96,9 +95,6 @@ public class MainGun : Prop
         m_blocking = GetComponentInChildren<GunBlocking>();
 
         BulletManager.Instance.InitBulletType(m_bulletSettings);
-        
-        m_reloadStartWait = new WaitForSeconds(m_reloadTime - 0.2f);
-        m_reloadEndWait = new WaitForSeconds(0.2f);
 
         BulletsMag = m_bulletsPerClip;
         BulletsHeld = m_maxAmmo;
@@ -154,14 +150,22 @@ public class MainGun : Prop
         else if (!IsReloading && BulletsMag > 0 && !m_blocking.IsBlocked())
         {
             float firePeriod = (1 / m_fireRate);
-            
+
+            bool hasFired = false;
+
             while (m_lastFireTime <= Time.time && BulletsMag > 0)
             {
                 FireOneShot(Time.time - m_lastFireTime);
                 m_recoilIncrease += m_shotRecoilAmount;
                 m_lastFireTime += firePeriod;
-                m_muzzleFlashLight.enabled = true;
-                StartCoroutine(FinishFire());
+
+                if (!hasFired)
+                {
+                    m_sound.PlayFireSound();
+                    m_muzzleFlashLight.enabled = true;
+                    StartCoroutine(FinishFire());
+                    hasFired = true;
+                }
             }
         }
         else
@@ -210,8 +214,10 @@ public class MainGun : Prop
         m_bulletsMag--;
         m_bulletsMagDirty = true;
 
-        m_muzzleFlash.Emit(1);
-        m_sound.PlayFireSound();
+        if (m_muzzleFlash != null)
+        {
+            m_muzzleFlash.Emit(1);
+        }
         m_anim.Recoil();
     }
 
@@ -223,7 +229,7 @@ public class MainGun : Prop
     
     private IEnumerator FinishReload()
     {
-        yield return m_reloadStartWait;
+        yield return Utils.Wait(m_reloadTime - 0.2f);
 
         int addedBullets = Mathf.Min(m_bulletsHeld, m_bulletsPerClip - m_bulletsMag);
         BulletsMag += addedBullets;
@@ -231,7 +237,7 @@ public class MainGun : Prop
         m_bulletsHeldDirty = true;
         m_sound.PlayReloadEnd();
 
-        yield return m_reloadEndWait;
+        yield return Utils.Wait(0.2f);
 
         m_reload = null;
         ResetFireTime();

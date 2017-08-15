@@ -68,9 +68,9 @@ namespace Framework
             {
                 obj = CreateInstance(position, rotation, parent);
             }
-            obj.gameObject.SetActive(true);
             obj.IsReleased = true;
             m_released.Add(obj);
+            obj.gameObject.SetActive(true);
             return obj;
         }
 
@@ -102,6 +102,7 @@ namespace Framework
                 m_pooled.RemoveAt(0);
                 Object.Destroy(obj.gameObject);
             }
+            m_released.Clear();
         }
     }
 }

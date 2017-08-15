@@ -29,6 +29,7 @@ public class Bullet : PooledObject
 
             m_line.SetPosition(0, transform.position);
             m_line.SetPosition(1, transform.position);
+            m_line.enabled = true;
 
             BulletManager.Instance.AddBullet(this);
         }
@@ -36,9 +37,10 @@ public class Bullet : PooledObject
 
     private void LateUpdate()
     {
-        Vector3 tempPos = m_line.GetPosition(0);
-        m_line.SetPosition(1, tempPos);
-        m_line.SetPosition(0, transform.position);
+        //Vector3 tempPos = m_line.GetPosition(0);
+        //m_line.SetPosition(1, tempPos);
+        //m_line.SetPosition(0, transform.position);
+        m_line.SetPosition(1, transform.position);
     }
 
     public bool UpdateBullet(float deltaTime)
@@ -54,35 +56,35 @@ public class Bullet : PooledObject
         {
             DestroyBullet();
 
-            HitboxCollider hitbox = hit.transform.GetComponentInParent<HitboxCollider>();
-            if (hitbox != null)
-            {
-                hitbox.Damage(m_settings.Damage);
-            }
-
-            if (hit.rigidbody)
+            if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForceAtPosition(m_settings.Force * deltaPos.normalized, hit.point);
             }
 
-            if (hit.transform.tag == "Bleed")
+            bool bleed = false;
+
+            HitboxCollider hitbox = hit.transform.GetComponentInParent<HitboxCollider>();
+            if (hitbox != null)
             {
-                if (m_settings.Blood)
+                hitbox.Damage(m_settings.Damage);
+
+                if (hitbox.Bleed && m_settings.Blood)
                 {
-                    ParticleSystem blood = Instantiate(m_settings.Blood, hit.point, Quaternion.LookRotation(hit.normal)) as ParticleSystem;
-                    blood.transform.parent = hit.collider.transform;
+                    bleed = true;
+                    BulletManager.Instance.Pools[m_settings.Blood].GetInstance(hit.point, Quaternion.LookRotation(hit.normal), hit.collider.transform);
                 }
             }
-            else
+
+            if (!bleed)
             {
                 if (m_settings.Sparks)
                 {
-                    Instantiate(m_settings.Sparks, hit.point, Quaternion.LookRotation(hit.normal));
+                    BulletManager.Instance.Pools[m_settings.Sparks].GetInstance(hit.point, Quaternion.LookRotation(hit.normal), null);
                 }
                 if (m_settings.BulletHole)
                 {
                     Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * Quaternion.AngleAxis(Random.value * 360, Vector3.up);
-                    Instantiate(m_settings.BulletHole, hit.point, rotation).GetComponent<BulletHoles>().SetParent(hit.collider.transform);
+                    BulletManager.Instance.Pools[m_settings.BulletHole].GetInstance(hit.point, rotation, hit.collider.transform);
                 }
             }
         }
@@ -90,10 +92,12 @@ public class Bullet : PooledObject
         {
             m_distanceTravelled += deltaPos.magnitude;
 
+            /*
             if (m_distanceTravelled > 1)
             {
                 m_line.enabled = true;
             }
+            */
 
             if (m_distanceTravelled > m_settings.Range)
             {

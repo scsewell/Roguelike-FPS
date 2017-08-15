@@ -7,6 +7,13 @@ public class HitboxCollider : MonoBehaviour
     [SerializeField]
     private float m_damageMultiplier = 1f;
 
+    [SerializeField]
+    private bool m_bleed = false;
+    public bool Bleed
+    {
+        get { return m_bleed; }
+    }
+
     private Health m_damageReciever;
 
     private void Awake()

@@ -4,16 +4,35 @@ using Framework;
 
 public class BulletManager : Singleton<BulletManager>
 {
-    private Dictionary<Bullet, ObjectPool> m_bulletPools = new Dictionary<Bullet, ObjectPool>();
-
+    private Dictionary<Object, ObjectPool> m_pools = new Dictionary<Object, ObjectPool>();
+    public Dictionary<Object, ObjectPool> Pools
+    {
+        get { return m_pools; }
+    }
+    
     private List<Bullet> m_bullets = new List<Bullet>();
     private List<Bullet> m_bulletsTemp = new List<Bullet>();
     
     public void InitBulletType(BulletSettings settings)
     {
-        if (!m_bulletPools.ContainsKey(settings.BulletPrefab))
+        if (!m_pools.ContainsKey(settings.BulletPrefab))
         {
-            m_bulletPools.Add(settings.BulletPrefab, new ObjectPool(settings.BulletPrefab, 20));
+            int instanceCount = 20;
+
+            m_pools.Add(settings.BulletPrefab, new ObjectPool(settings.BulletPrefab, instanceCount));
+
+            if (settings.Blood != null)
+            {
+                m_pools.Add(settings.Blood, new ObjectPool(settings.Blood, instanceCount));
+            }
+            if (settings.Sparks != null)
+            {
+                m_pools.Add(settings.Sparks, new ObjectPool(settings.Sparks, instanceCount));
+            }
+            if (settings.BulletHole != null)
+            {
+                m_pools.Add(settings.BulletHole, new ObjectPool(settings.BulletHole, instanceCount));
+            }
         }
     }
 
@@ -27,7 +46,7 @@ public class BulletManager : Singleton<BulletManager>
 
         Vector3 newDirection = direction * new Vector3(inaccuracy.x, inaccuracy.y, 1);
 
-        ObjectPool pool = m_bulletPools[settings.BulletPrefab];
+        ObjectPool pool = m_pools[settings.BulletPrefab];
         pool.GetInstance(position, Quaternion.LookRotation(newDirection), null).GetComponent<Bullet>().Init(settings, timeUntilNextUpdate);
     }
 
@@ -50,9 +69,17 @@ public class BulletManager : Singleton<BulletManager>
     public void Clear()
     {
         m_bullets.Clear();
-        foreach (KeyValuePair<Bullet, ObjectPool> bulletPool in m_bulletPools)
+        foreach (KeyValuePair<Object, ObjectPool> bulletPool in m_pools)
         {
             bulletPool.Value.ClearPool();
+        }
+    }
+    
+    public void Reinitalize()
+    {
+        foreach (KeyValuePair<Object, ObjectPool> bulletPool in m_pools)
+        {
+            bulletPool.Value.Initialize();
         }
     }
 

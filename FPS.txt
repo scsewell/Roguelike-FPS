@@ -1,7 +1,9 @@
 --- Short Term ---
 
 Decal performance
-fix gun firing time slicing
+Decal textures
+Pool gun particles and stuff
+
 Context help (reload, interact, etc)
 Shooting out lights
 

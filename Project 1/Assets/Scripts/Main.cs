@@ -32,16 +32,18 @@ public class Main : ComponentSingleton<Main>
 
     public void LoadMainScene()
     {
+        StartCoroutine(LoadScene());
+    }
+
+    private IEnumerator LoadScene()
+    {
         BulletManager.Instance.Clear();
 
         SceneManager.LoadScene(1);
-
-        StartCoroutine(GenerateLevel());
-    }
-
-    private IEnumerator GenerateLevel()
-    {
         yield return null;
+
+        BulletManager.Instance.Reinitalize();
+
         GetComponent<LevelGenerator>().GenerateLevel();
     }
 }
