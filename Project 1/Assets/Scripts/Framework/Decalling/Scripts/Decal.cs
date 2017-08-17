@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using Framework.DeferredDecalling;
 
 [RequireComponent(typeof(MeshFilter))]

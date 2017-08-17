@@ -4,11 +4,17 @@ using Framework.Interpolation;
 
 public class Bullet : PooledObject
 {
+    private const int MAX_SEGMENTS = 10;
+
     private TransformInterpolator m_interpolator;
     private LineRenderer m_line;
+
     private BulletSettings m_settings;
+    private Vector3 m_startPos;
     private Vector3 m_velocity;
     private float m_distanceTravelled;
+
+    private Vector3[] m_positions = new Vector3[MAX_SEGMENTS];
 
     private void Awake()
     {
@@ -22,25 +28,30 @@ public class Bullet : PooledObject
         m_velocity = transform.forward * m_settings.Speed;
         m_distanceTravelled = 0;
 
+        m_startPos = transform.position;
+
         if (!UpdateBullet(timeUntiNextUpdate))
         {
             m_interpolator.enabled = true;
             m_interpolator.ForgetPreviousValues();
-
-            m_line.SetPosition(0, transform.position);
-            m_line.SetPosition(1, transform.position);
-            m_line.enabled = true;
-
+            
             BulletManager.Instance.AddBullet(this);
         }
+
+        m_line.enabled = true;
     }
 
     private void LateUpdate()
     {
-        //Vector3 tempPos = m_line.GetPosition(0);
-        //m_line.SetPosition(1, tempPos);
-        //m_line.SetPosition(0, transform.position);
-        m_line.SetPosition(1, transform.position);
+        Vector3 position = transform.position;
+
+        Vector3 lineStart = Vector3.MoveTowards(position, m_startPos, 3 * m_velocity.magnitude * Time.deltaTime);
+        for (int i = 0; i < MAX_SEGMENTS; i++)
+        {
+            m_positions[i] = Vector3.Lerp(lineStart, position, ((float)i) / MAX_SEGMENTS);
+        }
+        m_line.positionCount = MAX_SEGMENTS;
+        m_line.SetPositions(m_positions);
     }
 
     public bool UpdateBullet(float deltaTime)
@@ -91,14 +102,7 @@ public class Bullet : PooledObject
         else
         {
             m_distanceTravelled += deltaPos.magnitude;
-
-            /*
-            if (m_distanceTravelled > 1)
-            {
-                m_line.enabled = true;
-            }
-            */
-
+            
             if (m_distanceTravelled > m_settings.Range)
             {
                 DestroyBullet();

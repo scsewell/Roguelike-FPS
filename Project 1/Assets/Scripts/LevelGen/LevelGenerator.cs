@@ -17,6 +17,8 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
     private Transform m_levelRoot;
     private Transform m_otherParent;
     private Transform m_navParent;
+    private Transform m_playerParent;
+    private Transform m_enemyParent;
     private NavMeshManager m_navMeshManager;
 
     private Level m_level;
@@ -57,6 +59,10 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
         m_navParent.SetParent(m_levelRoot);
         m_otherParent = new GameObject("Other").transform;
         m_otherParent.SetParent(m_levelRoot);
+        m_playerParent = new GameObject("Player").transform;
+        m_playerParent.SetParent(m_levelRoot);
+        m_enemyParent = new GameObject("Enemies").transform;
+        m_enemyParent.SetParent(m_levelRoot);
 
         m_navMeshManager = m_navParent.gameObject.AddComponent<NavMeshManager>();
 
@@ -316,7 +322,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
             }
 
             Player player = Instantiate(Resources.Load<Player>("Player/Player"));
-            player.transform.SetParent(m_otherParent, true);
+            player.transform.SetParent(m_playerParent, true);
             player.Spawn(Skinner.TransformPoint(spawnPos), Quaternion.identity);
         }
         else
@@ -336,7 +342,7 @@ public class LevelGenerator : ComponentSingleton<LevelGenerator>
                 Room spawnRoom = Utils.PickRandom(m_level.Rooms);
                 Vector3 spawnPos = spawnRoom.Tiles.First(t => (t.y == spawnRoom.Floor)).Position;
 
-                Instantiate(enemyParams.Prefab, Skinner.TransformPoint(spawnPos), Quaternion.identity, m_otherParent);
+                Instantiate(enemyParams.Prefab, Skinner.TransformPoint(spawnPos), Quaternion.identity, m_enemyParent);
             }
         }
     }
