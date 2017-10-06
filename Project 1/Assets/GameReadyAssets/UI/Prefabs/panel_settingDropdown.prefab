@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 11424562}
   - component: {fileID: 11497478}
   - component: {fileID: 114191007845408966}
+  - component: {fileID: 114826078601299734}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -516,7 +517,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 22411238}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.926368
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -948,7 +949,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000010251999}
+  m_AnchoredPosition: {x: 0, y: 2.702987}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &22430716
@@ -1171,5 +1172,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a61eef8b8c21ff54b873f70c208c69c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114826078601299734
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba80cdb6d79b08499b7ae1553928910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

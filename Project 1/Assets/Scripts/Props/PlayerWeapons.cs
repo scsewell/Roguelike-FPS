@@ -22,14 +22,7 @@ public class PlayerWeapons : MonoBehaviour
     {
         get { return m_activeProp != null; }
     }
-
-    private float m_recoil = 0;
-    public float Recoil
-    {
-        get { return m_recoil; }
-        set { m_recoil = value; }
-    }
-
+    
     private void Awake()
     {
         m_audio = GetComponent<AudioSource>();
@@ -73,7 +66,7 @@ public class PlayerWeapons : MonoBehaviour
         m_targetProp.DrawProp();
     }
 
-    public void UpdateWeapons()
+    public void UpdateWeapons(PlayerLook playerLook)
     {
         foreach (Prop prop in m_props)
         {
@@ -93,30 +86,32 @@ public class PlayerWeapons : MonoBehaviour
         }
 
         m_arms.enabled = IsPropActive;
+        bool fire = false;
 
-        if (IsPropActive)
-        {
-            m_activeProp.MainUpdate();
-        }
-        
         if (IsPropActive && !m_activeProp.Holster && !m_interact.IsInteracting)
         {
-            if (ControlsManager.Instance.JustDown(GameButton.Fire))
-            {
-                m_activeProp.OnFireStart();
-            }
             if (ControlsManager.Instance.IsDown(GameButton.Fire))
             {
-                m_activeProp.OnFireHeld();
+                fire = true;
             }
             if (ControlsManager.Instance.JustDown(GameButton.Reload))
             {
                 m_activeProp.OnReload();
             }
         }
+
+        if (IsPropActive)
+        {
+            m_activeProp.MainUpdate(fire);
+        }
+
+        foreach (Prop prop in m_props)
+        {
+            playerLook.AddRecoil(prop.GetRecoil());
+        }
     }
 
-    public void UpdateVisuals(PlayerInput input, PlayerLook look, CharacterMovement movement)
+    public void UpdateVisuals(PlayerInput input, PlayerLook look, CharacterMovement movement, PlayerHeadCamera headCamera)
     {
         if (IsPropActive)
         {
@@ -125,6 +120,7 @@ public class PlayerWeapons : MonoBehaviour
                look.GetLookDelta(),
                movement.IsJumping,
                movement.IsRunning,
+               headCamera.Aiming,
                false
                );
         }

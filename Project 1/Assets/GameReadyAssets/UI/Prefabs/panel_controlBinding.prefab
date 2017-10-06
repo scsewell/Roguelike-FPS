@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 222000684007652352}
   - component: {fileID: 114923793331575498}
   - component: {fileID: 114792618508915836}
+  - component: {fileID: 114279725129647244}
   m_Layer: 5
   m_Name: btn_binding
   m_TagString: Untagged
@@ -160,6 +161,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 719738b3649f1a74c8a14dca149c1dbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114279725129647244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1527728658194274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba80cdb6d79b08499b7ae1553928910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114378231018013800

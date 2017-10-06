@@ -12,16 +12,7 @@ namespace Framework.InputManagement
     public class Controls
     {
         private List<BufferedButton> m_buttons;
-        public List<BufferedButton> Buttons
-        {
-            get { return m_buttons; }
-        }
-
         private List<BufferedAxis> m_axes;
-        public List<BufferedAxis> Axes
-        {
-            get { return m_axes; }
-        }
 
         private Dictionary<string, BufferedButton> m_nameToButton;
         public Dictionary<string, BufferedButton> NameToButton
@@ -45,7 +36,18 @@ namespace Framework.InputManagement
         public bool IsMuted
         {
             get { return m_isMuted; }
-            set { m_isMuted = value; }
+            set
+            {
+                if (m_isMuted != value)
+                {
+                    m_isMuted = value;
+                    if (m_isMuted)
+                    {
+                        m_buttons.ForEach(s => { if (s.CanBeMuted) { s.ClearBuffers(); } });
+                        m_axes.ForEach(s => { if (s.CanBeMuted) { s.ClearBuffers(); } });
+                    }
+                }
+            }
         }
 
         private bool m_firstUpdate = true;
@@ -61,7 +63,7 @@ namespace Framework.InputManagement
             m_settings = new Settings();
         }
         
-        public void FixedUpdate()
+        public void LateFixedUpdate()
         {
             if (!m_firstUpdate)
             {
@@ -77,27 +79,15 @@ namespace Framework.InputManagement
         {
             if (m_firstUpdate)
             {
-                m_firstFixedFrame = true;
-                // Needs to run at the end of every FixedUpdate cycle to handle the input buffers.
-                foreach (BufferedButton button in m_buttons)
-                {
-                    button.RemoveOldBuffers();
-                }
-                foreach (BufferedAxis axis in m_axes)
-                {
-                    axis.RemoveOldBuffers();
-                }
                 m_firstUpdate = false;
+                // Needs to run at the end of every FixedUpdate cycle to handle the input buffers.
+                m_buttons.ForEach(s => s.RemoveOldBuffers());
+                m_axes.ForEach(s => s.RemoveOldBuffers());
+                m_firstFixedFrame = true;
             }
 
-            foreach (BufferedButton button in m_buttons)
-            {
-                button.BufferInput(m_isMuted);
-            }
-            foreach (BufferedAxis axis in m_axes)
-            {
-                axis.BufferInput(m_isMuted);
-            }
+            m_buttons.ForEach(s => s.BufferInput(m_isMuted));
+            m_axes.ForEach(s => s.BufferInput(m_isMuted));
         }
 
         /*
@@ -105,15 +95,8 @@ namespace Framework.InputManagement
          */
         public void UseDefaults()
         {
-            foreach (BufferedButton button in m_buttons)
-            {
-                button.UseDefaults();
-            }
-            foreach (BufferedAxis axis in m_axes)
-            {
-                axis.UseDefaults();
-            }
-
+            m_buttons.ForEach(s => s.UseDefaults());
+            m_axes.ForEach(s => s.UseDefaults());
             m_settings.UseDefaults();
         }
 

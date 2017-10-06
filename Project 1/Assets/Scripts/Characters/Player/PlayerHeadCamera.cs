@@ -15,7 +15,30 @@ public class PlayerHeadCamera : MonoBehaviour
     private float m_farClip = 80.0f;
     
 	private Camera m_cam;
-	
+    public Camera Cam
+    {
+        get { return m_cam; }
+    }
+    
+    private bool m_aiming = false;
+    public bool Aiming
+    {
+        get { return m_aiming; }
+        private set { m_aiming = value; }
+    }
+
+    public float AimFactor
+    {
+        get
+        {
+            if (m_aimFieldOfViewRatio == 1)
+            {
+                return 0;
+            }
+            return Mathf.Clamp01(1 + (((m_cam.fieldOfView / SettingManager.Instance.FieldOfView) - 1) / (1 - m_aimFieldOfViewRatio)));
+        }
+    }
+
 	private void Start()
     {
 		m_cam = GetComponent<Camera>();
@@ -33,10 +56,31 @@ public class PlayerHeadCamera : MonoBehaviour
 
         m_cam.nearClipPlane = m_nearClip;
         m_cam.farClipPlane = m_farClip;
+        
+        if (ControlsManager.Instance.JustDown(GameButton.AimToggle))
+        {
+            Aiming = !Aiming;
+        }
+        //Debug.Log("Aiming1: " + Aiming);
+        
+        if (ControlsManager.Instance.IsDown(GameButton.Aim))
+        {
+            Aiming = true;
+        }
+        else if (ControlsManager.Instance.JustUp(GameButton.Aim))
+        {
+            Aiming = false;
+        }
+       // Debug.Log("Aiming2: " + Aiming);
+        if (movement.IsRunning)
+        {
+            Aiming = false;
+        }
+        //Debug.Log("Aiming3: " + Aiming);
 
         float targetFieldOfView = SettingManager.Instance.FieldOfView;
 
-		if (ControlsManager.Instance.IsDown(GameButton.Aim) && !movement.IsRunning)
+		if (Aiming)
         {
 			targetFieldOfView *= m_aimFieldOfViewRatio;
 		}

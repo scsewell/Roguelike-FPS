@@ -26,9 +26,13 @@ public class BulletHoles : PooledObject
     private void OnEnable()
     {
         m_startTime = Time.time;
-        m_decal.LimitTo = transform.parent.gameObject;
-
-        Vector3 scale = transform.parent.lossyScale;
+        
+        Vector3 scale = Vector3.one;
+        if (transform.parent != null)
+        {
+            m_decal.LimitTo = transform.parent.gameObject;
+            scale = transform.parent.lossyScale;
+        }
         transform.localScale = Random.Range(m_minScale, m_maxScale) * new Vector3(1 / scale.x, 1 / scale.y, 1 / scale.z);
     }
 

@@ -15,16 +15,17 @@ public abstract class Prop : MonoBehaviour
     private float m_lookSmoothing = 9.0f;
     [SerializeField] [Range(0, 2)]
     private float m_lookSensitivity = 1.0f;
-
-    private Renderer[] m_renderers;
+    
     private Action m_onHolsterComplete;
     private bool m_lastHolstered = true;
 
     private Animator m_animator;
+    private HashSet<string> m_animParams;
     private float m_x = 0;
     private float m_y = 0;
     private float m_xLook = 0;
     private float m_yLook = 0;
+    private bool m_lastAiming = false;
 
     private bool m_holster = true;
     public bool Holster { get { return m_holster; } }
@@ -34,13 +35,38 @@ public abstract class Prop : MonoBehaviour
         get { return !gameObject.activeSelf; }
     }
 
+    private bool m_firing = false;
+    private bool Firing
+    {
+        get { return m_firing; }
+        set
+        {
+            if (m_firing != value)
+            {
+                m_firing = value;
+                if (m_firing)
+                {
+                    OnFireStart();
+                }
+                else
+                {
+                    OnFireEnd();
+                }
+            }
+        }
+    }
+
     private Transform[] m_armBones;
     public Transform[] ArmBones { get { return m_armBones; } }
 
     public void Init(SkinnedMeshRenderer arms, Dictionary<string, int> boneNamesToIndex)
     {
         m_animator = GetComponentInChildren<Animator>(true);
-        m_renderers = GetComponentsInChildren<Renderer>(true);
+        m_animParams = new HashSet<string>();
+        foreach (AnimatorControllerParameter param in m_animator.parameters)
+        {
+            m_animParams.Add(param.name);
+        }
 
         m_armBones = arms.bones.Where(b => b == null).Concat(
             m_armsRoot.GetComponentsInChildren<Transform>(true)
@@ -52,7 +78,7 @@ public abstract class Prop : MonoBehaviour
         OnHolster();
     }
 
-    public void MainUpdate()
+    public void MainUpdate(bool firing)
     {
         bool holstered = m_animator.GetCurrentAnimatorStateInfo(MainAnimatorState).IsTag("Holstered");
 
@@ -64,10 +90,12 @@ public abstract class Prop : MonoBehaviour
         }
         m_lastHolstered = holstered;
 
-        LogicUpdate();
+        Firing = firing;
+
+        LogicUpdate(firing);
     }
 
-    public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool interact)
+    public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool aiming, bool interact)
     {
         float dt = Time.deltaTime;
 
@@ -89,6 +117,19 @@ public abstract class Prop : MonoBehaviour
         m_animator.SetBool("Jumping", jumping);
         m_animator.SetBool("Running", running);
 
+        if (m_animParams.Contains("Aiming"))
+        {
+            m_animator.SetBool("Aiming", aiming);
+        }
+
+        bool aimChanged = m_lastAiming != aiming;
+        m_lastAiming = aiming;
+
+        if (m_animParams.Contains("Aiming Change"))
+        {
+            m_animator.SetBool("Aiming Change", aimChanged);
+        }
+
         AnimUpdate();
     }
 
@@ -108,19 +149,22 @@ public abstract class Prop : MonoBehaviour
         {
             m_holster = true;
             m_onHolsterComplete = onComplete;
+            Firing = false;
         }
     }
 
     public abstract GameButton HolsterButton { get; }
     protected abstract int MainAnimatorState { get; }
 
-    protected abstract void LogicUpdate();
+    protected abstract void LogicUpdate(bool firing);
     protected abstract void AnimUpdate();
+    public abstract Vector2 GetRecoil();
+
     protected abstract void OnDraw();
     protected abstract void OnHolster();
 
-    public abstract void OnFireStart();
-    public abstract void OnFireHeld();
+    protected abstract void OnFireStart();
+    protected abstract void OnFireEnd();
     public abstract void OnReload();
     public abstract void CancelActions();
 }

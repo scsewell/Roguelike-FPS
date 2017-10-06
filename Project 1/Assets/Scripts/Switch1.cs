@@ -58,7 +58,6 @@ public class Switch1 : MonoBehaviour
 	{
 		switchOn = !switchOn;
 		SetSwitchEffects();
-		switchingAudio.Play();
 	}
 
     private void SetSwitchEffects()
@@ -66,6 +65,6 @@ public class Switch1 : MonoBehaviour
         switchRenderer.sharedMaterial = switchOn ? onMaterial : offMaterial;
 
 		whileSwitchIsOnAudio.enabled = switchOn;
-		switchingAudio.clip = switchOn ? switchTurnOnSound : switchTurnOffSound;
+        switchingAudio.PlayOneShot(switchOn ? switchTurnOnSound : switchTurnOffSound);
 	}
 }

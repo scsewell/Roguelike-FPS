@@ -104,7 +104,7 @@ public class SettingManager : Singleton<SettingManager>
         m_settings.Add(Categories.Screen, "VSync", true, (v) => QualitySettings.vSyncCount = (v ? 1 : 0));
         m_brightness = m_settings.Add(Categories.Screen, "Brightness", 1, 0, 2, false);
 
-        m_settings.Add(Categories.Quality, "Shadow Quality", ShadowQualityLevels.Medium,
+        m_settings.Add(Categories.Quality, "Shadow Quality", ShadowQualityLevels.High,
             Enum.GetNames(typeof(ShadowQualityLevels)),
             (v) => v.ToString(),
             (s) => (ShadowQualityLevels)Enum.Parse(typeof(ShadowQualityLevels), s),

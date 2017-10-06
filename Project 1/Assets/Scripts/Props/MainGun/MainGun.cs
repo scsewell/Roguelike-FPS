@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using Framework;
@@ -8,43 +9,45 @@ public class MainGun : Prop
     [SerializeField] private TextMesh m_bulletsMagText;
     [SerializeField] private TextMesh m_bulletsHeldText;
     [SerializeField] private Transform m_bulletEmitter;
-    [SerializeField] private GameObject m_muzzleFlashPosition;
     [SerializeField] private Light m_muzzleFlashLight;
     [SerializeField] private ParticleSystem m_muzzleFlash;
     [SerializeField] private BulletSettings m_bulletSettings;
     
-	[SerializeField] [Range(0.1f, 100)]
-    private float m_fireRate = 8.0f;
-	[SerializeField] [Range(0, 100)]
-    private float m_shotRecoilAmount = 20f;
-	[SerializeField] [Range(1, 1.5f)]
-    private float m_recoilStabilizeSpeed = 1.1f;
-
 	[SerializeField]
     private int m_bulletsPerClip = 32;
     [SerializeField]
     private int m_maxAmmo = 260;
-
 	[SerializeField] [Range(0, 6)]
     private float m_reloadTime = 2f;
     
-	[SerializeField] [Range(0, 0.1f)]
+	[SerializeField] [Range(0.1f, 100)]
+    private float m_fireRate = 8.0f;
+
+    [SerializeField] [Range(1, 50)]
+    float m_bulletsPerRecoilKey = 5.0f;
+    [SerializeField] [Range(1, 40)]
+    float m_horizontalRecoil = 5.0f;
+    [SerializeField] [Range(1, 40)]
+    float m_verticalRecoil = 5.0f;
+    [SerializeField] [Range(0.01f, 1)]
+    float m_recoilSmoothing = 0.2f;
+
+    [SerializeField] [Range(0, 0.1f)]
     private float m_movementInaccuracy = 0.015f;
 	[SerializeField] [Range(0, 1)]
     private float m_crouchInaccuracyMultiplier = 0.5f;
 
 	private CharacterMovement m_character;
-    private PlayerWeapons m_weapons;
     private MainGunAnimations m_anim;
     private MainGunSounds m_sound;
     private GunBlocking m_blocking;
 
-    private StringBuilder m_bulletsMagSb = new StringBuilder();
-    private StringBuilder m_bulletsHeldSb = new StringBuilder();
     private int m_bulletsMag = 0;
     private int m_bulletsHeld = 0;
     private bool m_bulletsMagDirty = true;
     private bool m_bulletsHeldDirty = true;
+    private StringBuilder m_bulletsMagSb = new StringBuilder();
+    private StringBuilder m_bulletsHeldSb = new StringBuilder();
 
     private int BulletsMag
     {
@@ -73,9 +76,8 @@ public class MainGun : Prop
     }
 
     private IEnumerator m_reload;
-    private float m_recoilIncrease = 0;
+    private LinkedList<Recoil> m_recoil = new LinkedList<Recoil>();
     private float m_lastFireTime = 0;
-
 
     public override GameButton HolsterButton { get { return GameButton.Weapon1; } }
     protected override int MainAnimatorState { get { return 1; } }
@@ -89,7 +91,6 @@ public class MainGun : Prop
     private void Awake()
     {
 		m_character = Utils.GetComponentInAnyParent<CharacterMovement>(gameObject);
-        m_weapons = Utils.GetComponentInAnyParent<PlayerWeapons>(gameObject);
         m_anim = GetComponent<MainGunAnimations>();
         m_sound = GetComponent<MainGunSounds>();
         m_blocking = GetComponentInChildren<GunBlocking>();
@@ -99,20 +100,63 @@ public class MainGun : Prop
         BulletsMag = m_bulletsPerClip;
         BulletsHeld = m_maxAmmo;
         m_muzzleFlashLight.enabled = false;
+
+        for (int i = 0; i < 5; i++)
+        {
+            m_recoil.AddLast(new Recoil());
+        }
     }
 
     protected override void OnDraw()
     {
-        ResetFireTime();
+        ResetFire();
     }
 
     protected override void OnHolster() {}
 
-    protected override void LogicUpdate()
+    protected override void LogicUpdate(bool firing)
     {
-        m_recoilIncrease /= m_recoilStabilizeSpeed;
-        m_weapons.Recoil = m_recoilIncrease;
+        if (firing && BulletsMag == 0)
+        {
+            OnReload();
+        }
+        else if (firing && !IsReloading && BulletsMag > 0 && !m_blocking.IsBlocked())
+        {
+            float firePeriod = (1 / m_fireRate);
+
+            bool hasFired = false;
+
+            while (m_lastFireTime <= Time.time && BulletsMag > 0)
+            {
+                FireOneShot(Time.time - m_lastFireTime);
+                m_lastFireTime += firePeriod;
+
+                if (!hasFired)
+                {
+                    m_sound.PlayFireSound();
+                    m_muzzleFlashLight.enabled = true;
+                    StartCoroutine(FinishFire());
+                    hasFired = true;
+                }
+            }
+        }
+        else
+        {
+            ResetFire();
+        }
+        
         m_anim.RecoilUpdate();
+    }
+
+    public override Vector2 GetRecoil()
+    {
+        Vector2 recoilDelta = Vector2.zero;
+
+        foreach (Recoil recoil in m_recoil)
+        {
+            recoilDelta += recoil.Progress(m_recoilSmoothing, m_horizontalRecoil, m_verticalRecoil, m_fireRate);
+        }
+        return recoilDelta;
     }
 
     protected override void AnimUpdate()
@@ -136,42 +180,20 @@ public class MainGun : Prop
         }
     }
 
-    public override void OnFireStart()
+    protected override void OnFireStart()
     {
-        ResetFireTime();
+        Recoil recoil = m_recoil.Last.Value;
+        m_recoil.RemoveLast();
+        m_recoil.AddFirst(recoil);
+
+        recoil.GeneratePattern(m_bulletsPerClip, m_bulletsPerRecoilKey, m_fireRate);
+        
+        ResetFire();
     }
 
-    public override void OnFireHeld()
+    protected override void OnFireEnd()
     {
-        if (BulletsMag == 0)
-        {
-            OnReload();
-        }
-        else if (!IsReloading && BulletsMag > 0 && !m_blocking.IsBlocked())
-        {
-            float firePeriod = (1 / m_fireRate);
-
-            bool hasFired = false;
-
-            while (m_lastFireTime <= Time.time && BulletsMag > 0)
-            {
-                FireOneShot(Time.time - m_lastFireTime);
-                m_recoilIncrease += m_shotRecoilAmount;
-                m_lastFireTime += firePeriod;
-
-                if (!hasFired)
-                {
-                    m_sound.PlayFireSound();
-                    m_muzzleFlashLight.enabled = true;
-                    StartCoroutine(FinishFire());
-                    hasFired = true;
-                }
-            }
-        }
-        else
-        {
-            ResetFireTime();
-        }
+        ResetFire();
     }
 
     public override void OnReload()
@@ -211,8 +233,8 @@ public class MainGun : Prop
             additionalInaccuracy,
             inaccuracyMultiplier);
 
-        m_bulletsMag--;
-        m_bulletsMagDirty = true;
+        BulletsMag--;
+        m_recoil.First.Value.BulletFired();
 
         if (m_muzzleFlash != null)
         {
@@ -240,14 +262,56 @@ public class MainGun : Prop
         yield return Utils.Wait(0.2f);
 
         m_reload = null;
-        ResetFireTime();
+        ResetFire();
     }
 
-    private void ResetFireTime()
+    private void ResetFire()
     {
         if (Time.time - m_lastFireTime > (1 / m_fireRate))
         {
             m_lastFireTime = Time.time;
+        }
+    }
+
+    private class Recoil
+    {
+        private AnimationCurve m_pattern = new AnimationCurve();
+        private int m_burstCount = 0;
+        private float m_recoilTime = 0;
+        private Vector2 m_lastRecoil = Vector2.zero;
+
+        public void GeneratePattern(float bulletsPerMag, float bulletsPerKey, float fireRate)
+        {
+            while (m_pattern.length > 0)
+            {
+                m_pattern.RemoveKey(0);
+            }
+
+            float hRecoilValue = 0;
+            int keyCount = Mathf.CeilToInt(bulletsPerMag / bulletsPerKey);
+            for (int i = 0; i < keyCount; i++)
+            {
+                m_pattern.AddKey(new Keyframe(i * (bulletsPerKey / fireRate), hRecoilValue));
+                hRecoilValue += (Random.value - 0.5f);
+            }
+
+            m_burstCount = 0;
+            m_recoilTime = 0;
+            m_lastRecoil = Vector2.zero;
+        }
+
+        public Vector2 Progress(float recoilSmoothing, float hRecoil, float vRecoil, float fireRate)
+        {
+            m_recoilTime = Mathf.Lerp(m_recoilTime, (m_burstCount / fireRate), Time.deltaTime / recoilSmoothing);
+            Vector2 recoil = new Vector2(hRecoil * m_pattern.Evaluate(m_recoilTime), vRecoil * m_recoilTime);
+            Vector2 recoilDelta = recoil - m_lastRecoil;
+            m_lastRecoil = recoil;
+            return recoilDelta;
+        }
+
+        public void BulletFired()
+        {
+            m_burstCount++;
         }
     }
 }

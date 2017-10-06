@@ -147,7 +147,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8273711, y: -0.000000013038516, z: -0.76397854}
+  m_LocalPosition: {x: 0.32686287, y: 0.000000022351742, z: -0.15243185}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
@@ -388,10 +388,10 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.002
+    m_Strength: 0.325
+    m_Bias: 0.01
     m_NormalBias: 0.4
-    m_NearPlane: 0.5
+    m_NearPlane: 0.1
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 12100000, guid: a0c62cfe28263f3408e1958f27f1bcd3, type: 2}

@@ -6,6 +6,7 @@ public enum GameButton
     Menu,
     Fire,
     Aim,
+    AimToggle,
     Reload,
     Jump,
     RunHold,

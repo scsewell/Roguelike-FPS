@@ -21,9 +21,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2049
   m_range: 80
-  m_speed: 325
+  m_speed: 600
   m_useGravity: 1
   m_damage: 15
   m_force: 400
-  m_baseInaccuracy: 0.025
+  m_baseInaccuracy: 0.0065
   m_spread: 3

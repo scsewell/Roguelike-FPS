@@ -22,7 +22,7 @@ MonoBehaviour:
     m_Bits: 2049
   m_range: 200
   m_speed: 10
-  m_useGravity: 0
+  m_useGravity: 1
   m_damage: 10
   m_force: 300
   m_baseInaccuracy: 0.001

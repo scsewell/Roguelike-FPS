@@ -1,22 +1,31 @@
 --- Short Term ---
 
-Decal performance
-Decal textures
-Pool gun particles and stuff
+Run anim and ADS block only when running forward
+Fire modes
+Alt tab fullscreen resolution bug
+Player controller run feels floaty
+Mid air run start/stop
 
-Context help (reload, interact, etc)
-Shooting out lights
+Context help ((reload - red text for ammo empty?), interact, etc,  pickups, option on setting to change from PC to controller context help?)
+
+Storage containers w gun ammo (nice lid openning animation - liquid nitrogen?), Dead enemies (doom style drop / metro / stalker)?
+Decal performance - pool bullet holes
+
+mag empty / no bullet sound
+Aim down sight noise
 
 --- Long Term ---
 
+Granades (frag, flashbang, sound decoy, sticky, mines)!
 Generate fancier rooms (multi floor, non square shapes, rooms with catwalks, doors)
+Special Rooms
 thread level generaion, loading screen (giving stage and percent)
 Cull based on level gen
 minimap
 AI
 Corridor and prop art
+Shooting out lights
 
 --- Looking Out For ---
 
 Door can close on an object
-Mid air run start/stop

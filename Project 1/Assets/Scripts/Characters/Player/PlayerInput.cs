@@ -47,7 +47,7 @@ public class PlayerInput : MonoBehaviour
         }
         inputs.Crouch = m_crouching;
 
-        inputs.Jump = ControlsManager.Instance.IsDown(GameButton.Jump);
+        inputs.Jump = ControlsManager.Instance.JustDown(GameButton.Jump);
         inputs.Burdened = interaction.IsCarryingHeavy;
 
         return inputs;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Framework;
 using Framework.InputManagement;
@@ -9,8 +8,8 @@ using Framework.IO;
 [DefaultExecutionOrder(100)]
 public class ControlsManager : ComponentSingleton<ControlsManager>
 {
-    private Dictionary<int, string> m_buttonToName;
-    private Dictionary<int, string> m_axisToName;
+    private string[] m_buttonToName;
+    private string[] m_axisToName;
 
     private Controls m_controls;
 
@@ -22,17 +21,8 @@ public class ControlsManager : ComponentSingleton<ControlsManager>
 
     public ControlsManager()
     {
-        m_buttonToName = new Dictionary<int, string>();
-        foreach (GameButton button in Enum.GetValues(typeof(GameButton)))
-        {
-            m_buttonToName.Add((int)button, button.ToString());
-        }
-
-        m_axisToName = new Dictionary<int, string>();
-        foreach (GameAxis axis in Enum.GetValues(typeof(GameAxis)))
-        {
-            m_axisToName.Add((int)axis, axis.ToString());
-        }
+        m_buttonToName = Enum.GetNames(typeof(GameButton));
+        m_axisToName = Enum.GetNames(typeof(GameAxis));
 
         m_controls = new Controls();
         InitControls(m_controls);
@@ -40,7 +30,7 @@ public class ControlsManager : ComponentSingleton<ControlsManager>
 
     public void FixedUpdate()
     {
-        m_controls.FixedUpdate();
+        m_controls.LateFixedUpdate();
     }
 
     public void EarlyUpdate()
@@ -147,6 +137,10 @@ public class ControlsManager : ComponentSingleton<ControlsManager>
             GameButton.Aim, "Aim", true, true,
             new KeyButton(KeyCode.Mouse1),
             new JoystickButton(GamepadButton.LTrigger)
+            );
+
+        AddButton(controls,
+            GameButton.AimToggle, "Aim Toggle", true, true
             );
 
         AddButton(controls,

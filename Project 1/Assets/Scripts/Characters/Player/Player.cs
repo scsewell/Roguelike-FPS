@@ -34,22 +34,22 @@ public class Player : MonoBehaviour
     private void Update()
     {
         m_interact.ProcessInteractions();
-        m_weapons.UpdateVisuals(m_input, m_look, m_movement);
+        m_weapons.UpdateVisuals(m_input, m_look, m_movement, m_headCamera);
     }
 
     private void FixedUpdate()
     {
-        m_weapons.UpdateWeapons();
-
         // Move player
         MoveInputs inputs = m_input.GetInput(m_interact);
         m_movement.UpdateMovement(inputs);
 
         m_footsteps.UpdateSounds(m_weapons, m_movement);
-        m_look.UpdateLook(m_weapons);
         
-        m_headCamera.UpdateCamera(m_movement);
+        m_weapons.UpdateWeapons(m_look);
 
+        m_headCamera.UpdateCamera(m_movement);
+        m_look.UpdateLook(m_headCamera);
+        
         m_interact.MoveGrapTarget(m_movement);
     }
 }

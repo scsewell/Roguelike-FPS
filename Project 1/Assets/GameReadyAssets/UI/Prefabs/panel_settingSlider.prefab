@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - component: {fileID: 22476618}
   - component: {fileID: 11447014}
+  - component: {fileID: 114827965329260234}
   m_Layer: 5
   m_Name: slider
   m_TagString: Untagged
@@ -598,3 +599,14 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 195946}
   m_IsPrefabParent: 1
+--- !u!114 &114827965329260234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 135774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba80cdb6d79b08499b7ae1553928910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -18,15 +18,14 @@ namespace Framework.UI
 
         public static T Create<T>(T prefab, Transform parent) where T : Component
         {
-            T component = Object.Instantiate(prefab);
+            T component = Object.Instantiate(prefab, parent);
 
             RectTransform rt = component.GetComponent<RectTransform>();
             if (rt == null)
             {
                 rt = component.gameObject.AddComponent<RectTransform>();
             }
-
-            rt.SetParent(parent, false);
+            
             rt.localPosition = Vector3.zero;
             rt.localRotation = Quaternion.identity;
             rt.localScale = Vector2.one;

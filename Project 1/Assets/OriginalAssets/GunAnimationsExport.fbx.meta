@@ -3,7 +3,7 @@ guid: 0a6297111836f3e4b8464a4813b5504d
 timeCreated: 1465095553
 licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 21
   fileIDToRecycleName:
     100000: bullet
     100002: bullet_end
@@ -119,6 +119,8 @@ ModelImporter:
     100222: VIS_Elbow.L_end
     100224: VIS_Elbow.R
     100226: VIS_Elbow.R_end
+    100228: SightLens
+    100230: HoloPlane
     400000: bullet
     400002: bullet_end
     400004: Camera
@@ -233,22 +235,30 @@ ModelImporter:
     400222: VIS_Elbow.L_end
     400224: VIS_Elbow.R
     400226: VIS_Elbow.R_end
+    400228: SightLens
+    400230: HoloPlane
     2300000: Gun
     2300002: GunAmmoCounter
     2300004: GunBullet
     2300006: GunClip
     2300008: Plane
+    2300010: SightLens
+    2300012: HoloPlane
     3300000: Gun
     3300002: GunAmmoCounter
     3300004: GunBullet
     3300006: GunClip
     3300008: Plane
+    3300010: SightLens
+    3300012: HoloPlane
     4300000: Plane
     4300002: Gun
     4300004: GunAmmoCounter
     4300006: GunClip
     4300008: GunBullet
     4300010: Player
+    4300012: SightLens
+    4300014: HoloPlane
     7400000: Gun_Rig|Gun_Aim
     7400002: Gun_Rig|Gun_Aiming
     7400004: Gun_Rig|Gun_Fire
@@ -294,6 +304,7 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
       name: Gun_Rig|Gun_Aiming
@@ -3625,7 +3636,10 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -3641,6 +3655,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

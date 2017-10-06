@@ -45,9 +45,7 @@ namespace Framework.DeferredDecalling
         private DecalBlock m_propBlock;
         private InstancedDecalBlock m_instanceBlock1;
         private InstancedDecalBlock m_instanceBlock2;
-
-        private List<Renderer> m_rendererCache = new List<Renderer>();
-        private List<Decal> m_decalCache = new List<Decal>();
+        
         private Plane[] m_frustumPlanes = new Plane[6];
 
         private bool m_useInstancing = true;

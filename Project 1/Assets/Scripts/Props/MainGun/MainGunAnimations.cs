@@ -21,7 +21,7 @@ public class MainGunAnimations : MonoBehaviour
     private Vector3 m_fireResetPosition;
     private float m_recoilTimeLeft = 0;
 
-    private void Start() 
+    private void Start()
     {
 		m_anim = GetComponent<Animator>();
         gameObject.AddComponent<TransformInterpolator>();
@@ -43,8 +43,6 @@ public class MainGunAnimations : MonoBehaviour
         m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
 		m_anim.SetBool("Reloading", isReloading);
         m_anim.SetFloat("ReloadSpeed", reloadSpeed);
-        m_anim.SetBool("Aiming Change", ControlsManager.Instance.JustUp(GameButton.Aim) || ControlsManager.Instance.JustDown(GameButton.Aim));
-		m_anim.SetBool("Aiming", ControlsManager.Instance.IsDown(GameButton.Aim));
     }
 
 	public void Recoil()

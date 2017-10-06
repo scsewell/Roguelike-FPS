@@ -4,8 +4,8 @@
 	{
 		_TintColor ("Tint Color", Color) = (0.5,0.5,0.5,0.5)
 		_MainTex ("Particle Texture", 2D) = "white" {}
-		_FadeDistance("Fade Distance", Range(0, 10)) = 1
-		_FadeLength("Fade Length", Range(0, 10)) = 3
+		_FadeDistance ("Fade Distance", Range(0, 10)) = 1
+		_FadeLength ("Fade Length", Range(0, 10)) = 3
 	}
 
 	Category

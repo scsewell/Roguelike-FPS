@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 222483047301798622}
   - component: {fileID: 114405099825590278}
   - component: {fileID: 114929857709631360}
+  - component: {fileID: 114087586389471418}
   m_Layer: 5
   m_Name: button_binding
   m_TagString: Untagged
@@ -57,6 +58,7 @@ GameObject:
   - component: {fileID: 222119873949317598}
   - component: {fileID: 114276965992604072}
   - component: {fileID: 114555391501736844}
+  - component: {fileID: 114518520944558170}
   m_Layer: 5
   m_Name: button_remove
   m_TagString: Untagged
@@ -115,6 +117,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114087586389471418
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1222734642288036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba80cdb6d79b08499b7ae1553928910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114276965992604072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,6 +240,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114518520944558170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1378325248195904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba80cdb6d79b08499b7ae1553928910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114555391501736844
 MonoBehaviour:
   m_ObjectHideFlags: 1
