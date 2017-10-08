@@ -2526,7 +2526,7 @@ MonoBehaviour:
   m_fireRate: 12
   m_bulletsPerRecoilKey: 10
   m_horizontalRecoil: 5
-  m_verticalRecoil: 7.5
+  m_verticalRecoil: 6.5
   m_recoilSmoothing: 0.135
   m_movementInaccuracy: 0.0075
   m_crouchInaccuracyMultiplier: 0.5
@@ -2657,6 +2657,7 @@ MonoBehaviour:
     maxSidewaysSpeed: 2.15
     maxBackwardsSpeed: 2.15
     maxBurdenedSpeed: 0.75
+    maxRunAngle: 50
     heightChangeRate: 10
     crouchHeight: 1.25
     standHeight: 2.15

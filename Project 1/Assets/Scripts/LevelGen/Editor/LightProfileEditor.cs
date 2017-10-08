@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using Framework;
+using Framework.EditorTools;
 
 namespace LevelGen
 {

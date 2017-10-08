@@ -17,6 +17,7 @@ public class CharacterMovement : MonoBehaviour
         public float maxSidewaysSpeed = 10.0f;
         public float maxBackwardsSpeed = 10.0f;
         public float maxBurdenedSpeed = 4.0f;
+        public float maxRunAngle = 50.0f;
         public float heightChangeRate = 6.0f;
         public float crouchHeight = 1.5f;
         public float standHeight = 2.0f;
@@ -555,16 +556,14 @@ public class CharacterMovement : MonoBehaviour
     // The function returns the length of the resulting vector.
     private float MaxSpeedInDirection(MoveInputs input, Vector3 desiredMovementDirection)
     {
-        if (desiredMovementDirection == Vector3.zero)
-        {
-            return 0;
-        }
-        else
+        m_isRunning = false;
+        float speed = 0;
+
+        if (desiredMovementDirection != Vector3.zero)
         {
             float forwardSpeed = m_movement.maxForwardWalkSpeed;
             float backwardsSpeed = m_movement.maxBackwardsSpeed;
             float sidewaysSpeed = m_movement.maxSidewaysSpeed;
-            m_isRunning = false;
 
             if (input.Burdened)
             {
@@ -572,7 +571,7 @@ public class CharacterMovement : MonoBehaviour
                 backwardsSpeed = m_movement.maxBurdenedSpeed;
                 sidewaysSpeed = m_movement.maxBurdenedSpeed;
             }
-            else if (input.Run)
+            else if (input.Run && Mathf.Rad2Deg * Mathf.Acos(desiredMovementDirection.normalized.z) < m_movement.maxRunAngle / 2)
             {
                 m_isRunning = true;
                 forwardSpeed = m_movement.maxForwardRunSpeed;
@@ -586,8 +585,9 @@ public class CharacterMovement : MonoBehaviour
 
             float zAxisEllipseMultiplier = (desiredMovementDirection.z > 0 ? forwardSpeed : backwardsSpeed) / sidewaysSpeed;
             Vector3 temp = new Vector3(desiredMovementDirection.x, 0, desiredMovementDirection.z / zAxisEllipseMultiplier).normalized;
-            return new Vector3(temp.x, 0, temp.z * zAxisEllipseMultiplier).magnitude * sidewaysSpeed;
+            speed = sidewaysSpeed * new Vector3(temp.x, 0, temp.z * zAxisEllipseMultiplier).magnitude;
         }
+        return speed;
     }
 
     private bool TooSteep()
@@ -598,11 +598,6 @@ public class CharacterMovement : MonoBehaviour
     public bool IsSliding()
     {
         return (m_isGrounded && m_sliding.enabled && TooSteep());
-    }
-
-    public bool IsTouchingCeiling()
-    {
-        return (m_collisionFlags & CollisionFlags.CollidedAbove) != 0;
     }
 
     private void OnDrawGizmos()

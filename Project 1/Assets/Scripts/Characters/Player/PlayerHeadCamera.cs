@@ -61,22 +61,21 @@ public class PlayerHeadCamera : MonoBehaviour
         {
             Aiming = !Aiming;
         }
-        //Debug.Log("Aiming1: " + Aiming);
         
         if (ControlsManager.Instance.IsDown(GameButton.Aim))
         {
             Aiming = true;
         }
-        else if (ControlsManager.Instance.JustUp(GameButton.Aim))
+
+        if (ControlsManager.Instance.JustUp(GameButton.Aim))
         {
             Aiming = false;
         }
-       // Debug.Log("Aiming2: " + Aiming);
+
         if (movement.IsRunning)
         {
             Aiming = false;
         }
-        //Debug.Log("Aiming3: " + Aiming);
 
         float targetFieldOfView = SettingManager.Instance.FieldOfView;
 

@@ -30,6 +30,14 @@ public class Main : ComponentSingleton<Main>
         BulletManager.Instance.UpdateBullets();
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+        {
+            SettingManager.Instance.Apply();
+        }
+    }
+
     public void LoadMainScene()
     {
         StartCoroutine(LoadScene());

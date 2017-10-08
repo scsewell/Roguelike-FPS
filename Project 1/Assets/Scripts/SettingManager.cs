@@ -85,7 +85,7 @@ public class SettingManager : Singleton<SettingManager>
     {
         m_settings = new Settings();
 
-        m_settings.Add(Categories.Screen,"Resolution", Screen.currentResolution,
+        m_settings.Add(Categories.Screen,"Resolution", Screen.resolutions.Last(),
             GetSupportedResolutions(),
             (v) => SerializeResolution(v),
             (s) => ParseResolution(s),

@@ -1,6 +1,5 @@
 --- Short Term ---
 
-Run anim and ADS block only when running forward
 Fire modes
 Alt tab fullscreen resolution bug
 Player controller run feels floaty
