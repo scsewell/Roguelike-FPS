@@ -146,6 +146,12 @@ public class ControlsManager : ComponentSingleton<ControlsManager>
         AddButton(controls,
             GameButton.Reload, "Reload", true, true,
             new KeyButton(KeyCode.R),
+            new JoystickButton(GamepadButton.B)
+            );
+
+        AddButton(controls,
+            GameButton.ChangeFireMode, "Change Fire Mode", true, true,
+            new KeyButton(KeyCode.M),
             new JoystickButton(GamepadButton.Y)
             );
 

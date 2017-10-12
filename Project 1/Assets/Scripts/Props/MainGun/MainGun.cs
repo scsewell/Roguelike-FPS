@@ -35,6 +35,14 @@ public class MainGun : Prop
     private FireMode m_defaultFireMode = FireMode.Auto;
     [SerializeField]
     private int m_bulletsPerBurst = 3;
+    [SerializeField]
+    private Renderer m_fireModeRenderer;
+    [SerializeField]
+    private Texture2D m_fireModeSingle;
+    [SerializeField]
+    private Texture2D m_fireModeBurst;
+    [SerializeField]
+    private Texture2D m_fireModeAuto;
 
     [SerializeField] [Range(0.1f, 100)]
     private float m_fireRate = 8.0f;
@@ -56,13 +64,19 @@ public class MainGun : Prop
 	private CharacterMovement m_character;
     private MainGunAnimations m_anim;
     private MainGunSounds m_sound;
+
     private GunBlocking m_blocking;
+    private bool m_isBlocked = false;
+
     private IEnumerator m_reload;
     private LinkedList<Recoil> m_recoil = new LinkedList<Recoil>();
-    private float m_lastFireTime = 0;
+    private bool m_firedThisFrame = false;
+    private float m_nextFireTime = 0;
     private bool m_cooldown = false;
     private FireMode m_currentFireMode;
-    private bool m_isBursting = false;
+    private bool m_isAutoFiring = false;
+    private bool m_isBurstFiring = false;
+    private bool m_isSingleFiring = false;
     private int m_burstCount = 0;
 
     private int m_bulletsMag = 0;
@@ -119,75 +133,86 @@ public class MainGun : Prop
         BulletsMag = m_bulletsPerClip;
         BulletsHeld = m_maxAmmo;
         m_muzzleFlashLight.enabled = false;
-
-        m_currentFireMode = m_defaultFireMode;
+        
+        m_fireModeRenderer.material = new Material(m_fireModeRenderer.material);
+        SetFireMode(m_defaultFireMode);
 
         for (int i = 0; i < 5; i++)
         {
             m_recoil.AddLast(new Recoil());
         }
     }
-
-    protected override void OnDraw()
+    
+    protected override void OnHolster()
     {
-        ResetFire();
+        m_isBurstFiring = false;
+        m_isSingleFiring = false;
     }
 
-    protected override void OnHolster() {}
-
-    protected override void LogicUpdate(bool firing)
+    protected override void LogicUpdate()
     {
-        if (firing && BulletsMag == 0)
+        m_isBlocked = m_blocking.IsBlocked();
+        
+        if (!m_cooldown || Time.time - m_nextFireTime > 0)
+        {
+            m_nextFireTime = Time.time;
+            m_cooldown = false;
+        }
+
+        if (m_currentFireMode == FireMode.Auto && m_isAutoFiring && BulletsMag == 0)
         {
             OnReload();
         }
-        else if (((firing && m_currentFireMode != FireMode.Burst) || m_isBursting) && !IsReloading && BulletsMag > 0 && !m_blocking.IsBlocked())
+
+        m_firedThisFrame = false;
+
+        if (!IsReloading && !m_isBlocked)
         {
             float firePeriod = (1 / m_fireRate);
+            float nextTime = Time.time + Time.deltaTime;
 
-            bool hasFired = false;
-            
-            while (m_lastFireTime <= Time.time && BulletsMag > 0 && (!m_isBursting || m_burstCount < m_bulletsPerBurst))
+            if (m_currentFireMode == FireMode.Auto && m_isAutoFiring)
             {
-                FireOneShot(Time.time - m_lastFireTime);
-                m_lastFireTime += firePeriod;
-
-                if (m_isBursting && m_burstCount == m_bulletsPerBurst)
+                while (m_nextFireTime <= nextTime && BulletsMag > 0)
                 {
-                    m_isBursting = false;
+                    FireOneShot(nextTime - m_nextFireTime, firePeriod);
                 }
-
-                if (!hasFired)
+            }
+            else if (m_currentFireMode == FireMode.Burst && m_isBurstFiring)
+            {
+                while (m_nextFireTime <= nextTime && BulletsMag > 0 && m_burstCount < m_bulletsPerBurst)
                 {
-                    m_sound.PlayFireSound();
-                    m_muzzleFlashLight.enabled = true;
-                    StartCoroutine(FinishFire());
-                    hasFired = true;
+                    FireOneShot(nextTime - m_nextFireTime, firePeriod);
+
+                    if (m_burstCount == m_bulletsPerBurst)
+                    {
+                        m_isBurstFiring = false;
+                    }
+                }
+            }
+            else if (m_currentFireMode == FireMode.Single && m_isSingleFiring)
+            {
+                if (m_nextFireTime <= nextTime && BulletsMag > 0)
+                {
+                    FireOneShot(nextTime - m_nextFireTime, firePeriod);
+                    m_isSingleFiring = false;
                 }
             }
         }
-        else
-        {
-            ResetFire();
-        }
         
-        m_anim.RecoilUpdate();
-    }
-
-    public override Vector2 GetRecoil()
-    {
-        Vector2 recoilDelta = Vector2.zero;
-
-        foreach (Recoil recoil in m_recoil)
+        if (m_firedThisFrame)
         {
-            recoilDelta += recoil.Progress(m_recoilSmoothing, m_horizontalRecoil, m_verticalRecoil);
+            m_sound.PlayFireSound();
+            m_muzzleFlashLight.enabled = true;
+            StartCoroutine(FinishFire());
         }
-        return recoilDelta;
+
+        m_anim.RecoilUpdate();
     }
 
     protected override void AnimUpdate()
     {
-        m_anim.AnimUpdate(IsReloading, 2.0f / m_reloadTime);
+        m_anim.AnimUpdate(IsReloading, 2.0f / m_reloadTime, m_isBlocked);
 
         if (m_bulletsMagDirty)
         {
@@ -206,44 +231,79 @@ public class MainGun : Prop
         }
     }
 
-    protected override void OnFireStart()
+    public override Vector2 GetRecoil()
     {
-        if (!IsReloading)
+        Vector2 recoilDelta = Vector2.zero;
+
+        foreach (Recoil recoil in m_recoil)
         {
-            if (m_currentFireMode == FireMode.Burst)
+            recoilDelta += recoil.Progress(m_recoilSmoothing, m_horizontalRecoil, m_verticalRecoil);
+        }
+        return recoilDelta;
+    }
+
+    protected override void OnFireStart(bool fireInputStart)
+    {
+        m_isAutoFiring = true;
+
+        if (fireInputStart)
+        {
+            if (BulletsMag == 0)
             {
-                if (m_isBursting)
+                if (BulletsHeld == 0)
                 {
-                    return;
+                    m_sound.PlayDryFireSound();
                 }
-                m_isBursting = true;
-                m_burstCount = 0;
+                OnReload();
             }
 
-            Recoil recoil = m_recoil.Last.Value;
-            m_recoil.RemoveLast();
-            m_recoil.AddFirst(recoil);
+            if (!IsReloading)
+            {
+                if (m_currentFireMode == FireMode.Single)
+                {
+                    m_isSingleFiring = true;
+                }
+                else if (m_currentFireMode == FireMode.Burst)
+                {
+                    if (m_isBurstFiring)
+                    {
+                        return;
+                    }
+                    m_isBurstFiring = true;
+                    m_burstCount = 0;
+                }
 
-            recoil.GeneratePattern(m_bulletsPerClip, m_bulletsPerRecoilKey);
-
-            ResetFire();
+                GetNextRecoilPattern();
+            }
         }
     }
 
     protected override void OnFireEnd()
     {
-        ResetFire();
+        m_isAutoFiring = false;
     }
 
     public override void OnReload()
     {
         if (!IsReloading && BulletsHeld > 0 && BulletsMag < m_bulletsPerClip)
         {
-            m_isBursting = false;
+            m_isBurstFiring = false;
             m_sound.PlayReloadStart();
             m_reload = FinishReload();
             StartCoroutine(m_reload);
         }
+    }
+
+    public override void OnFireModeChange()
+    {
+        switch (m_currentFireMode)
+        {
+            case FireMode.Single:   SetFireMode(FireMode.Burst);    break;
+            case FireMode.Burst:    SetFireMode(FireMode.Auto);     break;
+            case FireMode.Auto:     SetFireMode(FireMode.Single);   break;
+        }
+
+        m_sound.PlayFireModeSound();
     }
 
     public override void CancelActions()
@@ -255,7 +315,7 @@ public class MainGun : Prop
         }
     }
 
-    private void FireOneShot(float timeUntilNextUpdate)
+    private void FireOneShot(float timeUntilNextUpdate, float firePeriod)
     {
         float additionalInaccuracy = (m_movementInaccuracy * m_character.Velocity.magnitude);
         float inaccuracyMultiplier = 1;
@@ -276,6 +336,8 @@ public class MainGun : Prop
         BulletsMag--;
         m_recoil.First.Value.BulletFired();
 
+        m_firedThisFrame = true;
+        m_nextFireTime += firePeriod;
         m_cooldown = true;
         m_burstCount++;
 
@@ -305,16 +367,40 @@ public class MainGun : Prop
         yield return Utils.Wait(0.2f);
 
         m_reload = null;
-        ResetFire();
+        GetNextRecoilPattern();
     }
 
-    private void ResetFire()
+    private void SetFireMode(FireMode newMode)
     {
-        if (!m_cooldown || Time.time - m_lastFireTime > (1 / m_fireRate))
+        m_currentFireMode = newMode;
+
+        switch (m_currentFireMode)
         {
-            m_lastFireTime = Time.time;
-            m_cooldown = false;
+            case FireMode.Single:   m_fireModeRenderer.material.mainTexture = m_fireModeSingle; break;
+            case FireMode.Burst:    m_fireModeRenderer.material.mainTexture = m_fireModeBurst;  break;
+            case FireMode.Auto:     m_fireModeRenderer.material.mainTexture = m_fireModeAuto;   break;
         }
+
+        m_isBurstFiring = false;
+        m_isSingleFiring = false;
+    }
+
+    private void ResetFireTime()
+    {
+        Recoil recoil = m_recoil.Last.Value;
+        m_recoil.RemoveLast();
+        m_recoil.AddFirst(recoil);
+
+        recoil.GeneratePattern(m_bulletsPerClip, m_bulletsPerRecoilKey);
+    }
+
+    private void GetNextRecoilPattern()
+    {
+        Recoil recoil = m_recoil.Last.Value;
+        m_recoil.RemoveLast();
+        m_recoil.AddFirst(recoil);
+
+        recoil.GeneratePattern(m_bulletsPerClip, m_bulletsPerRecoilKey);
     }
 
     private class Recoil

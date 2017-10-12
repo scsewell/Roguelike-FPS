@@ -1,7 +1,9 @@
 --- Short Term ---
 
-Fire modes
-Alt tab fullscreen resolution bug
+Add reload/interact combined command for use with controller
+Aim down sight noise
+Improve outline
+Control menu headers
 Player controller run feels floaty
 Mid air run start/stop
 
@@ -9,9 +11,6 @@ Context help ((reload - red text for ammo empty?), interact, etc,  pickups, opti
 
 Storage containers w gun ammo (nice lid openning animation - liquid nitrogen?), Dead enemies (doom style drop / metro / stalker)?
 Decal performance - pool bullet holes
-
-mag empty / no bullet sound
-Aim down sight noise
 
 --- Long Term ---
 

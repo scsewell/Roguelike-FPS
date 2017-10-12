@@ -574,7 +574,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22493066, guid: 03bd000e2a3584648be6b96c58104602, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 846481.3
+      value: 1121965.2
       objectReference: {fileID: 0}
     - target: {fileID: 22493066, guid: 03bd000e2a3584648be6b96c58104602, type: 2}
       propertyPath: m_SizeDelta.y
@@ -582,7 +582,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22451850, guid: 03bd000e2a3584648be6b96c58104602, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 836651.6
+      value: 1098614.9
       objectReference: {fileID: 0}
     - target: {fileID: 22451850, guid: 03bd000e2a3584648be6b96c58104602, type: 2}
       propertyPath: m_SizeDelta.y
@@ -2600,14 +2600,6 @@ Prefab:
     - target: {fileID: 424544, guid: bc0cbcbd2088d1a4c8fc8f557b3c786b, type: 2}
       propertyPath: m_LocalRotation.w
       value: 0.70358664
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400008, guid: bc0cbcbd2088d1a4c8fc8f557b3c786b, type: 2}
-      propertyPath: m_permittedFireModes
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400008, guid: bc0cbcbd2088d1a4c8fc8f557b3c786b, type: 2}
-      propertyPath: m_defaultFireMode
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bc0cbcbd2088d1a4c8fc8f557b3c786b, type: 2}

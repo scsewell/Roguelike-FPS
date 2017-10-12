@@ -11,9 +11,7 @@ public class MainGunAnimations : MonoBehaviour
     private float m_recoilSpeed = 10f;
 	[SerializeField][Range(1, 20)]
     private float m_recoilResetSpeed = 6f;
-
-    [SerializeField]
-    private GunBlocking m_gunBlocking;
+    
     [SerializeField]
     private bool m_useBlocking = false;
     
@@ -38,9 +36,9 @@ public class MainGunAnimations : MonoBehaviour
         m_recoilTimeLeft -= Time.deltaTime;
     }
 
-    public void AnimUpdate(bool isReloading, float reloadSpeed)
+    public void AnimUpdate(bool isReloading, float reloadSpeed, bool isBlocked)
     {
-        m_anim.SetBool("Blocked", m_useBlocking && m_gunBlocking.IsBlocked());
+        m_anim.SetBool("Blocked", m_useBlocking && isBlocked);
 		m_anim.SetBool("Reloading", isReloading);
         m_anim.SetFloat("ReloadSpeed", reloadSpeed);
     }

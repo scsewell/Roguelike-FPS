@@ -5,7 +5,7 @@ namespace Framework.InputManagement
     public class JoystickButton : ISource<bool>
     {
         private const float MAIN_THRESHOLD = 0.5f;
-        private const float TRIGGER_THRESHOLD = 0.3f;
+        private const float TRIGGER_THRESHOLD = 0.65f;
 
         public GamepadButton m_button;
 

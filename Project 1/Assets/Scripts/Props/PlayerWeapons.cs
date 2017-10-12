@@ -86,13 +86,23 @@ public class PlayerWeapons : MonoBehaviour
         }
 
         m_arms.enabled = IsPropActive;
+
         bool fire = false;
+        bool fireStart = false;
 
         if (IsPropActive && !m_activeProp.Holster && !m_interact.IsInteracting)
         {
             if (ControlsManager.Instance.IsDown(GameButton.Fire))
             {
                 fire = true;
+            }
+            if (ControlsManager.Instance.JustDown(GameButton.Fire))
+            {
+                fireStart = true;
+            }
+            if (ControlsManager.Instance.JustDown(GameButton.ChangeFireMode))
+            {
+                m_activeProp.OnFireModeChange();
             }
             if (ControlsManager.Instance.JustDown(GameButton.Reload))
             {
@@ -102,7 +112,7 @@ public class PlayerWeapons : MonoBehaviour
 
         if (IsPropActive)
         {
-            m_activeProp.MainUpdate(fire);
+            m_activeProp.MainUpdate(fire, fireStart);
         }
 
         foreach (Prop prop in m_props)

@@ -8,6 +8,7 @@ public enum GameButton
     Aim,
     AimToggle,
     Reload,
+    ChangeFireMode,
     Jump,
     RunHold,
     RunTap,

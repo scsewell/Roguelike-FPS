@@ -26,6 +26,7 @@ public abstract class Prop : MonoBehaviour
     private float m_xLook = 0;
     private float m_yLook = 0;
     private bool m_lastAiming = false;
+    private bool m_firing = false;
 
     private bool m_holster = true;
     public bool Holster { get { return m_holster; } }
@@ -34,28 +35,7 @@ public abstract class Prop : MonoBehaviour
     {
         get { return !gameObject.activeSelf; }
     }
-
-    private bool m_firing = false;
-    private bool Firing
-    {
-        get { return m_firing; }
-        set
-        {
-            if (m_firing != value)
-            {
-                m_firing = value;
-                if (m_firing)
-                {
-                    OnFireStart();
-                }
-                else
-                {
-                    OnFireEnd();
-                }
-            }
-        }
-    }
-
+    
     private Transform[] m_armBones;
     public Transform[] ArmBones { get { return m_armBones; } }
 
@@ -78,7 +58,7 @@ public abstract class Prop : MonoBehaviour
         OnHolster();
     }
 
-    public void MainUpdate(bool firing)
+    public void MainUpdate(bool fire, bool fireInputStart)
     {
         bool holstered = m_animator.GetCurrentAnimatorStateInfo(MainAnimatorState).IsTag("Holstered");
 
@@ -90,9 +70,20 @@ public abstract class Prop : MonoBehaviour
         }
         m_lastHolstered = holstered;
 
-        Firing = firing;
+        if (m_firing != fire)
+        {
+            m_firing = fire;
+            if (m_firing)
+            {
+                OnFireStart(fireInputStart);
+            }
+            else
+            {
+                OnFireEnd();
+            }
+        }
 
-        LogicUpdate(firing);
+        LogicUpdate();
     }
 
     public void VisualUpdate(Vector2 move, Vector2 look, bool jumping, bool running, bool aiming, bool interact)
@@ -149,22 +140,28 @@ public abstract class Prop : MonoBehaviour
         {
             m_holster = true;
             m_onHolsterComplete = onComplete;
-            Firing = false;
+
+            if (m_firing)
+            {
+                m_firing = false;
+                OnFireEnd();
+            }
         }
     }
 
     public abstract GameButton HolsterButton { get; }
     protected abstract int MainAnimatorState { get; }
 
-    protected abstract void LogicUpdate(bool firing);
-    protected abstract void AnimUpdate();
-    public abstract Vector2 GetRecoil();
+    protected virtual void LogicUpdate() { }
+    protected virtual void AnimUpdate() { }
+    public virtual Vector2 GetRecoil() { return Vector2.zero; }
 
-    protected abstract void OnDraw();
-    protected abstract void OnHolster();
+    protected virtual void OnDraw() {}
+    protected virtual void OnHolster() {}
 
-    protected abstract void OnFireStart();
-    protected abstract void OnFireEnd();
-    public abstract void OnReload();
-    public abstract void CancelActions();
+    protected virtual void OnFireStart(bool fireInputStart) {}
+    protected virtual void OnFireEnd() {}
+    public virtual void OnReload() {}
+    public virtual void OnFireModeChange() {}
+    public virtual void CancelActions() {}
 }

@@ -28,9 +28,7 @@ public class Flashlight : Prop
         m_anim = GetComponentInChildren<Animator>();
         m_audio = GetComponent<AudioSource>();
     }
-
-    protected override void LogicUpdate(bool firing) {}
-
+    
     protected override void AnimUpdate()
     {
         AnimatorStateInfo state = m_anim.GetCurrentAnimatorStateInfo(2);
@@ -45,18 +43,12 @@ public class Flashlight : Prop
         m_flashlightRig.position = m_flashlight.position;
     }
 
-    protected override void OnFireStart()
+    protected override void OnFireStart(bool fireInputStart)
     {
-        m_on = !m_on;
-        m_audio.PlayOneShot(m_on ? m_turnOn : m_turnOff);
+        if (fireInputStart)
+        {
+            m_on = !m_on;
+            m_audio.PlayOneShot(m_on ? m_turnOn : m_turnOff);
+        }
     }
-
-    public override Vector2 GetRecoil() { return Vector2.zero; }
-
-    protected override void OnDraw() {}
-    protected override void OnHolster() {}
-
-    protected override void OnFireEnd() {}
-    public override void OnReload() {}
-    public override void CancelActions() {}
 }

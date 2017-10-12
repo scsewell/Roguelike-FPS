@@ -410,6 +410,7 @@ public class GameMenu : MonoBehaviour
         CreateSettingsPanels(m_contentControls, m_controlPanels, spacing, () => m_editControls.Settings);
         
         UIHelper.Create(prefab_headerBindings, m_contentControls);
+        // TODO: Order by some value
         foreach (GameButton button in Enum.GetValues(typeof(GameButton)))
         {
             string name = button.ToString();
