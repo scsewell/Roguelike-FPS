@@ -12,8 +12,6 @@
 			"Queue" = "Transparent" 
 			"IgnoreProjector" = "True" 
 			"RenderType" = "Transparent" 
-			"PreviewType" = "Plane"
-			"CanUseSpriteAtlas" = "True"
 		}
 
 		Cull Off
@@ -39,14 +37,14 @@
 				float4 pos : SV_POSITION;
 			};
 
-			v2f vert (appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);
 				return o;
 			}
 
-			uniform fixed4 _Color;
+			fixed4 _Color;
 
 			fixed4 frag(v2f i) : SV_Target
 			{

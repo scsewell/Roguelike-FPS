@@ -1,27 +1,3 @@
-/*
-//  Copyright (c) 2015 JosÃ© Guerreiro. All rights reserved.
-//
-//  MIT license, see http://www.opensource.org/licenses/mit-license.php
-//  
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//  
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//  
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-*/
-
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -116,8 +92,7 @@ public class OutlineEffect : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_renderTexture.Release();
-        m_extraRenderTexture.Release();
+        ReleaseRenderTextures();
     }
 
     private void OnPreCull()
@@ -135,7 +110,7 @@ public class OutlineEffect : MonoBehaviour
 
     private void UpdateOulineBufferCommands()
     {
-        m_outlineCommands.name = "BufferOulines";
+        m_outlineCommands.name = "BufferOutlines";
 
         m_outlineCommands.Clear();
 
@@ -179,8 +154,24 @@ public class OutlineEffect : MonoBehaviour
 
     private void CreateRenderTextures()
     {
+        ReleaseRenderTextures();
+
         m_renderTexture = new RenderTexture(m_cam.pixelWidth, m_cam.pixelHeight, 16, RenderTextureFormat.Default);
         m_extraRenderTexture = new RenderTexture(m_cam.pixelWidth, m_cam.pixelHeight, 16, RenderTextureFormat.Default);
+    }
+
+    private void ReleaseRenderTextures()
+    {
+        if (m_renderTexture != null)
+        {
+            m_renderTexture.Release();
+            m_renderTexture = null;
+        }
+        if (m_extraRenderTexture != null)
+        {
+            m_extraRenderTexture.Release();
+            m_extraRenderTexture = null;
+        }
     }
 
     private void UpdateOutlineMaterial()

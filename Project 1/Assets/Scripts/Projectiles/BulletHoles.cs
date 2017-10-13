@@ -7,9 +7,6 @@ public class BulletHoles : PooledObject
     private float m_glowIntensity = 10.0f;
     [SerializeField] [Range(0, 4)]
     private float m_glowFadeTime = 0.35f;
-
-    [SerializeField] private int m_maxHoleCount = 50;
-
     [SerializeField]
     private float m_minScale = 0.025f;
     [SerializeField]

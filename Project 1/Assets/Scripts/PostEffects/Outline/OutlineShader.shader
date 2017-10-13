@@ -39,14 +39,11 @@ Shader "Hidden/OutlineEffect"
 			Cull Off
 
 			CGPROGRAM
-
+            
+			#pragma target 3.0
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 3.0
 			#include "UnityCG.cginc"
-
-			sampler2D _MainTex;
-			sampler2D _OutlineSource;
 
 			struct v2f
 			{
@@ -59,12 +56,14 @@ Shader "Hidden/OutlineEffect"
 				v2f o;
 				o.position = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord;
-
 				return o;
 			}
 
+            sampler2D _MainTex;
+            sampler2D _OutlineSource;
+
 			float _LineThickness;
-			uniform float4 _MainTex_TexelSize;
+			float4 _MainTex_TexelSize;
 
 			half4 frag(v2f i) : COLOR
 			{
@@ -84,7 +83,7 @@ Shader "Hidden/OutlineEffect"
 				 
 				if ((red && blue) || (green && blue) || (red && green))
 				{
-					return float4(0,0,0,0);
+					return 0;
 				}
 				else
 				{
@@ -102,16 +101,11 @@ Shader "Hidden/OutlineEffect"
 			
 			CGPROGRAM
 
+			#pragma target 3.0
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 3.0
-
 			#pragma multi_compile __ CORNER_OUTLINES
-
 			#include "UnityCG.cginc"
-
-			sampler2D _MainTex;
-			sampler2D _OutlineSource;
 
 			struct v2f
 			{
@@ -124,10 +118,12 @@ Shader "Hidden/OutlineEffect"
 			   	v2f o;
 				o.position = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord;
-				
 			   	return o;
 			}
 
+            sampler2D _MainTex;
+            sampler2D _OutlineSource;
+            float4 _MainTex_TexelSize;
 			float _LineThickness;
 			float _LineIntensity;
 			half4 _LineColor1;
@@ -135,15 +131,13 @@ Shader "Hidden/OutlineEffect"
 			half4 _LineColor3;
 			float _FillAmount;
 			int _CornerOutlines;
-			uniform float4 _MainTex_TexelSize;
 
-			half4 frag (v2f i) : COLOR
+			half4 frag(v2f i) : COLOR
 			{	
 				half4 originalPixel = tex2D(_MainTex, i.uv);
 				half4 outlineSource = tex2D(_OutlineSource, i.uv);
-								
+		
 				half4 outline = 0;
-				bool hasOutline = false;
 				float2 texelSize = _MainTex_TexelSize * 1000.0f;
 
 				half4 sample1 = tex2D(_OutlineSource, i.uv + float2(_LineThickness,0.0) * texelSize);
@@ -158,42 +152,36 @@ Shader "Hidden/OutlineEffect"
 				half4 sample6 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness, -_LineThickness) * texelSize);
 				half4 sample7 = tex2D(_OutlineSource, i.uv + float2(_LineThickness, -_LineThickness) * texelSize);
 				half4 sample8 = tex2D(_OutlineSource, i.uv + float2(-_LineThickness, _LineThickness) * texelSize);
-
+                
 				if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h ||
 					sample5.r > h || sample6.r > h || sample7.r > h || sample8.r > h)
 				{
 					outline = _LineColor1 * _LineIntensity * _LineColor1.a;
-					hasOutline = true;
 				}
 				else if (
 					sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h ||
 					sample5.g > h || sample6.g > h || sample7.g > h || sample8.g > h)
 				{
 					outline = _LineColor2 * _LineIntensity * _LineColor2.a;
-					hasOutline = true;
 				}
 				else if (
 					sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h ||
 					sample5.b > h || sample6.b > h || sample7.b > h || sample8.b > h)
 				{
 					outline = _LineColor3 * _LineIntensity * _LineColor3.a;
-					hasOutline = true;
 				}
 #else
 				if (sample1.r > h || sample2.r > h || sample3.r > h || sample4.r > h)
 				{
 					outline = _LineColor1 * _LineIntensity * _LineColor1.a;
-					hasOutline = true;
 				}
 				else if (sample1.g > h || sample2.g > h || sample3.g > h || sample4.g > h)
 				{
 					outline = _LineColor2 * _LineIntensity * _LineColor2.a;
-					hasOutline = true;
 				}
 				else if (sample1.b > h || sample2.b > h || sample3.b > h || sample4.b > h)
 				{
 					outline = _LineColor3 * _LineIntensity * _LineColor3.a;
-					hasOutline = true;
 				}
 #endif
 
@@ -201,17 +189,9 @@ Shader "Hidden/OutlineEffect"
 				{
 					outline *= max(max(outlineSource.r, outlineSource.g), outlineSource.b) * _FillAmount * outlineSource.a;
 				}
-				
-				if (hasOutline)
-				{
-					return lerp(originalPixel + outline, outline, _FillAmount);
-				}
-				else
-				{
-					return originalPixel;
-				}
+
+                return lerp(originalPixel + outline, outline, _FillAmount);
 			}
-			
 			ENDCG
 		}
 	}

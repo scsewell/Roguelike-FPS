@@ -2,7 +2,6 @@
 
 Add reload/interact combined command for use with controller
 Aim down sight noise
-Improve outline
 Control menu headers
 Player controller run feels floaty
 Mid air run start/stop

@@ -361,7 +361,6 @@ public class MainGun : Prop
         int addedBullets = Mathf.Min(m_bulletsHeld, m_bulletsPerClip - m_bulletsMag);
         BulletsMag += addedBullets;
         BulletsHeld -= addedBullets;
-        m_bulletsHeldDirty = true;
         m_sound.PlayReloadEnd();
 
         yield return Utils.Wait(0.2f);
@@ -383,15 +382,6 @@ public class MainGun : Prop
 
         m_isBurstFiring = false;
         m_isSingleFiring = false;
-    }
-
-    private void ResetFireTime()
-    {
-        Recoil recoil = m_recoil.Last.Value;
-        m_recoil.RemoveLast();
-        m_recoil.AddFirst(recoil);
-
-        recoil.GeneratePattern(m_bulletsPerClip, m_bulletsPerRecoilKey);
     }
 
     private void GetNextRecoilPattern()
