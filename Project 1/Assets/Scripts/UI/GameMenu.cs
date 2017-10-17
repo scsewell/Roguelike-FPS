@@ -383,7 +383,7 @@ public class GameMenu : MonoBehaviour
         Navigation topNav = explicitNav;
         topNav.selectOnUp = m_btnApplySettings;
 
-        Selectable firstSetting = UIHelper.SetNavigationVertical(m_contentSettings, topNav, explicitNav, explicitNav);
+        Selectable firstSetting = UIHelper.SetNavigationVertical(m_contentSettings, topNav, explicitNav, explicitNav).FirstOrDefault();
         Navigation tempNav;
 
         tempNav = m_btnBackSettings.navigation;
@@ -436,7 +436,7 @@ public class GameMenu : MonoBehaviour
         topNav.selectOnUp = m_btnApplyControls;
         UIHelper.SetNavigationVertical(m_contentControls, topNav, explicitNav, explicitNav);
 
-        Selectable firstControl = UIHelper.SetNavigationVertical(m_contentControls, topNav, explicitNav, explicitNav);
+        Selectable firstControl = UIHelper.SetNavigationVertical(m_contentControls, topNav, explicitNav, explicitNav).FirstOrDefault();
         Navigation tempNav;
 
         tempNav = m_btnBackControls.navigation;

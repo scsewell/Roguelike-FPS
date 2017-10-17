@@ -40,7 +40,7 @@ namespace Framework.UI
             return rt;
         }
 
-        public static Selectable SetNavigationVertical(Transform parent, Navigation startNav, Navigation middleNav, Navigation endNav)
+        public static Selectable[] SetNavigationVertical(Transform parent, Navigation startNav, Navigation middleNav, Navigation endNav)
         {
             Selectable[] selectables = parent.Cast<Transform>().Select(t => t.GetComponentInChildren<Selectable>()).Where(s => s != null).ToArray();
 
@@ -67,11 +67,7 @@ namespace Framework.UI
                 }
             }
 
-            if (selectables.Length > 0)
-            {
-                return selectables.First();
-            }
-            return null;
+            return selectables;
         }
     }
 }
